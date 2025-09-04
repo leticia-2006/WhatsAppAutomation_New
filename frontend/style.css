@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.buttons button {
+    margin: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.search-box {
+    margin: 10px 0;
+}
+
+#sessions-list li {
+    padding: 5px;
+    margin: 3px 0;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tag {
+    background-color: #eee;
+    padding: 2px 6px;
+    margin-left: 5px;
+    border-radius: 3px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 30%;
+    left: 35%;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #333;
+}

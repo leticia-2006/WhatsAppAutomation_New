@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WA Automation Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>WA Automation Dashboard</h1>
+
+    <div class="buttons">
+        <button onclick="loadSessions('all')">All Sessions</button>
+        <button onclick="loadSessions('group')">Group Session</button>
+        <button onclick="loadSessions('unread')">Unread</button>
+        <button onclick="loadSessions('unreplied')">Unreplied</button>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search by name or phone" oninput="searchSessions()">
+    </div>
+    <div class="language-select">
+    <label for="source-lang">Write in:</label>
+     <select id="source-lang">
+    <option value="en">English</option>
+    <option value="ar">Arabic</option>
+    <option value="fr">French</option>
+</select>
+
+<select id="target-lang">
+    <option value="en">English</option>
+    <option value="ar">Arabic</option>
+    <option value="fr">French</option>
+</select>
+<div class="tag-filter-box">
+    <label for="tag-filter">Filter by Tag:</label>
+    <select id="tag-filter" onchange="filterByTag()">
+        <option value="">All Tags</option>
+        <option value="VIP">VIP</option>
+        <option value="Repeat">Repeat</option>
+    </select>
+</div>
+    <ul id="sessions-list"></ul>
+
+    <div id="note-modal" class="modal">
+        <textarea id="note-text" placeholder="Enter note..."></textarea>
+        <button onclick="saveNote()">Save Note</button>
+        <button onclick="closeNoteModal()">Cancel</button>
+    </div>
+<script>
+function openNoteModal(clientId) {
+    const modal = document.getElementById('note-modal');
+    modal.style.display = 'block';
+    modal.dataset.clientId = clientId;
+}
+
+function closeNoteModal() {
+    const modal = document.getElementById('note-modal');
+    modal.style.display = 'none';
+    modal.dataset.clientId = '';
+}
+
+function saveNote() {
+    const modal = document.getElementById('note-modal');
+    const clientId = modal.dataset.clientId;
+    const noteText = document.getElementById('note-text').value;
+
+    // تحديث البيانات محليًا
+    const client = currentSessions.find(c => c.id === parseInt(clientId));
+    if (client) {
+        client.note = noteText;
+        renderSessions(currentSessions);
+    }
+
+    closeNoteModal();
+}
+</script>
+
+<script
+src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
+
+
+<script src="/script.js"></script>
+</body>
+</html>
