@@ -26,7 +26,7 @@ app.use('/sessions', sessionsRouter);
 app.use('/users', usersRouter);
 
 // Frontend path
-const FRONTEND_PATH = path.join(__dirname,'../frontend');
+const FRONTEND_PATH = path.join(__dirname,'frontend');
 app.use(express.static(FRONTEND_PATH));
 app.get('*', (req, res) => { res.sendFile(path.join(FRONTEND_PATH,'index.html'));
 });
@@ -42,5 +42,6 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
