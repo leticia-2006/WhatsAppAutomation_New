@@ -4,7 +4,7 @@ const db = require('../db.js');
 const { getLatestQR } = require('../whatsappClient'); // استدعاء العميل الذي أنشأناه
 
 router.get('/qr', (req, res) => {
-     const qr = getLatestQR
+     const qr = getLatestQR();
      if (qr) {
         res.json({ qr }); // إرسال الكود للواجهة
      } else {
@@ -69,6 +69,7 @@ router.get('/unreplied', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
