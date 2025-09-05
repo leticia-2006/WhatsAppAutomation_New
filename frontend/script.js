@@ -154,17 +154,21 @@ socket.on('new_message', (data) => {
     alert(`New message from client ${data.clientId}: ${data.message}`);
 });*/
 async function fetchQRCode() {
+  try {
     const response = await axios.get('/sessions/qr');
     if (response.data.qr) {
         const qrCode = response.data.qr;
         // استخدام مكتبة qr-code-styling أو أي canvas لعرضه
         const canvas = document.getElementById('qr-canvas');
-        qrcode.toCanvas(canvas, qrCode, function (error) {
+        QRCode.toCanvas(canvas, qrCode, function (error) {
             if (error) console.error(error);
             console.log('QR Code displayed on frontend');
         });
     }
+} catch (err) {
+    console.error('Error fetching QR:', err);
+  }
 }
+setInterval(fetchQRCode, 5000);
 
-fetchQRCode();
 
