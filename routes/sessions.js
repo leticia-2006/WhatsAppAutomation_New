@@ -1,23 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
-const client = require('../whatsappClient'); // استدعاء العميل الذي أنشأناه
+const { latestQR } = require('../whatsappClient'); // استدعاء العميل الذي أنشأناه
 
-router.get('/qr', async (req, res) => {
-    try {
-        if (!client.info || !client.info.wid) {
-            // إذا الجلسة غير متصلة بعد
-            client.once('qr', (qr) => {
-                res.json({ qr }); // إرسال الكود للواجهة
-            });
-        } else {
-            res.json({ message: 'Session already initialized' });
+router.get('/qr', (req, res) => {
+     if (latestQR) {
+        res.json({ qr: latestQR }); // إرسال الكود للواجهة
+            
+     } else {
+            res.json({ qr: null });
         }
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Error generating QR Code' });
-    }
-});
+});  
 
 // All sessions
 router.get('/all', async (req, res) => {
@@ -76,6 +69,7 @@ router.get('/unreplied', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
