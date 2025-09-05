@@ -45,7 +45,7 @@ function loadSessions(type) {
 }
 
 function renderSessions(sessions) {
-  const tbody = document.getElementById('orders-body');
+  const tbody = document.getElementById('sessions-body');
   tbody.innerHTML = '';
 
   if (!sessions || sessions.length === 0) {
@@ -170,4 +170,5 @@ async function onReceiveMessage(clientId, message) {
   const translatedMessage = await translateText(message, 'auto', targetLang);
   displayMessage(clientId, translatedMessage); // عرض الرسالة في واجهة المستخدم
 }
+
 
