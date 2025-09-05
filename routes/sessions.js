@@ -20,7 +20,7 @@ router.get('/all', async (req, res) => {
 router.get('/group', async (req, res) => {
     try {
         console.log('Fetching group sessions...');
-        const res = await db.query('SELECT * FROM clients WHERE group_id=1');
+        const result = await db.query('SELECT * FROM clients WHERE group_id=1');
         const rows = res.rows;
         console.log('Group Rows:', rows);
         res.json(rows);
@@ -34,7 +34,7 @@ router.get('/group', async (req, res) => {
 router.get('/unread', async (req, res) => {
     try {
         console.log('Fetching unread sessions...');
-        const res = await db.query("SELECT * FROM clients WHERE status='unread'");
+        const result = await db.query("SELECT * FROM clients WHERE status='unread'");
         const rows = res.rows;
         console.log('Unread Rows:', rows);
         res.json(rows);
@@ -48,7 +48,7 @@ router.get('/unread', async (req, res) => {
 router.get('/unreplied', async (req, res) => {
     try {
         console.log('Fetching unreplied sessions...');
-        const res = await db.query("SELECT * FROM clients WHERE status='unreplied'");
+        const result = await db.query("SELECT * FROM clients WHERE status='unreplied'");
         const rows = res.rows;
         console.log('Unreplied Rows:', rows);
         res.json(rows);
@@ -59,5 +59,6 @@ router.get('/unreplied', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
