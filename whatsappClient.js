@@ -1,6 +1,8 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
+let latestQR = null;
+
 // تفعيل LocalAuth لحفظ الجلسات على السيرفر
 const client = new Client({
     authStrategy: new LocalAuth({
@@ -8,25 +10,29 @@ const client = new Client({
     }),
     puppeteer: { headless: true }
 });
-let latestQR = null;
-let qrGenerated = false;
+
 
 // حدث توليد QR Code
 client.on('qr', (qr) => {
-   if (!qrGenerated){
     latestQR = qr;
-    qrGenerated = true;   
-    latestQR = qr;
-    console.log('Scan this QR Code:');
+    console.log('QR Code generated. Scan it from frontend.');
     qrcode.generate(qr, { small: true }); // يعرض في الطرفية
-   }
- });
+});
 
 // حدث الجلسة جاهزة
 client.on('ready', () => {
     console.log('WhatsApp Client is ready!');
-    qrGenerated = false;
 });
+
+client.on('auth-failure', msg => {
+    console.error('Authentication failure:', msg);
+});
+
+client.on('disconnected', reason => {
+    console.log('Client disconnected:',reason);
+});
+
+    client.initialize();
 
 // بدء الجلسة
 client.initialize();
