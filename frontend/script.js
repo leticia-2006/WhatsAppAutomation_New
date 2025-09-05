@@ -40,8 +40,8 @@ function renderSessions(sessions) {
 
       <div>${client.note || '-'}</div>
       <div>
-      <button onclick="openNoteModal(${client.id})">📝</button>
-      <button onclick="addTag(${client.id},'VIP')"></button>
+      <button onclick="openNoteModal(${client.id})">📝Note</button>
+      <button onclick="addTag(${client.id},'VIP')">⭐VIP</button>
       </div>
     `;
     list.appendChild(li);
@@ -185,6 +185,7 @@ async function fetchQRCode() {
 
 fetchQRCode();
 setInterval(fetchQRCode, 5000);
+
 
 
 
