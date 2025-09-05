@@ -25,17 +25,15 @@ client.on('ready', () => {
 });
 
 client.on('auth-failure', msg => {
-    console.error('Authentication failure:', msg);
-});
-
+    console.error('Authentication failure:', msg));
 client.on('disconnected', reason => {
-    console.log('Client disconnected:',reason);
-});
+    console.log('Client disconnected:',reason));
 
-    client.initialize();
+
+    
 
 // بدء الجلسة
 client.initialize();
 
-module.exports = { client, latestQR };
+module.exports = { client, getLatestQR: () =>latestQR };
 
