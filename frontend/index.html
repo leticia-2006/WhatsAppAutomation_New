@@ -8,7 +8,10 @@
 </head>
 <body>
     <h1>WA Automation Dashboard</h1>
-
+    <div id="qr-container">
+    <h2>Scan this QR Code to connect WhatsApp</h2>
+    <canvas id="qr-canvas"></canvas>
+    </div>
     <div class="buttons">
         <button onclick="loadSessions('all')">All Sessions</button>
         <button onclick="loadSessions('group')">Group Session</button>
@@ -82,4 +85,5 @@ src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
 
 <script src="/script.js"></script>
 </body>
+
 </html>
