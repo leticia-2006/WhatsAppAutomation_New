@@ -169,4 +169,5 @@ async function onReceiveMessage(clientId, message) {
   const targetLang = document.getElementById('source-lang').value;
   const translatedMessage = await translateText(message, 'auto', targetLang);
   displayMessage(clientId, translatedMessage); // عرض الرسالة في واجهة المستخدم
+}
 
