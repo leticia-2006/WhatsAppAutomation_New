@@ -21,14 +21,28 @@ function renderSessions(sessions) {
   }
 
   sessions.forEach(client => {
-    const li = document.createElement('li');
+    const row = document.createElement('div');
+    row.classList.add('row');
 
     // عرض الاسم، الهاتف، Repeat، Tags
-    li.innerHTML = `
-      <strong>${client.name}</strong> - ${client.phone} - Repeat: ${client.repeat || 0} 
-      - Tags: ${client.tags || ''} 
-      <button onclick="openNoteModal(${client.id})">📝 Add Note</button>
-      <button onclick="addTag(${client.id},'VIP')">Add VIP Tag</button>
+    row.innerHTML = `
+      <div>${client.id || '-'}</div>
+      <div>
+        <strong>${client.name || 'Unknown'}</strong><br> 
+        <small>${client.phone || '-'}</small> 
+        </div>
+        <div>${client.repeat || 0}</div>
+        <!-- Repeat -->
+        <div>${client.lastMessage || '-'}</div>
+        <div><span class="status $
+          {client.status || 'pending'}">$
+          {client.status || 'pending'}</span></div>
+
+      <div>${client.note || '-'}</div>
+      <div>
+      <button onclick="openNoteModal(${client.id})">📝</button>
+      <button onclick="addTag(${client.id},'VIP')"></button>
+      </div>
     `;
     list.appendChild(li);
   });
@@ -171,6 +185,7 @@ async function fetchQRCode() {
 
 fetchQRCode();
 setInterval(fetchQRCode, 5000);
+
 
 
 
