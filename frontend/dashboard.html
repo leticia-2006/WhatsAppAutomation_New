@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WA Automation Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">WA Auto</div>
+      <nav>
+        <a href="#" class="active">Sessions</a>
+        <a href="#">Settings</a>
+        <a href="#">Logs</a>
+        <a href="#">Users</a>
+      </nav>
+      <footer>
+        <small>© WA Automation</small>
+      </footer>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <header>
+        <h1>Sessions</h1>
+        <p id="session-count">0 sessions found</p>
+      </header>
+
+      <!-- Controls -->
+      <div class="controls">
+        <div class="tabs">
+          <button class="tab active" onclick="loadSessions('all')">All</button>
+          <button class="tab" onclick="loadSessions('group')">Group</button>
+          <button class="tab" onclick="loadSessions('unread')">Unread</button>
+          <button class="tab" onclick="loadSessions('unreplied')">Unreplied</button>
+        </div>
+        <div class="filters">
+          <input type="text" id="search-input" placeholder="Search by name or phone" oninput="searchSessions()"/>
+          <select id="tag-filter" onchange="filterByTag()">
+            <option value="">All Tags</option>
+            <option value="VIP">VIP</option>
+            <option value="Repeat">Repeat</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table">
+        <div class="thead">
+          <div>ID</div>
+          <div>Name / Phone</div>
+          <div>Repeat</div>
+          <div>Tags</div>
+          <div>Note</div>
+        </div>
+        <div class="tbody" id="sessions-body">
+          <!-- rows تضاف عبر JS -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
