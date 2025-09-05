@@ -21,35 +21,21 @@ function renderSessions(sessions) {
   }
 
   sessions.forEach(client => {
-    const row = document.createElement('div');
-    row.classList.add('row');
+    const li = document.createElement('li');
 
     // عرض الاسم، الهاتف، Repeat، Tags
-    row.innerHTML = `
-      <div>${client.id || '-'}</div>
-      <div>
-        <strong>${client.name || 'Unknown'}</strong><br> 
-        <small>${client.phone || '-'}</small> 
-        </div>
-        <div>${client.repeat || 0}</div>
-        <!-- Repeat -->
-        <div>${client.lastMessage || '-'}</div>
-        <div><span class="status $
-          {client.status || 'pending'}">$
-          {client.status || 'pending'}</span></div>
-
-      <div>${client.note || '-'}</div>
-      <div>
-      <button onclick="openNoteModal(${client.id})">📝Note</button>
-      <button onclick="addTag(${client.id},'VIP')">⭐VIP</button>
-      </div>
+    li.innerHTML = `
+      <strong>${client.name}</strong> - ${client.phone} - Repeat: ${client.repeat || 0}
+      - Tags: ${client.tags || ''}
+      <button onclick="openNoteModal(${client.id})">📝 Add Note</button>
+      <button onclick="addTag(${client.id},'VIP')">Add VIP Tag</button>
     `;
     list.appendChild(li);
   });
 }
 function searchSessions() {
   const input = document.getElementById('search-input').value.toLowerCase();
-  const filtered = currentSessions.filter (client => 
+  const filtered = currentSessions.filter (client =>
     client.name.toLowerCase().includes(input) || client.phone.includes(input)
   );
   renderSessions(filtered);
@@ -92,7 +78,7 @@ function addTag(clientId, tagName) {
 
 function filterByTag() {
   const tag = document.getElementById('tag-filter').value;
-  const filtered = currentSessions.filter(client => 
+  const filtered = currentSessions.filter(client =>
     !tag || (client.tags && client.tags.includes(tag))
   );
   renderSessions(filtered);
@@ -185,8 +171,3 @@ async function fetchQRCode() {
 
 fetchQRCode();
 setInterval(fetchQRCode, 5000);
-
-
-
-
-
