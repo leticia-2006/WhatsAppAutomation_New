@@ -9,17 +9,21 @@ const client = new Client({
     puppeteer: { headless: true }
 });
 let latestQR = null;
+let qrGenerated = false;
 
 // حدث توليد QR Code
 client.on('qr', (qr) => {
+   if (!qrGenerated){
     latestQR = qr;
     console.log('Scan this QR Code:');
     qrcode.generate(qr, { small: true }); // يعرض في الطرفية
-});
+   }
+ });
 
 // حدث الجلسة جاهزة
 client.on('ready', () => {
     console.log('WhatsApp Client is ready!');
+    qrGenerated = false;
 });
 
 // بدء الجلسة
