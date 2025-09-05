@@ -1,89 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>WA Automation Dashboard</title>
-    <link rel="stylesheet" href="/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WA Automation</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body>
-    <h1>WA Automation Dashboard</h1>
-    <div id="qr-container">
-    <h2>Scan this QR Code to connect WhatsApp</h2>
+<body class="landing">
+  <div class="qr-container">
+    <h1>Scan QR Code to Connect WhatsApp</h1>
     <canvas id="qr-canvas"></canvas>
-    </div>
-    <div class="buttons">
-        <button onclick="loadSessions('all')">All Sessions</button>
-        <button onclick="loadSessions('group')">Group Session</button>
-        <button onclick="loadSessions('unread')">Unread</button>
-        <button onclick="loadSessions('unreplied')">Unreplied</button>
-    </div>
+  </div>
 
-    <div class="search-box">
-        <input type="text" id="search-input" placeholder="Search by name or phone" oninput="searchSessions()">
-    </div>
-    <div class="language-select">
-    <label for="source-lang">Write in:</label>
-     <select id="source-lang">
-    <option value="en">English</option>
-    <option value="ar">Arabic</option>
-    <option value="fr">French</option>
-</select>
-
-<select id="target-lang">
-    <option value="en">English</option>
-    <option value="ar">Arabic</option>
-    <option value="fr">French</option>
-</select>
-<div class="tag-filter-box">
-    <label for="tag-filter">Filter by Tag:</label>
-    <select id="tag-filter" onchange="filterByTag()">
-        <option value="">All Tags</option>
-        <option value="VIP">VIP</option>
-        <option value="Repeat">Repeat</option>
-    </select>
-</div>
-    <ul id="sessions-list"></ul>
-
-    <div id="note-modal" class="modal">
-        <textarea id="note-text" placeholder="Enter note..."></textarea>
-        <button onclick="saveNote()">Save Note</button>
-        <button onclick="closeNoteModal()">Cancel</button>
-    </div>
-<script>
-function openNoteModal(clientId) {
-    const modal = document.getElementById('note-modal');
-    modal.style.display = 'block';
-    modal.dataset.clientId = clientId;
-}
-
-function closeNoteModal() {
-    const modal = document.getElementById('note-modal');
-    modal.style.display = 'none';
-    modal.dataset.clientId = '';
-}
-
-function saveNote() {
-    const modal = document.getElementById('note-modal');
-    const clientId = modal.dataset.clientId;
-    const noteText = document.getElementById('note-text').value;
-
-    // تحديث البيانات محليًا
-    const client = currentSessions.find(c => c.id === parseInt(clientId));
-    if (client) {
-        client.note = noteText;
-        renderSessions(currentSessions);
+  <script>
+    async function fetchQRCode() {
+      try {
+        const response = await axios.get('/sessions/qr');
+        const qrCode = response.data.qr;
+        if (qrCode) {
+          const canvas = document.getElementById('qr-canvas');
+          QRCode.toCanvas(canvas, qrCode, function (error) {
+            if (error) console.error(error);
+            else console.log('QR Code displayed on frontend');
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching QR:', err);
+      }
     }
 
-    closeNoteModal();
-}
-</script>
+    fetchQRCode();
+    setInterval(fetchQRCode, 5000);
 
-<script
-src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-
-<script src="/script.js"></script>
+    // بعد المسح، يمكن تحويل المستخدم تلقائيًا للـ Dashboard
+    // مثال: setTimeout(() => window.location.href = 'dashboard.html', 10000);
+  </script>
 </body>
-
 </html>
+
+  
+    
+
