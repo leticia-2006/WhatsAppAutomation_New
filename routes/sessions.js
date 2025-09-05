@@ -6,7 +6,7 @@ const db = require('../db.js');
 router.get('/all', async (req, res) => {
     try {
         console.log('Fetching all sessions...');
-        const res = await db.query('SELECT * FROM clients');
+        const result = await db.query('SELECT * FROM clients');
         const rows = res.rows;
         console.log('Rows:', rows);
         res.json(rows);
@@ -59,4 +59,5 @@ router.get('/unreplied', async (req, res) => {
 });
 
 module.exports = router;
+
 
