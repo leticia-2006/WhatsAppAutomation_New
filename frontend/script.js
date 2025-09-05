@@ -3,7 +3,7 @@
 // ========================
 async function fetchQRCode() {
   try {
-    const response = await axios.get('/sessions/qr');
+    const response = await axios.get('https://chat.ohgo.site/sessions/qr');
     const qrCode = response.data.qr;
     if (qrCode) {
         const canvas = document.getElementById('qr-canvas');
@@ -170,5 +170,6 @@ async function onReceiveMessage(clientId, message) {
   const translatedMessage = await translateText(message, 'auto', targetLang);
   displayMessage(clientId, translatedMessage); // عرض الرسالة في واجهة المستخدم
 }
+
 
 
