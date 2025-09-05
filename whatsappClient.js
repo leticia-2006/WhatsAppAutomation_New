@@ -15,6 +15,8 @@ let qrGenerated = false;
 client.on('qr', (qr) => {
    if (!qrGenerated){
     latestQR = qr;
+    qrGenerated = true;   
+    latestQR = qr;
     console.log('Scan this QR Code:');
     qrcode.generate(qr, { small: true }); // يعرض في الطرفية
    }
