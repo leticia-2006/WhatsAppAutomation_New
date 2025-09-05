@@ -153,4 +153,18 @@ socket.on('new_message', (data) => {
     // يمكنك عرضها في Dashboard
     alert(`New message from client ${data.clientId}: ${data.message}`);
 });*/
+async function fetchQRCode() {
+    const response = await axios.get('/sessions/qr');
+    if (response.data.qr) {
+        const qrCode = response.data.qr;
+        // استخدام مكتبة qr-code-styling أو أي canvas لعرضه
+        const canvas = document.getElementById('qr-canvas');
+        qrcode.toCanvas(canvas, qrCode, function (error) {
+            if (error) console.error(error);
+            console.log('QR Code displayed on frontend');
+        });
+    }
+}
+
+fetchQRCode();
 
