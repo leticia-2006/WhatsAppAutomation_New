@@ -7,7 +7,7 @@ router.get('/all', async (req, res) => {
     try {
         console.log('Fetching all sessions...');
         const result = await db.query('SELECT * FROM clients');
-        const rows = res.rows;
+        const rows = result.rows;
         console.log('Rows:', rows);
         res.json(rows);
     } catch (err) {
@@ -21,7 +21,7 @@ router.get('/group', async (req, res) => {
     try {
         console.log('Fetching group sessions...');
         const result = await db.query('SELECT * FROM clients WHERE group_id=1');
-        const rows = res.rows;
+        const rows = result.rows;
         console.log('Group Rows:', rows);
         res.json(rows);
     } catch (err) {
@@ -35,7 +35,7 @@ router.get('/unread', async (req, res) => {
     try {
         console.log('Fetching unread sessions...');
         const result = await db.query("SELECT * FROM clients WHERE status='unread'");
-        const rows = res.rows;
+        const rows = result.rows;
         console.log('Unread Rows:', rows);
         res.json(rows);
     } catch (err) {
@@ -49,7 +49,7 @@ router.get('/unreplied', async (req, res) => {
     try {
         console.log('Fetching unreplied sessions...');
         const result = await db.query("SELECT * FROM clients WHERE status='unreplied'");
-        const rows = res.rows;
+        const rows = result.rows;
         console.log('Unreplied Rows:', rows);
         res.json(rows);
     } catch (err) {
@@ -59,6 +59,7 @@ router.get('/unreplied', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
