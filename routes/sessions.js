@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
-const { latestQR } = require('../whatsappClient'); // استدعاء العميل الذي أنشأناه
+const { getLatestQR } = require('../whatsappClient'); // استدعاء العميل الذي أنشأناه
 
 router.get('/qr', (req, res) => {
-     if (latestQR) {
-        res.json({ qr: latestQR }); // إرسال الكود للواجهة
-            
+     const qr = getLatestQR
+     if (qr) {
+        res.json({ qr }); // إرسال الكود للواجهة
      } else {
             res.json({ qr: null });
         }
@@ -69,6 +69,7 @@ router.get('/unreplied', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
