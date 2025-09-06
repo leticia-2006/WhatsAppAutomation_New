@@ -18,10 +18,11 @@ function checkRole(requiredRole) {
 // إضافة Agent
 router.post('/add-agent', checkRole('super_admin'), async (req, res) => {
     try {
-        const { name, phone } = req.body;
+        const { name, phone, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
         await db.query(
-            "INSERT INTO users (name, phone, role) VALUES ($1, $2, 'agent')",
-            [name, phone]
+            "INSERT INTO users (name, phone, role, password) VALUES ($1, $2, 'agent', $3)",
+            [name, phone, hashedPassword]
         );
         res.json({ message: 'Agent added successfully' });
     } catch (err) {
@@ -33,10 +34,11 @@ router.post('/add-agent', checkRole('super_admin'), async (req, res) => {
 // إضافة Supervisor
 router.post('/add-supervisor', checkRole('super_admin'), async (req, res) => {
     try {
-        const { name, phone } = req.body;
+        const { name, phone, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
         await db.query(
-            "INSERT INTO users (name, phone, role) VALUES ($1, $2, 'supervisor')",
-            [name, phone]
+            "INSERT INTO users (name, phone, role, password) VALUES ($1, $2, 'supervisor', $3)",
+            [name, phone, hashedPassword]
         );
         res.json({ message: 'Supervisor added successfully' });
     } catch (err) {
@@ -48,10 +50,11 @@ router.post('/add-supervisor', checkRole('super_admin'), async (req, res) => {
 // إضافة Super Admin (إذا احتجت لاحقًا)
 router.post('/add-super-admin', async (req, res) => {
     try {
-        const { name, phone } = req.body;
+        const { name, phone, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
         await db.query(
-            "INSERT INTO users (name, phone, role) VALUES ($1, $2, 'super_admin')",
-            [name, phone]
+            "INSERT INTO users (name, phone, role, password) VALUES ($1, $2, 'super_admin', $3)",
+            [name, phone, hashedPassword]
         );
         res.json({ message: 'Super Admin added successfully' });
     } catch (err) {
@@ -81,4 +84,5 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
 
