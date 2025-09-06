@@ -59,18 +59,6 @@ function closeNoteModal() {
   modal.dataset.clientId = '';
 }
 
-function saveNote() {
-  const modal = document.getElementById('note-modal');
-  const clientId = modal.dataset.clientId;
-  const noteText = document.getElementById('note-text').value;
-
-  axios.post(`/sessions/add-note`, { clientId, note: noteText })
-    .then(() => {
-        closeNoteModal();
-        loadSessions(); // تحديث الجلسات بعد الحفظ
-    })
-    .catch(err => console.error(err));
-}
 
 // ========================
 // Tags
@@ -229,6 +217,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions;
 
 // ========================
+
 
 
 
