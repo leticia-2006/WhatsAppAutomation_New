@@ -26,50 +26,8 @@ if(document.getElementById('qr-canvas')) {
 // ========================
 let currentSessions = [];
 
-function loadSessions(type='all') {
-  axios.get(`/sessions/${type}`)
-    .then(response => {
-      currentSessions = response.data;
-      renderSessions(currentSessions);
-    })
-    .catch(err => console.error('Axios error:', err));
-}
 
-function renderSessions(sessions) {
-  const tbody = document.getElementById('sessions-body');
-  tbody.innerHTML = '';
 
-  if (!sessions || sessions.length === 0) {
-      tbody.innerHTML = '<div class="row">No sessions found</div>';
-      return;
-  }
-
-  sessions.forEach((client, idx) => {
-    const row = document.createElement('div');
-    row.classList.add('row');
-    if(idx === 0) row.classList.add('highlight'); // تمييز أول صف
-
-    const statusText = client.status === 'deleted' ? 'Deleted message' : client.status;
-
-    row.innerHTML = `
-      <div>${client.id || '-'}</div>
-      <div>
-        <div><strong>${client.name}</strong></div>
-        <div style="font-size:12px; color:#777">${client.phone}</div>
-      </div>
-      <div>${client.repeat || 0}</div>
-      <div>${client.tags || ''}</div>
-      <div>
-        <button onclick="openNoteModal(${client.id})">📝 Add Note</button>
-        <button onclick="addTag(${client.id},'VIP')">Add VIP Tag</button>
-      </div>
-      <div>${statusText}</div>
-    `;
-    tbody.appendChild(row);
-  });
-
-  document.getElementById('session-count').innerText = `${sessions.length} sessions found`;
-}
 
 // ========================
 // البحث والفلاتر
@@ -271,5 +229,6 @@ function saveNote() {
 window.addEventListener("load", loadSessions;
 
 // ========================
+
 
 
