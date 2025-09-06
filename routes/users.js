@@ -9,7 +9,9 @@ const { requireLogin, checkRole } = require('../middleware')
 router.post('/add-agent', requireLogin,checkRole('super_admin'), async (req, res) => {
     try {
         const { name, phone, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log("Password from input:",password);
+        console.log("Hashed password from DB:",user.password);
+        const match = await bcrypt.compare(password, user.password);
         await db.query(
             "INSERT INTO users (name, phone, role, password) VALUES ($1, $2, 'agent', $3)",
             [name, phone, hashedPassword]
@@ -74,6 +76,7 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
