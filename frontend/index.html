@@ -11,7 +11,7 @@
   <div class="login-container">
     <h1>Login to WA Automation</h1>
     <form id="login-form">
-      <input type="text" id="phone" placeholder="Phone number" required />
+      <input type="text" id="name" placeholder="Name" required />
       <input type="password" id="password" placeholder="Password" required />
       <button type="submit">Login</button>
     </form>
@@ -22,10 +22,10 @@
     const form = document.getElementById('login-form');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const phone = document.getElementById('phone').value;
+      const name = document.getElementById('name').value;
       const password = document.getElementById('password').value;
       try {
-        const res = await axios.post('/users/login', { phone, password });
+        const res = await axios.post('/users/login', { name, password });
         if(res.data.user) {
           localStorage.setItem('user', JSON.stringify(res.data.user));
           window.location.href = 'dashboard.html';
@@ -37,6 +37,7 @@
   </script>
 </body>
 </html>
+
 
 
 
