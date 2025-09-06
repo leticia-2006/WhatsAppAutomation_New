@@ -10,7 +10,9 @@ const db = require('./db.js');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://chat.ohgo.site",
+  credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -86,6 +88,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
