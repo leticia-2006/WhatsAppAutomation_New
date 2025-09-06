@@ -143,7 +143,7 @@ async function loadSessions() {
     } else if(user.role === 'admin') {
       allSessions = allSessions.filter(s => s.agent_id && s.admin_id === user.id);
     }
-    renderSessions();
+    renderSessions(allSessions);
   } catch(err) { console.error(err); }
 }
 
@@ -220,6 +220,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
