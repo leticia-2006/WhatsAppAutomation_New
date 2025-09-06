@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
+const bcrypt = require('bcrypt');
 
 // Middleware لفحص الصلاحيات
 function checkRole(requiredRole) {
@@ -59,4 +60,25 @@ router.post('/add-super-admin', async (req, res) => {
     }
 });
 
+//login
+router.post('/login', async (req, res) => {
+    const { phone, password } = req.body;
+
+    try {
+        const result = await db.query("SELECT * FROM users WHERE phone = $1", [phone]);
+        if (result.rows.length === 0) return res.status(401).json({ message: 'Invalid credentials' });
+
+        const user = result.rows[0];
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) return res.status(401).json({ message: 'Invalid credentials' });
+
+        res.json({ message: 'Login successful', user: { id: user.id, name: user.name, role: user.role } });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 module.exports = router;
+
