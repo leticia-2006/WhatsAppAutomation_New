@@ -4,17 +4,6 @@ const db = require('../db.js');
 const bcrypt = require('bcrypt');
 const { requireLogin, checkRole } = require('../middleware')
 
-// Middleware لفحص الصلاحيات
-function checkRole(requiredRole) {
-    return (req, res, next) => {
-        const userRole = req.user?.role; // نفترض أن المستخدم مسجل دخول
-        if (userRole === requiredRole || userRole === 'super_admin') {
-            next();
-        } else {
-            res.status(403).json({ message: 'Access denied' });
-        }
-    };
-}
 
 // إضافة Agent
 router.post('/add-agent', requireLogin,checkRole('super_admin'), async (req, res) => {
@@ -85,6 +74,7 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
