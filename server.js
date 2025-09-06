@@ -4,6 +4,7 @@ const http = require('http');
 const path = require('path');
 const session = require('express-session'); // لإدارة الجلسات
 const bcrypt = require('bcrypt'); // لتشفير الباسورد
+const messagesRouter = require('./routes/messages')
 const db = require('./db.js');
 
 const app = express();
@@ -70,6 +71,7 @@ const usersRouter = require('./routes/users');
 
 app.use('/sessions', requireLogin, sessionsRouter);
 app.use('/users', requireLogin, usersRouter);
+app.use('/messages', messagesRouter);
 
 // ===== Frontend =====
 const FRONTEND_PATH = path.join(__dirname,'frontend');
@@ -84,4 +86,5 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
