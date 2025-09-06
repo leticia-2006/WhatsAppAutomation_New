@@ -134,8 +134,12 @@ let allSessions = [];
 
 async function loadSessions() {
   try {
-    const res = await axios.get(`/sessions/${currentTab}`);
-    allSessions = res.data;
+    const res = await axios.get(`/sessions/${currentTab}`{
+    headers: {
+    Authorization: `Bearer $ {user.token}`
+    }
+  });
+      allSessions = res.data;
 
     // تصفية حسب صلاحيات المستخدم
     if(user.role === 'agent') {
@@ -220,6 +224,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
