@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
 const bcrypt = require('bcrypt');
+const { requireLogin, checkRole } = require('../middleware')
 
 // Middleware لفحص الصلاحيات
 function checkRole(requiredRole) {
@@ -84,6 +85,7 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
