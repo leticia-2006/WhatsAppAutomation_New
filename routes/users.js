@@ -16,7 +16,7 @@ function checkRole(requiredRole) {
 }
 
 // إضافة Agent
-router.post('/add-agent', checkRole('super_admin'), async (req, res) => {
+router.post('/add-agent', requireLogin,checkRole('super_admin'), async (req, res) => {
     try {
         const { name, phone, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,7 +32,7 @@ router.post('/add-agent', checkRole('super_admin'), async (req, res) => {
 });
 
 // إضافة Supervisor
-router.post('/add-supervisor', checkRole('super_admin'), async (req, res) => {
+router.post('/add-supervisor', requireLogin, checkRole('super_admin'), async (req, res) => {
     try {
         const { name, phone, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -48,7 +48,7 @@ router.post('/add-supervisor', checkRole('super_admin'), async (req, res) => {
 });
 
 // إضافة Super Admin (إذا احتجت لاحقًا)
-router.post('/add-super-admin', async (req, res) => {
+router.post('/add-super-admin',requireLogin, checkRole('super_admin'), async (req, res) => {
     try {
         const { name, phone, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -84,5 +84,6 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
