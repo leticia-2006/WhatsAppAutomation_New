@@ -212,14 +212,15 @@ function saveNote() {
   axios.post(`/sessions/add-note`, { clientId, note: noteText })
     .then(() => {
       closeNoteModal();
-      loadSessions();
-    } catch (err) { console.error(err);})
+      loadSessions();})
+    .catch (err => console.error(err));
 }
 
 // Load initial sessions
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
