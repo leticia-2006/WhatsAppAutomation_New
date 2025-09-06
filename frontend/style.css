@@ -31,7 +31,7 @@ body {
 /* Sidebar */
 .sidebar {
     width: 240px;
-    background: #0057ff;
+    background: #333; /* رمادي داكن */
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -59,8 +59,8 @@ body {
 }
 .sidebar nav a.active,
 .sidebar nav a:hover {
-    background: #fff;
-    color: #0057ff;
+    background: #bbb; /* رمادي متوسط */
+    color: #111; /* نص داكن */
 }
 .sidebar footer {
     font-size: 12px;
@@ -83,17 +83,21 @@ header p { font-size: 14px; color: #777; margin-bottom: 24px; }
 .tab {
     padding: 8px 16px;
     border: none;
-    background: #fff;
+    background: #eee; /* رمادي فاتح */
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
 }
 .tab.active {
-    background: #0057ff;
-    color: #fff;
+    background: #bbb; /* رمادي متوسط */
+    color: #111;
 }
 .filters { display: flex; gap: 8px; align-items: center; }
-.filters input, .filters select { padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px; }
+.filters input, .filters select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
 
 /* Table */
 .table {
@@ -120,8 +124,8 @@ header p { font-size: 14px; color: #777; margin-bottom: 24px; }
     font-size: 14px;
 }
 .row.highlight {
-    background: linear-gradient(90deg, #0f63ff, #0057ff);
-    color: #fff;
+    background: #ddd; /* رمادي فاتح */
+    color: #111;
 }
 
 /* Status badges */
