@@ -70,7 +70,7 @@ const sessionsRouter = require('./routes/sessions');
 const usersRouter = require('./routes/users');
 
 app.use('/sessions', requireLogin, sessionsRouter);
-app.use('/users', requireLogin, usersRouter);
+app.use('/users', usersRouter);
 app.use('/messages', messagesRouter);
 
 // ===== Frontend =====
@@ -86,5 +86,6 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
