@@ -55,10 +55,10 @@ router.post('/add-super-admin',requireLogin, checkRole('super_admin'), async (re
 
 //login
 router.post('/login', async (req, res) => {
-    const { phone, password } = req.body;
+    const { name, password } = req.body;
 
     try {
-        const result = await db.query("SELECT * FROM users WHERE phone = $1", [phone]);
+        const result = await db.query("SELECT * FROM users WHERE name = $1", [name]);
         if (result.rows.length === 0) return res.status(401).json({ message: 'Invalid credentials' });
 
         const user = result.rows[0];
@@ -74,6 +74,7 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
