@@ -1,82 +1,161 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WA Automation Dashboard</title>
-  <link rel="stylesheet" href="style.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WA Automation Dashboard</title>
+<link rel="stylesheet" href="style.css"/>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 </head>
 <body>
-  <div class="dashboard">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="logo">WA Auto</div>
-      <nav>
-        <a href="#" class="active">Sessions</a>
-        <a href="#">Settings</a>
-        <a href="#">Logs</a>
-        <a href="#">Users</a>
-      </nav>
-      <footer>
-        <small>© WA Automation</small>
-      </footer>
-    </aside>
+<div class="dashboard">
 
-    <!-- Main content -->
-    <main class="main">
-      <header>
-        <h1>Sessions</h1>
-        <p id="session-count">0 sessions found</p>
-      </header>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">WA Auto</div>
+    <nav>
+      <a href="#" class="tab-link active" data-tab="all">All</a>
+      <a href="#" class="tab-link" data-tab="group">Group</a>
+      <a href="#" class="tab-link" data-tab="unread">Unread</a>
+      <a href="#" class="tab-link" data-tab="unreplied">Unreplied</a>
+      <a href="#" id="qr-link">Link WhatsApp</a>
+      <a href="#" id="logout-btn">Logout</a>
+    </nav>
+    <footer>
+      <small>© WA Automation</small>
+    </footer>
+  </aside>
 
-      <!-- Controls -->
-      <div class="controls">
-        <div class="tabs">
-          <button class="tab active" onclick="loadSessions('all')>All</button>
-          <button class="tab" onclick="loadSessions('group')>Group</button>
-          <button class="tab" onclick="loadSessions('unread')>Unread</button>
-          <button class="tab" onclick="loadSessions('unreplied')>Unreplied</button>
-        </div>
-        <div class="filters">
-          <input type="text" id="search-input" placeholder="Search by name or phone" oninput="searchSessions()"/>
-          <select id="tag-filter" onchange="filterByTag()">
-            <option value="">All Tags</option>
-            <option value="VIP">VIP</option>
-            <option value="Repeat">Repeat</option>
-          </select>
-        </div>
+  <!-- Main content -->
+  <main class="main">
+    <header>
+      <h1>Sessions</h1>
+      <p id="session-count">0 sessions found</p>
+    </header>
+
+    <!-- Filters -->
+    <div class="filters">
+      <input type="text" id="search-input" placeholder="Search by name or phone" oninput="applyFilters()"/>
+      <select id="tag-filter" onchange="applyFilters()">
+        <option value="">All Tags</option>
+        <option value="VIP">VIP</option>
+        <option value="Repeat">Repeat</option>
+      </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table">
+      <div class="thead">
+        <div>ID</div>
+        <div>Name / Phone</div>
+        <div>Repeat</div>
+        <div>Tags</div>
+        <div>Note</div>
+        <div>Status</div>
       </div>
+      <div class="tbody" id="sessions-body"></div>
+    </div>
 
-      <!-- Table -->
-      <div class="table">
-        <div class="thead">
-          <div>ID</div>
-          <div>Name / Phone</div>
-          <div>Repeat</div>
-          <div>Tags</div>
-          <div>Note</div>
-        </div>
-        <div class="tbody" id="sessions-body">
-          <!-- rows تضاف عبر JS -->
-        </div>
-      </div>
-    </main>
-  </div>
-<!-- Note Modal -->
-<div id="note-modal" style="display:none; position:fixed; top:50%; left:50%; 
-    transform:translate(-50%, -50%); background:#fff; border:1px solid #ccc; 
-    padding:20px; z-index:1000; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+    <!-- QR Code Modal -->
+    <div id="qr-modal" style="display:none; position:fixed; top:50%; left:50%;
+        transform:translate(-50%, -50%); background:#fff; border:1px solid #ccc;
+        padding:20px; z-index:1000; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+      <h3>Scan QR Code to link WhatsApp</h3>
+      <canvas id="qr-canvas"></canvas>
+      <br>
+      <button onclick="closeQRModal()">Close</button>
+    </div>
 
-  <h3>Add Note</h3>
-  <textarea id="note-text" rows="4" cols="40" placeholder="Write your note..."></textarea>
-  <br><br>
-  <button onclick="saveNote()">Save</button>
-  <button onclick="closeNoteModal()">Cancel</button>
+  </main>
 </div>
- 
-  <script src="script.js"></script>
-  <scripts>window.onload = function(){loadSessions('all');};</scripts>
 
+<script>
+const user = JSON.parse(localStorage.getItem('user'));
+if(!user) window.location.href = 'index.html';
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  localStorage.removeItem('user');
+  window.location.href = 'index.html';
+});
+
+document.getElementById('qr-link').addEventListener('click', () => {
+  document.getElementById('qr-modal').style.display = 'block';
+  fetchQRCode();
+});
+
+function closeQRModal() {
+  document.getElementById('qr-modal').style.display = 'none';
+}
+
+// Fetch QR code
+async function fetchQRCode() {
+  try {
+    const res = await axios.get('/sessions/qr');
+    const qrCode = res.data.qr;
+    if(qrCode) {
+      QRCode.toCanvas(document.getElementById('qr-canvas'), qrCode, err => {
+        if(err) console.error(err);
+      });
+    }
+  } catch(err) { console.error(err); }
+}
+
+// Load sessions based on tab
+let currentTab = 'all';
+const tabLinks = document.querySelectorAll('.tab-link');
+tabLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    currentTab = link.dataset.tab;
+    tabLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    loadSessions();
+  });
+});
+
+let allSessions = [];
+
+async function loadSessions() {
+  try {
+    const res = await axios.get(`/sessions/${currentTab}`);
+    allSessions = res.data;
+    renderSessions();
+  } catch(err) { console.error(err); }
+}
+
+function renderSessions() {
+  const tbody = document.getElementById('sessions-body');
+  const searchTerm = document.getElementById('search-input').value.toLowerCase();
+  const tagFilter = document.getElementById('tag-filter').value;
+  tbody.innerHTML = '';
+
+  const filtered = allSessions.filter(s => 
+    (s.name.toLowerCase().includes(searchTerm) || s.phone.includes(searchTerm)) &&
+    (!tagFilter || s.tags?.includes(tagFilter))
+  );
+
+  filtered.forEach(session => {
+    const statusText = session.status === 'deleted' ? 'Deleted message' : session.status;
+    const row = `<div>${session.id}</div>
+                 <div>${session.name} / ${session.phone}</div>
+                 <div>${session.repeat || '-'}</div>
+                 <div>${session.tags || '-'}</div>
+                 <div>${session.note || '-'}</div>
+                 <div>${statusText}</div>`;
+    tbody.innerHTML += row;
+  });
+
+  document.getElementById('session-count').innerText = `${filtered.length} sessions found`;
+}
+
+// Apply filters on search or tag change
+function applyFilters() {
+  renderSessions();
+}
+
+window.onload = loadSessions;
+</script>
 </body>
 </html>
