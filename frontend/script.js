@@ -1,3 +1,4 @@
+axios.defaults.withCredentials = true;
 // ========================
 // QR Code Page
 // ========================
@@ -220,6 +221,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
