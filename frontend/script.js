@@ -213,14 +213,14 @@ function saveNote() {
     .then(() => {
       closeNoteModal();
       loadSessions();
-    })
-    .catch(err => console.error(err));
+    } catch (err) { console.error(err);}
 }
 
 // Load initial sessions
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
