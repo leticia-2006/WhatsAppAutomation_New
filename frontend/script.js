@@ -88,11 +88,14 @@ if(user.role === 'super_admin') {
 }
 
 // Logout
-document.getElementById('logout-btn').addEventListener('click', () => {
+const logoutBtn =
+document.getElementById('logout-btn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => {
   localStorage.removeItem('user');
   window.location.href = 'index.html';
 });
-
+}
 // QR Modal
 document.getElementById('qr-link').addEventListener('click', () => {
   document.getElementById('qr-modal').style.display = 'block';
@@ -217,6 +220,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
