@@ -57,25 +57,38 @@ router.post('/add-super-admin',requireLogin, checkRole('super_admin'), async (re
 
 //login
 router.post('/login', async (req, res) => {
+  console.log("==Login route hit==");
     const { name, password } = req.body;
-
+    console.log("Name from input:", name);
+    console.log("Passsword from input:", password);
+    
     try {
         const result = await db.query("SELECT * FROM users WHERE name = $1", [name]);
-        if (result.rows.length === 0) return res.status(401).json({ message: 'Invalid credentials' });
+        console.log("DB result:",result.rows);
+        if (result.rows.length === 0) {
+        console.log("No user found with this name");    
+        return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
         const user = result.rows[0];
+        console.log("User from DB:", user); 
         const match = await bcrypt.compare(password, user.password);
-
-        if (!match) return res.status(401).json({ message: 'Invalid credentials' });
-
-        res.json({ message: 'Login successful', user: { id: user.id, name: user.name, role: user.role } });
-    } catch (err) {
+        console.log("Password match result:", match);
+      
+        if (!match){
+            console.log("Password did not match for user:", user.name);
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+            console.log("Login successful for:", user.name);
+            res.json({ message: 'Login successful', user: { id: user.id, name: user.name, role: user.role } });
+        } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 });
 
 module.exports = router;
+
 
 
 
