@@ -143,7 +143,7 @@ async function loadSessions() {
       allSessions = allSessions.filter(s => s.agent_id && s.admin_id === user.id);
     }
     renderSessions();
-  } catch(err) { console.error(err); }
+  } catch(err) { console.error(err); 
 }
 
 function renderSessions() {
@@ -220,6 +220,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
