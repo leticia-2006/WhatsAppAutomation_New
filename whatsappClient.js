@@ -11,12 +11,11 @@ const client = new Client({
     puppeteer: { headless: true }
 });
 
-
-// حدث توليد QR Code
+// حدث توليد QR Code عند إضافة رقم جديد فقط
 client.on('qr', (qr) => {
     latestQR = qr;
     console.log('QR Code generated. Scan it from frontend.');
-    qrcode.generate(qr, { small: true }); // يعرض في الطرفية
+    qrcode.generate(qr, { small: true }); 
 });
 
 // حدث الجلسة جاهزة
@@ -24,18 +23,17 @@ client.on('ready', () => {
     console.log('WhatsApp Client is ready!');
 });
 
+// فشل المصادقة
 client.on('auth-failure', msg => {
     console.error('Authentication failure:', msg);
 });
+
+// فصل الاتصال
 client.on('disconnected', reason => {
     console.log('Client disconnected:',reason);
 });
 
-
-    
-
 // بدء الجلسة
 client.initialize();
 
-module.exports = { client, getLatestQR: () =>latestQR };
-
+module.exports = { client, getLatestQR: () => latestQR };
