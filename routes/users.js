@@ -43,7 +43,7 @@ router.post('/add-supervisor', requireLogin, checkRole('super_admin'), async (re
 router.post('/add-super-admin',requireLogin, checkRole('super_admin'), async (req, res) => {
     try {
         const { name, phone, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password.trim(), 10);
         await db.query(
             "INSERT INTO users (name, phone, role, password) VALUES ($1, $2, 'super_admin', $3)",
             [name, phone, hashedPassword]
@@ -88,6 +88,7 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
