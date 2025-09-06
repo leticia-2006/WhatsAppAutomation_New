@@ -268,7 +268,8 @@ function saveNote() {
 }
 
 // Load initial sessions
-window.onload = loadSessions;
+window.addEventListener("load", loadSessions;
 
 // ========================
+
 
