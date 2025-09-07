@@ -134,7 +134,7 @@ let allSessions = [];
 
 async function loadSessions() {
   try {
-    const res = await axios.get(`/sessions/${currentTab}`{
+    const res = await axios.get(`/sessions/${currentTab}`,{
     headers: {
     Authorization: `Bearer $ {user.token}`
     }
@@ -224,6 +224,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
