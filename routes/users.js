@@ -82,9 +82,9 @@ router.post('/login', async (req, res) => {
         }
        
         const token = jwt.sign(
-        { id: user.id, name: user.name, role: user.role }
+        { id: user.id, name: user.name, role: user.role },
         SECRET_KEY,
-        { expiresIn: '1h' });
+        { expiresIn: '1h' };)
          console.log("Login successful for:", user.name);
       res.json({ message: 'Login successful', user: { id: user.id, name: user.name, role: user.role }, token: token });
       } catch (err) {
@@ -95,6 +95,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
