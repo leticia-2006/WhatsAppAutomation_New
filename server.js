@@ -23,7 +23,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 2 * 60 * 60 * 1000, 
-           secure: true,
+           secure: process.env.NODE_ENV ==='production',
           sameSite: 'none'
           } // 2 ساعات
 }));
@@ -64,6 +64,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
