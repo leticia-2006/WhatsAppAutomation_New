@@ -19,10 +19,29 @@
       <a href="#" class="tab-link" data-tab="unread">Unread</a>
       <a href="#" class="tab-link" data-tab="unreplied">Unreplied</a>
       <a href="#" id="qr-link" style="display:none;">Link WhatsApp</a>
-    </nav>
+     </nav>
     <button id="logout-btn">Logout</button>
   </aside>  
+      
+   <!-- Main Content -->
+   <main class="main-content">  
+     <div class="controls">
+      <input type="text" id="search-input" placeholder="Search clients..." oninput="applyFilters()">
+      <select id="tag-filter" onchange="applyFilters()">      <option value="">All tags</option>
+      <option value="VIP">VIP</option>
+      <option value="New">New</option>
+      </select>
+    </div>
+    <div id="sesssions-body"></div> 
+    <div id="session-count"></div>
+   </main>
+   </div>
 
+  <!-- QR Modal -->
+   <div id="qr-modal" style="display:none;">
+     <canvas id="qr-canvas"></canvas
+   </div>                           
+    
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script src="script.js"></script>
