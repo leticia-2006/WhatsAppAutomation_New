@@ -225,9 +225,9 @@ function saveNote() {
 }
 
 // Load initial sessions
-window.addEventListener("load", loadSessions);
 window.addEventListener("load", fetchUser);
 // ========================
+
 
 
 
