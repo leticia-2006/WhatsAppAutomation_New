@@ -56,8 +56,7 @@ function addTag(clientId, tagName) {
 
 
 // عرض زر QR فقط للسوبر أدمن
-if(user.role === 'super_admin') {
-  document.getElementById('qr-link').style.display = 'block';
+if(user.role === 'super_admin'){document.getElementById('qr-link').style.display = 'block';
 }
 
 // Logout
@@ -205,6 +204,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
