@@ -1,8 +1,3 @@
-const user = JSON.parse(localStorage.getItem('user'));
-console.log(localStorage.getItem('user'));
-if(!user || !user.token) { 
-console.error('User or token not found');
-window.location.href = 'index.html';}
 axios.defaults.withCredentials = true;
 let sessions = [];
 // ========================
@@ -80,11 +75,9 @@ async function fetchQRCode() {
   try {
    const numberId = 'client1';
    const res = await axios.get(`/sessions/qr/${numberId}`
-        , { headers: {
-    Authorization: `Bearer ${user.token}`
-    }});
-
-    const qrCode = res.data.qr || res.data;
+        , { withCredentials: true
+});
+  const qrCode = res.data.qr || res.data;
     if(qrCode) {
       QRCode.toCanvas(document.getElementById('qr-canvas'), qrCode, err => {
         if(err) console.error(err);
@@ -114,7 +107,7 @@ async function loadSessions() {
   try {
       console.log(" Loading sessions for tab:", currentTab);
     const res = await axios.get(`/sessions/${currentTab}`, {
-      headers: { Authorization: `Bearer ${user.token}` }
+      withCredentials: true
     });
     console.log("Response from server:", res.data);
     sessions = res.data || []; // هنا نستخدم المتغير sessions
@@ -221,6 +214,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
