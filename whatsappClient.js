@@ -1,7 +1,7 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
-let latestQR = null;
+let latestQR = {};
 
 // تفعيل LocalAuth لحفظ الجلسات على السيرفر
 const client = new Client({
@@ -13,8 +13,9 @@ const client = new Client({
 
 // حدث توليد QR Code عند إضافة رقم جديد فقط
 client.on('qr', (qr) => {
-    latestQR = qr;
-    console.log('QR Code generated. Scan it from frontend.');
+    const currentNumberId = 'client1';
+    latestQRs[currentNumberId] = qr;
+    console.log('QR Code generated for', currentNumberId);
     qrcode.generate(qr, { small: true }); 
 });
 
@@ -36,4 +37,4 @@ client.on('disconnected', reason => {
 // بدء الجلسة
 client.initialize();
 
-module.exports = { client, getLatestQR: () => latestQR };
+module.exports = { client, getLatestQR };
