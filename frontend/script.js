@@ -78,8 +78,8 @@ async function fetchQRCode() {
     const res = await axios.get('/sessions/qr', {
     headers: {
     Authorization: `Bearer ${user.token}`
-    }
-});
+    }});
+
     const qrCode = res.data.qr;
     if(qrCode) {
       QRCode.toCanvas(document.getElementById('qr-canvas'), qrCode, (err) => {
@@ -200,6 +200,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
