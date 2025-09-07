@@ -85,7 +85,7 @@ async function fetchQRCode() {
     Authorization: `Bearer ${user.token}`
     }});
 
-    const qrCode = res.data.qr;
+    const qrCode = res.data.qr || res.data;
     if(qrCode) {
       QRCode.toCanvas(document.getElementById('qr-canvas'), qrCode, err => {
         if(err) console.error(err);
@@ -205,6 +205,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
