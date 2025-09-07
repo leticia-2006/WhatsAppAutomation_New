@@ -1,3 +1,6 @@
+const user = JSON.parse(localStorage.getItem('user'));
+if(!user) window.location.href = 'index.html';
+
 axios.defaults.withCredentials = true;
 // ========================
 // نفذ fetchQRCode إذا كانت الصفحة بها canvas QR
@@ -12,8 +15,7 @@ if(document.getElementById('qr-canvas')) {
 let currentSessions = [];
 
 // الحصول على بيانات المستخدم من localStorage
-const user = JSON.parse(localStorage.getItem('user'));
-if(!user) window.location.href = 'index.html';
+
 
 
 // ========================
@@ -200,6 +202,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
