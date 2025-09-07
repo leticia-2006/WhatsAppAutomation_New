@@ -75,7 +75,11 @@ function closeQRModal() { document.getElementById('qr-modal').style.display = 'n
 // Fetch QR code
 async function fetchQRCode() {
   try {
-    const res = await axios.get('/sessions/qr');
+    const res = await axios.get('/sessions/qr', {
+    headers: {
+    Authorization: `Bearer ${user.token}`
+    }
+});
     const qrCode = res.data.qr;
     if(qrCode) {
       QRCode.toCanvas(document.getElementById('qr-canvas'), qrCode, err => {
@@ -195,6 +199,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
