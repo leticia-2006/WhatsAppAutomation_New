@@ -22,7 +22,10 @@ app.use(session({
   secret: 'wa_automation_secret', // يمكن تغييره
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 2 * 60 * 60 * 1000 } // 2 ساعات
+  cookie: { maxAge: 2 * 60 * 60 * 1000, 
+           secure: true,
+          sameSite: 'none'
+          } // 2 ساعات
 }));
 
 app.use((req, res, next) => {
@@ -61,6 +64,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
