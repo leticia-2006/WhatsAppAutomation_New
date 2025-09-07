@@ -6,8 +6,10 @@ const session = require('express-session'); // لإدارة الجلسات
 const bcrypt = require('bcrypt'); // لتشفير الباسورد
 const messagesRouter = require('./routes/messages')
 const db = require('./db.js');
-
+const sessionsRouter = require('./routes/sessions');
 const app = express();
+const usersRouter = require('./routes/users');
+                            
 
 // Middleware
 app.use(cors({
@@ -59,6 +61,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
