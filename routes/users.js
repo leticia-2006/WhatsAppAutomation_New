@@ -3,15 +3,11 @@ const router = express.Router();
 const db = require('../db.js');
 const bcrypt = require('bcrypt');
 const { requireLogin, checkRole } = require('../middleware')
-const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'mysecretkey';
 
-router.get('/me', (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ message: 'Not logged in' });
-    }
+
+router.get('/me',requireLogin (req, res) => {
     res.json(req.session.user);
-});
+    });
 
 // إضافة Agent
 router.post('/add-agent', requireLogin, checkRole('super_admin'), async (req, res) => {
@@ -97,6 +93,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
