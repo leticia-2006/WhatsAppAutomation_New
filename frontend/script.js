@@ -86,7 +86,7 @@ async function fetchQRCode() {
         if(err) console.error(err);
       });
     }
-  } catch(err) { console.error(Error fetching QR:', err);
+  } catch(err) { 'console.error(Error fetching QR:', err);
   }
 }
 
@@ -200,6 +200,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
