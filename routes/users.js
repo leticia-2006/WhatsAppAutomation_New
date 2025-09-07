@@ -3,7 +3,8 @@ const router = express.Router();
 const db = require('../db.js');
 const bcrypt = require('bcrypt');
 const { requireLogin, checkRole } = require('../middleware')
-
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'mysecretkey';
 
 // إضافة Agent
 router.post('/add-agent', requireLogin,checkRole('super_admin'), async (req, res) => {
@@ -79,8 +80,13 @@ router.post('/login', async (req, res) => {
             console.log("Password did not match for user:", user.name);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
-            console.log("Login successful for:", user.name);
-            res.json({ message: 'Login successful', user: { id: user.id, name: user.name, role: user.role } });
+        console.log("Login successful for:", user.name);
+        const token = jwt.sign(
+        { id: user.id, name: user.name, role: user.role }
+        SECRET_KEY,
+        { expiresIn: '1h' }
+        );
+        res.json({ message: 'Login successful', user: { id: user.id, name: user.name, role: user.role }, token: token });
         } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
@@ -88,6 +94,7 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
