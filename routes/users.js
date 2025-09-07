@@ -80,14 +80,10 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
         req.session.user = { id: user.id, name: user.name, role: user.role };
-       
-        const token = jwt.sign(
-        { id: user.id, name: user.name, role: user.role },
-        SECRET_KEY,
-        { expiresIn: '1h' } );
          console.log("Login successful for:", user.name);
-      res.json({ message: 'Login successful', user: { id: user.id, name: user.name, role: user.role }, token: token });
-      } catch (err) {
+    res.json({message: 'Login successful', user: { id:user.id, name: user.name, role: user.role }});
+    
+    } catch (err) {
         console.error(err);
  res.status(500).json ({ message: 'Server error' });
     }
@@ -95,6 +91,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
