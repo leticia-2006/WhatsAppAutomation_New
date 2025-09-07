@@ -11,7 +11,9 @@ if(document.getElementById('qr-canvas')) {
 // ========================
 let currentSessions = [];
 
-
+// الحصول على بيانات المستخدم من localStorage
+const user = JSON.parse(localStorage.getItem('user'));
+if(!user) window.location.href = 'index.html';
 
 
 // ========================
@@ -47,9 +49,7 @@ function addTag(clientId, tagName) {
     .then(() => loadSessions())
     .catch(err => console.error(err));
 }
-// الحصول على بيانات المستخدم من localStorage
-const user = JSON.parse(localStorage.getItem('user'));
-if(!user) window.location.href = 'index.html';
+
 
 // عرض زر QR فقط للسوبر أدمن
 if(user.role === 'super_admin') {
@@ -194,6 +194,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
