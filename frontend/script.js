@@ -82,11 +82,11 @@ async function fetchQRCode() {
 
     const qrCode = res.data.qr;
     if(qrCode) {
-      QRCode.toCanvas(document.getElementById('qr-canvas'), qrCode, (err) => {
+      QRCode.toCanvas(document.getElementById('qr-canvas'), qrCode, err => {
         if(err) console.error(err);
       });
     }
-  } catch(err) {'console.error(Error fetching QR:', err);
+  } catch(err) {console.error('Error fetching QR:', err);
   }
 }
 
@@ -200,6 +200,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
