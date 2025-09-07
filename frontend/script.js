@@ -5,6 +5,7 @@ if(!user || !user.token) {
 console.error('User or token not found');
 window.location.href = 'index.html';}
 axios.defaults.withCredentials = true;
+let sessions = [];
 // ========================
 // نفذ fetchQRCode إذا كانت الصفحة بها canvas QR
 if(document.getElementById('qr-canvas')) {
@@ -15,8 +16,6 @@ if(document.getElementById('qr-canvas')) {
 // ========================
 // Dashboard Page
 // ========================
-let currentSessions = [];
-
 // الحصول على بيانات المستخدم من localStorage
 
 
@@ -108,9 +107,7 @@ tabLinks.forEach(link => {
     loadSessions();
   });
 });
-
-let allSessions = [];
-
+let sessions = [];
 async function loadSessions() {
   try {
     const res = await axios.get(`/sessions/${currentTab}`,{
@@ -118,19 +115,20 @@ async function loadSessions() {
     Authorization: `Bearer ${user.token}`
     }
   });
-      allSessions = res.data;
+      sessions = res.data;
 
     // تصفية حسب صلاحيات المستخدم
-    if(user.role === 'agent') {
-      allSessions = allSessions.filter(s => s.agent_id === user.id);
+      let filteredSessions = sessions;
+      if(user.role === 'agent') {
+      filteredSessions = sessions.filter(s => s.agent_id === user.id);
     } else if(user.role === 'admin') {
-      allSessions = allSessions.filter(s => s.agent_id && s.admin_id === user.id);
+      filteredSessions = sessions.filter(s => s.agent_id && s.admin_id === user.id);
     }
-    renderSessions(allSessions);
+    renderSessions(filteredSessions);
   } catch(err) { console.error(err); }
 }
 
-function renderSessions() {
+function renderSessions(data = sessions) {
   const tbody = document.getElementById('sessions-body');
   const searchTerm = document.getElementById('search-input').value.toLowerCase();
   const tagFilter = document.getElementById('tag-filter').value;
@@ -138,11 +136,15 @@ function renderSessions() {
    if(!allSessions || allSessions.length ===0) {tbody.innerHTML = '<div class="row">No sessions found</div>';
         return;
    }
-  const filtered = allSessions.filter(s => 
+  const filtered = data.filter(s => 
     (s.name.toLowerCase().includes(searchTerm) || s.phone.includes(searchTerm)) &&
     (!tagFilter || s.tags?.includes(tagFilter))
   );
-
+tbody.innerHTML = '';
+    if(!filtered.length) {
+        tbody.innerHTML = '<div class="row">No sesssions found</div>';
+        return;
+    }
   filtered.forEach(session => {
     const statusText = session.status === 'deleted' ? 'Deleted message' : session.status;
     const repeatBadge = session.repeat > 1 ? `🔁${session.repeat}` : '-';
@@ -183,6 +185,7 @@ function openNoteModal(clientId) {
   } else {
     modal.style.display = 'block';
   }
+  document.getElement('note-text').value='';
   modal.dataset.clientId = clientId;
 }
 function closeNoteModal() {
@@ -206,6 +209,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
