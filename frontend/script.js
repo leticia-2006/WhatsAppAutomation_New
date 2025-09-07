@@ -108,60 +108,76 @@ tabLinks.forEach(link => {
   });
 });
 
+// ========================
+// Load Sessions
+// ========================
 async function loadSessions() {
   try {
-    const res = await axios.get(`/sessions/${currentTab}`,{
-    headers: {
-    Authorization: `Bearer ${user.token}`
-    }
-  });
-      sessions = res.data;
+    const res = await axios.get(`/sessions/${currentTab}`, {
+      headers: { Authorization: `Bearer ${user.token}` }
+    });
+
+    sessions = res.data || []; // هنا نستخدم المتغير sessions
 
     // تصفية حسب صلاحيات المستخدم
-      if(user.role === 'agent') {
-      sessions = sessions.filter(s => s.agent_id === user.id);
+    let filteredSessions = sessions;
+    if(user.role === 'agent') {
+      filteredSessions = sessions.filter(s => s.agent_id === user.id);
     } else if(user.role === 'admin') {
-      sessions = sessions.filter(s => s.agent_id && s.admin_id === user.id);
+      filteredSessions = sessions.filter(s => s.agent_id && s.admin_id === user.id);
     }
-    renderSessions(sessions);
-  } catch(err) { console.error(err); }
+
+    renderSessions(filteredSessions);
+  } catch(err) {
+    console.error('Error in loadSessions:', err);
+    const tbody = document.getElementById('sessions-body');
+    if(tbody) tbody.innerHTML = '<div class="row">Error loading sessions</div>';
+  }
 }
 
+// ========================
+// Render Sessions
+// ========================
 function renderSessions(data = sessions) {
   const tbody = document.getElementById('sessions-body');
-  const searchTerm = document.getElementById('search-input').value.toLowerCase();
-  const tagFilter = document.getElementById('tag-filter').value;
+  if(!tbody) return;
+
   tbody.innerHTML = '';
-   if(!sessions || sessions.length ===0) {tbody.innerHTML = '<div class="row">No sessions found</div>';
-        return;
-   }
-  const filtered = data.filter(s => 
-    (s.name.toLowerCase().includes(searchTerm) || s.phone.includes(searchTerm)) &&
-    (!tagFilter || s.tags?.includes(tagFilter))
-  );
-tbody.innerHTML = '';
-    if(!filtered.length) {
-        tbody.innerHTML = '<div class="row">No sesssions found</div>';
-        return;
-    }
-  filtered.forEach(session => {
-    const statusText = session.status === 'deleted' ? 'Deleted message' : session.status;
+
+  if(!data.length) {
+    tbody.innerHTML = '<div class="row">No sessions found</div>';
+    document.getElementById('session-count').innerText = '0 sessions found';
+    return;
+  }
+
+  const searchTerm = (document.getElementById('search-input')?.value || '').toLowerCase();
+  const tagFilter = document.getElementById('tag-filter')?.value || '';
+
+  data.forEach(session => {
+    const id = session.id || '-';
+    const name = session.name || '-';
+    const phone = session.phone || '-';
     const repeatBadge = session.repeat > 1 ? `🔁${session.repeat}` : '-';
-    const noteBtn = `<button onclick="openNoteModal(${session.id})">📝 Add Note</button>`;
     const tags = session.tags ? session.tags.split(',').map(t => `<span class="tag">${t}</span>`).join(' ') : '-';
+    const statusText = session.status || '-';
+
+    const noteBtn = `<button onclick="openNoteModal(${id})">📝 Add Note</button>`;
 
     const row = `<div class="row">
-                 <div>${session.id}</div>
-                 <div>${session.name} / ${session.phone}</div>
-                 <div>${repeatBadge}</div>
-                 <div>${tags}</div>
-                 <div>${noteBtn}</div>
-                 <div>${statusText}</div>`;
+                   <div>${id}</div>
+                   <div>${name} / ${phone}</div>
+                   <div>${repeatBadge}</div>
+                   <div>${tags}</div>
+                   <div>${noteBtn}</div>
+                   <div>${statusText}</div>
+                 </div>`;
+
     tbody.innerHTML += row;
   });
 
-  document.getElementById('session-count').innerText = `${filtered.length} sessions found`;
+  document.getElementById('session-count').innerText = `${data.length} sessions found`;
 }
+
 
 // Notes Modal
 function openNoteModal(clientId) {
@@ -205,6 +221,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
