@@ -124,10 +124,10 @@ function renderSessions() {
   const searchTerm = document.getElementById('search-input').value.toLowerCase();
   const tagFilter = document.getElementById('tag-filter').value;
   tbody.innerHTML = '';
-   if(!sessions || sessions.lenght ===0) {tbody.innerHTML = '<div class="row">No sessions fpund</div>';
+   if(!sessions || sessions.length ===0) {tbody.innerHTML = '<div class="row">No sessions found</div>';
         return;
    }
-  const filtered = allSessions.filter(s => 
+  const filtered = sessionsToRender.filter(s => 
     (s.name.toLowerCase().includes(searchTerm) || s.phone.includes(searchTerm)) &&
     (!tagFilter || s.tags?.includes(tagFilter))
   );
@@ -138,7 +138,8 @@ function renderSessions() {
     const noteBtn = `<button onclick="openNoteModal(${session.id})">📝 Add Note</button>`;
     const tags = session.tags ? session.tags.split(',').map(t => `<span class="tag">${t}</span>`).join(' ') : '-';
 
-    const row = `<div>${session.id}</div>
+    const row = `<div>class="row"
+                  <div>${session.id}</div>
                  <div>${session.name} / ${session.phone}</div>
                  <div>${repeatBadge}</div>
                  <div>${tags}</div>
@@ -194,6 +195,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
