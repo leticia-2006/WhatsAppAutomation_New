@@ -32,8 +32,10 @@
           localStorage.setItem('user', JSON.stringify({
             ...res.data.user,
             token: res.data.token }));
-          window.location.href = 'dashboard.html';
-        }
+            window.location.href = 'dashboard.html';
+        } else {
+          document.getElementById('login-error').innerText = 'Login failed: token missing';
+         }
       } catch (err) {
         document.getElementById('login-error').innerText = err.response?.data?.message || 'Login failed';
       }
@@ -41,6 +43,7 @@
   </script>
 </body>
 </html>
+
 
 
 
