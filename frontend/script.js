@@ -1,7 +1,7 @@
 
 const user = JSON.parse(localStorage.getItem('user'));
 console.log(localStorage.getItem('user'));
-if(!user ||user.token) { 
+if(!user || !user.token) { 
 console.error('User or token not found');
 window.location.href = 'index.html';}
 axios.defaults.withCredentials = true;
@@ -205,6 +205,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
