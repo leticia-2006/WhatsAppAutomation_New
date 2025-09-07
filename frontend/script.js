@@ -1,21 +1,5 @@
 axios.defaults.withCredentials = true;
 // ========================
-// QR Code Page
-// ========================
-async function fetchQRCode() {
-  try {
-    const response = await axios.get('https://chat.ohgo.site/sessions/qr');
-    const qrCode = response.data.qr;
-    if (qrCode) {
-        const canvas = document.getElementById('qr-canvas');
-        QRCode.toCanvas(canvas, qrCode, function (error) {
-            if (error) console.error(error);
-            else console.log('QR Code displayed on frontend');
-        });
-    }
-  } catch (err) { console.error('Error fetching QR:', err); }
-}
-
 // نفذ fetchQRCode إذا كانت الصفحة بها canvas QR
 if(document.getElementById('qr-canvas')) {
     fetchQRCode();
@@ -44,22 +28,6 @@ function applyFilters() {
 
   renderSessions(filtered);
 }
-
-// ========================
-// Notes Modal
-// ========================
-function openNoteModal(clientId) {
-  const modal = document.getElementById('note-modal');
-  modal.style.display = 'block';
-  modal.dataset.clientId = clientId;
-}
-
-function closeNoteModal() {
-  const modal = document.getElementById('note-modal');
-  modal.style.display = 'none';
-  modal.dataset.clientId = '';
-}
-
 
 // ========================
 // Tags
@@ -136,7 +104,7 @@ async function loadSessions() {
   try {
     const res = await axios.get(`/sessions/${currentTab}`,{
     headers: {
-    Authorization: `Bearer $ {user.token}`
+    Authorization: `Bearer ${user.token}`
     }
   });
       allSessions = res.data;
@@ -148,7 +116,7 @@ async function loadSessions() {
       allSessions = allSessions.filter(s => s.agent_id && s.admin_id === user.id);
     }
     renderSessions(allSessions);
-   catch(err) { console.error(err); }
+  } catch(err) { console.error(err); }
 }
 
 function renderSessions() {
@@ -156,7 +124,9 @@ function renderSessions() {
   const searchTerm = document.getElementById('search-input').value.toLowerCase();
   const tagFilter = document.getElementById('tag-filter').value;
   tbody.innerHTML = '';
-
+   if(!sessions || sessions.lenght ===0) {tbody.innerHTML = '<div class="row">No sessions fpund</div>';
+        return;
+   }
   const filtered = allSessions.filter(s => 
     (s.name.toLowerCase().includes(searchTerm) || s.phone.includes(searchTerm)) &&
     (!tagFilter || s.tags?.includes(tagFilter))
@@ -224,6 +194,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
