@@ -1,4 +1,3 @@
-
 const user = JSON.parse(localStorage.getItem('user'));
 console.log(localStorage.getItem('user'));
 if(!user || !user.token) { 
@@ -221,6 +220,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
