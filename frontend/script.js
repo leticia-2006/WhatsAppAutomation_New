@@ -86,7 +86,8 @@ async function fetchQRCode() {
         if(err) console.error(err);
       });
     }
-  } catch(err) { console.error(err); }
+  } catch(err) { console.error(Error fetching QR:', err);
+  }
 }
 
 // Tabs
@@ -199,6 +200,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
