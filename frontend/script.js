@@ -27,7 +27,7 @@ function applyFilters() {
   const searchTerm = document.getElementById('search-input').value.toLowerCase();
   const tagFilter = document.getElementById('tag-filter').value;
 
-  const filtered = currentSessions.filter(client => 
+  const filtered = sessions.filter(client => 
     (client.name.toLowerCase().includes(searchTerm) || client.phone.includes(searchTerm)) &&
     (!tagFilter || client.tags?.includes(tagFilter))
   );
@@ -39,7 +39,7 @@ function applyFilters() {
 // Tags
 // ========================
 function addTag(clientId, tagName) {
-  const client = currentSessions.find(c => c.id === parseInt(clientId));
+  const client = sessions.find(c => c.id === parseInt(clientId));
   if (!client) return;
 
   if (!client.tags) client.tags = '';
@@ -47,7 +47,7 @@ function addTag(clientId, tagName) {
   if (!existingTags.includes(tagName)) existingTags.push(tagName);
   client.tags = existingTags.join(', ');
 
-  renderSessions(currentSessions);
+  renderSessions(sessions);
 
   axios.post(`/sessions/add-tag`, { clientId, tag: tagName })
     .then(() => loadSessions())
@@ -206,6 +206,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
