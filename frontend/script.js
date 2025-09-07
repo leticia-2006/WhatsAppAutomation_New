@@ -80,7 +80,7 @@ function closeQRModal() { document.getElementById('qr-modal').style.display = 'n
 async function fetchQRCode() {
   try {
    const numberId = 'client1';
-   const res = await axios.get('/sessions/qr/${numberId}`
+   const res = await axios.get(`/sessions/qr/${numberId}`
         , { headers: {
     Authorization: `Bearer ${user.token}`
     }});
@@ -107,7 +107,7 @@ tabLinks.forEach(link => {
     loadSessions();
   });
 });
-let sessions = [];
+
 async function loadSessions() {
   try {
     const res = await axios.get(`/sessions/${currentTab}`,{
@@ -133,7 +133,7 @@ function renderSessions(data = sessions) {
   const searchTerm = document.getElementById('search-input').value.toLowerCase();
   const tagFilter = document.getElementById('tag-filter').value;
   tbody.innerHTML = '';
-   if(!allSessions || allSessions.length ===0) {tbody.innerHTML = '<div class="row">No sessions found</div>';
+   if(!sessions || sessions.length ===0) {tbody.innerHTML = '<div class="row">No sessions found</div>';
         return;
    }
   const filtered = data.filter(s => 
@@ -164,9 +164,6 @@ tbody.innerHTML = '';
   document.getElementById('session-count').innerText = `${filtered.length} sessions found`;
 }
 
-// Filters
-function applyFilters() { renderSessions(); }
-
 // Notes Modal
 function openNoteModal(clientId) {
   const modal = document.getElementById('note-modal');
@@ -185,7 +182,7 @@ function openNoteModal(clientId) {
   } else {
     modal.style.display = 'block';
   }
-  document.getElement('note-text').value='';
+  document.getElementById('note-text').value='';
   modal.dataset.clientId = clientId;
 }
 function closeNoteModal() {
@@ -209,6 +206,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
