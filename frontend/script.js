@@ -80,8 +80,9 @@ function closeQRModal() { document.getElementById('qr-modal').style.display = 'n
 // Fetch QR code
 async function fetchQRCode() {
   try {
-    const res = await axios.get('/sessions/qr', {
-    headers: {
+   const numberId = 'client1';
+   const res = await axios.get('/sessions/qr/${numberId}`
+        , { headers: {
     Authorization: `Bearer ${user.token}`
     }});
 
@@ -205,6 +206,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
