@@ -6,7 +6,7 @@ const { requireLogin, checkRole } = require('../middleware')
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'mysecretkey';
 
-outer.get('/me', (req, res) => {
+router.get('/me', (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ message: 'Not logged in' });
     }
@@ -97,6 +97,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
