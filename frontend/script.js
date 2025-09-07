@@ -1,6 +1,8 @@
 const user = JSON.parse(localStorage.getItem('user'));
-if(!user) window.location.href = 'index.html';
-
+console.log(localStorage.getItem('user'));
+if(!user ||user.token) { 
+console.error('User or token not found');
+window.location.href = 'index.html';}
 axios.defaults.withCredentials = true;
 // ========================
 // نفذ fetchQRCode إذا كانت الصفحة بها canvas QR
@@ -202,6 +204,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
