@@ -112,10 +112,11 @@ tabLinks.forEach(link => {
 // ========================
 async function loadSessions() {
   try {
+      console.log(" Loading sessions for tab:", currentTab);
     const res = await axios.get(`/sessions/${currentTab}`, {
       headers: { Authorization: `Bearer ${user.token}` }
     });
-
+    console.log("Response from server:", res.data);
     sessions = res.data || []; // هنا نستخدم المتغير sessions
 
     // تصفية حسب صلاحيات المستخدم
@@ -125,7 +126,7 @@ async function loadSessions() {
     } else if(user.role === 'admin') {
       filteredSessions = sessions.filter(s => s.agent_id && s.admin_id === user.id);
     }
-
+    console.log("Sessions after filtering:", filteredSessions);
     renderSessions(filteredSessions);
   } catch(err) {
     console.error('Error in loadSessions:', err);
@@ -220,6 +221,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
