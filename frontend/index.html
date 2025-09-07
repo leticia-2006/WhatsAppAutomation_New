@@ -26,8 +26,10 @@
       const password = document.getElementById('password').value;
       try {
         const res = await axios.post('/users/login', { name, password });
-        if(res.data.user) {
-          localStorage.setItem('user', JSON.stringify(res.data.user));
+        if(res.data.user && res.data.token) {
+          localStorage.setItem('user', JSON.stringify({
+            ...res.data.user,
+            token: res.data.token }));
           window.location.href = 'dashboard.html';
         }
       } catch (err) {
@@ -37,6 +39,7 @@
   </script>
 </body>
 </html>
+
 
 
 
