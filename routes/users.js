@@ -6,6 +6,12 @@ const { requireLogin, checkRole } = require('../middleware')
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'mysecretkey';
 
+outer.get('/me', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Not logged in' });
+    }
+    res.json(req.session.user);
+});
 
 // إضافة Agent
 router.post('/add-agent', requireLogin, checkRole('super_admin'), async (req, res) => {
@@ -91,6 +97,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
