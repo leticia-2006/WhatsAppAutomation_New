@@ -26,7 +26,8 @@
       const name = document.getElementById('name').value;
       const password = document.getElementById('password').value;
       try {
-        const res = await axios.post('/users/login', { name, password });
+        const res = await axios.post('/users/login', { name, password },
+                                     {withCredentials: true });
         console.log(res.data);
         if(res.data.user && res.data.token) {
           localStorage.setItem('user', JSON.stringify({
@@ -43,6 +44,7 @@
   </script>
 </body>
 </html>
+
 
 
 
