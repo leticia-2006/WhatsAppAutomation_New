@@ -118,13 +118,12 @@ async function loadSessions() {
       sessions = res.data;
 
     // تصفية حسب صلاحيات المستخدم
-      let filteredSessions = sessions;
       if(user.role === 'agent') {
-      filteredSessions = sessions.filter(s => s.agent_id === user.id);
+      sessions = sessions.filter(s => s.agent_id === user.id);
     } else if(user.role === 'admin') {
-      filteredSessions = sessions.filter(s => s.agent_id && s.admin_id === user.id);
+      sessions = sessions.filter(s => s.agent_id && s.admin_id === user.id);
     }
-    renderSessions(filteredSessions);
+    renderSessions(sessions);
   } catch(err) { console.error(err); }
 }
 
@@ -206,6 +205,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
