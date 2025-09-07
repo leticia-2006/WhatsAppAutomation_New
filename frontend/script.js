@@ -8,7 +8,8 @@ axios.defaults.withCredentials = true;
 let sessions = [];
 // ========================
 // نفذ fetchQRCode إذا كانت الصفحة بها canvas QR
-if(document.getElementById('qr-canvas')) {
+const qrCanvas = document.getElementById('qr-canvas');
+    if(user.role==='super_admin' && qrCanvas) {
     fetchQRCode();
     setInterval(fetchQRCode, 5000);
 }
@@ -204,6 +205,7 @@ function saveNote() {
 window.addEventListener("load", loadSessions);
 
 // ========================
+
 
 
 
