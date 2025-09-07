@@ -1,5 +1,6 @@
 axios.defaults.withCredentials = true;
 let sessions = [];
+let user = null;
 // ========================
 // نفذ fetchQRCode إذا كانت الصفحة بها canvas QR
 const qrCanvas = document.getElementById('qr-canvas');
@@ -171,6 +172,19 @@ function renderSessions(data = sessions) {
   document.getElementById('session-count').innerText = `${data.length} sessions found`;
 }
 
+// جلب بيانات المستخدم عند تحميل الصفحة
+async function fetchUser() {
+  try {
+    const res = await axios.get('/users/me', { withCredentials: true });
+    user = res.data;
+    console.log("Current user:", user);
+    loadSessions(); // الآن استدعِ الداتا بعد التأكد من user
+  } catch (err) {
+    console.error("Not logged in", err);
+    window.location.href = 'index.html'; // رجع لصفحة الدخول
+  }
+}
+
 
 // Notes Modal
 function openNoteModal(clientId) {
@@ -212,8 +226,9 @@ function saveNote() {
 
 // Load initial sessions
 window.addEventListener("load", loadSessions);
-
+window.addEventListener("load", fetchUser);
 // ========================
+
 
 
 
