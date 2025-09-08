@@ -29,13 +29,11 @@
         const res = await axios.post('/users/login', { name, password },
                                      {withCredentials: true });
         console.log(res.data);
-        if(res.data.user && res.data.token) {
-          localStorage.setItem('user', JSON.stringify({
-            ...res.data.user,
-            token: res.data.token }));
+        if(res.data.user) {
+          localStorage.setItem('user', JSON.stringify(res.data.user));
             window.location.href = 'dashboard.html';
         } else {
-          document.getElementById('login-error').innerText = 'Login failed: token missing';
+          document.getElementById('login-error').innerText = 'Login failed';
          }
       } catch (err) {
         document.getElementById('login-error').innerText = err.response?.data?.message || 'Login failed';
@@ -44,6 +42,7 @@
   </script>
 </body>
 </html>
+
 
 
 
