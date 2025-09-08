@@ -17,7 +17,7 @@ app.use(cors({
   credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.set('trust proxy', 1);
 app.use(session({
   secret: 'wa_automation_secret', // يمكن تغييره
   resave: false,
@@ -64,6 +64,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
