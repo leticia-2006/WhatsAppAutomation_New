@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const { requireLogin, checkRole } = require('../middleware')
 
 
-router.get('/me', requireLogin (req, res) => {
+router.get('/me', requireLogin, (req, res) => {
     res.json(req.session.user);
     });
 
@@ -93,6 +93,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
