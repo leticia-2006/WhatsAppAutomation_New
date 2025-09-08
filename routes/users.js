@@ -83,6 +83,7 @@ router.post('/login', async (req, res) => {
         }
         req.session.user = { id: user.id, name: user.name, role: user.role };
          console.log("Login successful for:", user.name);
+        console.log("Session after login:", req.session);
     res.json({message: 'Login successful', user: { id:user.id, name: user.name, role: user.role }});
     
     } catch (err) {
@@ -93,6 +94,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
