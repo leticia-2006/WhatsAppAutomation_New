@@ -89,6 +89,7 @@ tabLinks.forEach(link => {
   });
 });
 
+
 // Load Sessions
 async function loadSessions() {
   try {
@@ -114,6 +115,31 @@ async function loadSessions() {
     if(tbody) tbody.innerHTML = '<div class="row">Error loading sessions</div>';
   }
 }
+
+
+//messages.js
+async function loadMessages(clientId) {
+  try {
+    const res = await axios.get(`/messages/${clientId}`, { withCredentials: true });
+    const messages = res.data;
+
+    const chatBox = document.getElementById('chat-box');
+    if (!chatBox) return;
+
+    chatBox.innerHTML = '';
+    messages.forEach(msg => {
+      const content = msg.is_deleted ? `<i>Message deleted</i>` : msg.content;
+      const div = `<div class="message ${msg.sender_role}">
+                     <strong>${msg.sender_role}:</strong> ${content}
+                   </div>`;
+      chatBox.innerHTML += div;
+    });
+  } catch (err) {
+    console.error("Error loading messages:", err);
+  }
+}
+
+
 
 
 // Render Sessions
@@ -222,6 +248,7 @@ function saveNote() {
 
 // Load initial sessions
 window.addEventListener("load", fetchUser);
+
 
 
 
