@@ -3,11 +3,7 @@ let sessions = [];
 let user = null;
 // ========================
 // نفذ fetchQRCode إذا كانت الصفحة بها canvas QR
-const qrCanvas = document.getElementById('qr-canvas');
-    if(user.role==='super_admin' && qrCanvas) {
-    fetchQRCode();
-    setInterval(fetchQRCode, 5000);
-}
+
 
 // ========================
 // Dashboard Page
@@ -51,9 +47,8 @@ function addTag(clientId, tagName) {
 }
 
 
-// عرض زر QR فقط للسوبر أدمن
-if(user.role === 'super_admin'){document.getElementById('qr-link').style.display = 'block';
-}
+
+
 
 // Logout
 const logoutBtn =
@@ -172,13 +167,23 @@ function renderSessions(data = sessions) {
   document.getElementById('session-count').innerText = `${data.length} sessions found`;
 }
 
+
 // جلب بيانات المستخدم عند تحميل الصفحة
 async function fetchUser() {
-  try {
-    const res = await axios.get('/users/me', { withCredentials: true });
-    user = res.data;
-    console.log("Current user:", user);
-    loadSessions(); // الآن استدعِ الداتا بعد التأكد من user
+ try {
+  const res = await axios.get('/users/me', { withCredentials: true });
+  user = res.data;
+  console.log("Current user:", user);
+  if(user.role==='super_admin'){
+    const qrCanvas = document.getElementById('qr-canvas');
+    if(qrCanvas){
+     fetchQRCode();
+     setInterval(fetchQRCode, 5000);
+   }
+    const qrLink = document.getElementById('qr-link');
+      if(qrLink) qrLink.style.display = 'block';
+}
+     loadSessions(); // الآن استدعِ الداتا بعد التأكد من user
   } catch (err) {
     console.error("Not logged in", err);
     window.location.href = 'index.html'; // رجع لصفحة الدخول
@@ -227,6 +232,7 @@ function saveNote() {
 // Load initial sessions
 window.addEventListener("load", fetchUser);
 // ========================
+
 
 
 
