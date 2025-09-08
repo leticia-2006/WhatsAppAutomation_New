@@ -81,12 +81,12 @@ header p { font-size: 14px; color: #777; margin-bottom: 24px; }
 }
 .tabs { display: flex; gap: 12px; }
 .tab {
-    padding: 8px 16px;
-    border: none;
+    padding: 15px 20px;
+    border: 2px solid #007bff;
     background: #eee; /* رمادي فاتح */
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 10px;
 }
 .tab.active {
     background: #bbb; /* رمادي متوسط */
@@ -165,4 +165,5 @@ header p { font-size: 14px; color: #777; margin-bottom: 24px; }
     margin-left: 5px;
     border-radius: 3px;
 }
+
 
