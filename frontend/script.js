@@ -123,7 +123,7 @@ async function loadMessages(clientId) {
     const res = await axios.get(`/messages/${clientId}`, { withCredentials: true });
     const messages = res.data;
 
-    const chatBox = document.getElementById('chat-box');
+    const chatBox = document.getElementById('chatMessages');
     if (!chatBox) return;
 
     chatBox.innerHTML = '';
@@ -248,6 +248,7 @@ function saveNote() {
 
 // Load initial sessions
 window.addEventListener("load", fetchUser);
+
 
 
 
