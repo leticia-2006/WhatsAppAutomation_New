@@ -101,12 +101,12 @@ async function loadSessions() {
 
     // تصفية حسب صلاحيات المستخدم
     let filteredSessions = sessions;
-    if(user.role === 'agent') {
+    /*if(user.role === 'agent') {
       filteredSessions = sessions.filter(s => s.agent_id === user.id);
     } else if(user.role === 'admin') {
       filteredSessions = sessions.filter(s => s.agent_id && s.admin_id === user.id);
     }
-    console.log("Sessions after filtering:", filteredSessions);
+    console.log("Sessions after filtering:", filteredSessions);*/
     renderSessions(filteredSessions);
   } catch(err) {
     console.error('Error in loadSessions:', err);
@@ -221,6 +221,7 @@ function saveNote() {
 
 // Load initial sessions
 window.addEventListener("load", fetchUser);
+
 
 
 
