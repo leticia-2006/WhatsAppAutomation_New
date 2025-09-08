@@ -33,7 +33,18 @@
       </select>
     </div>
     <div id="sessions-body"></div> 
-    <div id="session-count"></div>
+     <!-- Chat View -->
+<div id="chat-view" class="chat">
+  <h3>المحادثة</h3>
+  <div id="chatMessages" class="messages"></div>
+
+  <div class="chat-footer">
+    <input type="text" id="msgInput" placeholder="اكتب رسالة..."/>
+    <button onclick="sendMessage()">إرسال</button>
+  </div>
+</div>
+
+     <div id="session-count"></div>
    </main>
    </div>
 
