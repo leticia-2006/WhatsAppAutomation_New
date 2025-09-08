@@ -1,20 +1,9 @@
 axios.defaults.withCredentials = true;
 let sessions = [];
 let user = null;
-// ========================
-// نفذ fetchQRCode إذا كانت الصفحة بها canvas QR
 
 
-// ========================
-// Dashboard Page
-// ========================
-// الحصول على بيانات المستخدم من localStorage
-
-
-
-// ========================
 // البحث والفلاتر
-// ========================
 function applyFilters() {
   const searchTerm = document.getElementById('search-input').value.toLowerCase();
   const tagFilter = document.getElementById('tag-filter').value;
@@ -27,9 +16,8 @@ function applyFilters() {
   renderSessions(filtered);
 }
 
-// ========================
+
 // Tags
-// ========================
 function addTag(clientId, tagName) {
   const client = sessions.find(c => c.id === parseInt(clientId));
   if (!client) return;
@@ -47,9 +35,6 @@ function addTag(clientId, tagName) {
 }
 
 
-
-
-
 // Logout
 const logoutBtn =
 document.getElementById('logout-btn');
@@ -59,11 +44,19 @@ if (logoutBtn) {
   window.location.href = 'index.html';
 });
 }
+
+
 // QR Modal
-document.getElementById('qr-link').addEventListener('click', () => {
-  document.getElementById('qr-modal').style.display = 'block';
+const qrLink = document.getElementById('qr-link');
+iff(qrLink) {
+  qrLink.addEventListener('click', () => {
+  const qrModal = document.getElementById('qr-modal');
+    if(qrModal) qrModal.style.display = 'block';
   fetchQRCode();
 });
+}
+
+
 function closeQRModal() { document.getElementById('qr-modal').style.display = 'none'; }
 
 // Fetch QR code
@@ -96,9 +89,7 @@ tabLinks.forEach(link => {
   });
 });
 
-// ========================
 // Load Sessions
-// ========================
 async function loadSessions() {
   try {
       console.log(" Loading sessions for tab:", currentTab);
@@ -124,9 +115,8 @@ async function loadSessions() {
   }
 }
 
-// ========================
+
 // Render Sessions
-// ========================
 function renderSessions(data = sessions) {
   const tbody = document.getElementById('sessions-body');
   if(!tbody) return;
@@ -231,7 +221,8 @@ function saveNote() {
 
 // Load initial sessions
 window.addEventListener("load", fetchUser);
-// ========================
+
+
 
 
 
