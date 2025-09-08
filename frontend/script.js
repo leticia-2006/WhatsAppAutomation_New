@@ -143,6 +143,7 @@ function renderSessions(data = sessions) {
     const noteBtn = `<button onclick="openNoteModal(${id})">📝 Add Note</button>`;
 
     const row = `<div class="row">
+    onclick="loadMessages(${id})">             
                    <div>${id}</div>
                    <div>${name} / ${phone}</div>
                    <div>${repeatBadge}</div>
@@ -221,6 +222,7 @@ function saveNote() {
 
 // Load initial sessions
 window.addEventListener("load", fetchUser);
+
 
 
 
