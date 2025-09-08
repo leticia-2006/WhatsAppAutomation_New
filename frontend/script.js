@@ -48,7 +48,7 @@ if (logoutBtn) {
 
 // QR Modal
 const qrLink = document.getElementById('qr-link');
-iff(qrLink) {
+if(qrLink) {
   qrLink.addEventListener('click', () => {
   const qrModal = document.getElementById('qr-modal');
     if(qrModal) qrModal.style.display = 'block';
@@ -221,6 +221,7 @@ function saveNote() {
 
 // Load initial sessions
 window.addEventListener("load", fetchUser);
+
 
 
 
