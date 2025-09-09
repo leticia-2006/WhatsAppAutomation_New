@@ -60,4 +60,4 @@ function getLatestQR(clientId) {
 // مثال: إنشاء عميل واحد باسم client1
 const client1 = createWhatsAppClient("client1");
 
-module.exports = { createWhatsAppClient, getLatestQR, client, client1 };
+module.exports = { createWhatsAppClient, getLatestQR, clients, client1 };
