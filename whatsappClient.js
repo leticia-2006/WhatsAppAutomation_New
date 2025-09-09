@@ -4,10 +4,10 @@ const db = require('./db.js');
 
 // نخزن QR لكل رقم هنا
 let latestQRs = {};
-let clients = {}
+let clients = {};
 
 // دالة لإنشاء عميل WhatsApp لكل رقم
-function createWhatsAppClient(clientId) {
+function createWhatsAppClient(numberId, clientId) {
     const client = new Client({
         authStrategy: new LocalAuth({ clientId }),
         puppeteer: { headless: true }
@@ -27,7 +27,7 @@ function createWhatsAppClient(clientId) {
 
     client.on('disconnected', async (reason) => {
         console.log(`WhatsApp Client for number ${numberId} disconnected:`, reason);
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["disconnected", numberId]);
+        await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["disconnected", numberId]);
     });
 client.on('message', async (msg) => {
     console.log("New message:", msg.from, msg.body);
@@ -36,7 +36,7 @@ client.on('message', async (msg) => {
     await db.query(
         `INSERT INTO messages (client_id, sender_role, content)
          VALUES ($1, $2, $3)`,
-        ["clientId", "client", msg.body] // sender_role = client لأنه جاي من الزبون
+        [numberId, "client", msg.body] // sender_role = client لأنه جاي من الزبون
     );
  } catch (err) {
      console.error("Error saving message:", err);
@@ -56,4 +56,4 @@ function getLatestQR(clientId) {
 
 
 
-module.exports = { createWhatsAppClient, getLatestQR, clients, client1 };
+module.exports = { createWhatsAppClient, getLatestQR, clients };
