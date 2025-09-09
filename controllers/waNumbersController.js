@@ -65,3 +65,22 @@ exports.removeNumber = async (req, res) => {
   await db.query("DELETE FROM wa_numbers WHERE id=$1", [id]);
   res.json({ success: true });
 };
+
+const { getLatestQR } = require("../whatsappClient");
+
+// إرجاع QR خاص برقم معين
+exports.getQR = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const qr = getLatestQR(id);
+
+    if (!qr) {
+      return res.status(404).json({ error: "QR not found or client already connected" });
+    }
+
+    res.json({ qr });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
