@@ -166,4 +166,63 @@ header p { font-size: 14px; color: #777; margin-bottom: 24px; }
     border-radius: 3px;
 }
 
+/* ===== Chat Layout ===== */
+.chat-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr; /* 300px للـ clients, الباقي للمحادثة */
+    gap: 16px;
+    height: calc(100vh - 100px); /* يأخذ الطول تقريبًا كله مع خصم الهيدر */
+}
+
+/* قائمة العملاء */
+.sessions-list {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* واجهة المحادثة */
+.chat {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 16px;
+}
+.chat h3 {
+    margin-bottom: 12px;
+}
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: #fafafa;
+}
+.chat-footer {
+    display: flex;
+    gap: 8px;
+}
+.chat-footer input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+.chat-footer button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+.chat-footer button:hover {
+    background: #0056b3;
+}
 
