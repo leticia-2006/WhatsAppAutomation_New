@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
-const { client1 } = require('../WhatsappClient.js');
+const { client1 } = require('../whatsappClient.js');
 
 // جلب كل الرسائل لعميل معين
 router.get('/:clientId', async (req, res) => {
