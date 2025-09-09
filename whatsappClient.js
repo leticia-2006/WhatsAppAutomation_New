@@ -1,8 +1,10 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const db = require('./db.js');
 
 // نخزن QR لكل رقم هنا
 let latestQRs = {};
+let clients = {}
 
 // دالة لإنشاء عميل WhatsApp لكل رقم
 function createWhatsAppClient(clientId) {
@@ -29,8 +31,22 @@ function createWhatsAppClient(clientId) {
     client.on('disconnected', reason => {
         console.log(`Client ${clientId} disconnected:`, reason);
     });
+client.on('message', async (msg) => {
+    console.log("New message:", msg.from, msg.body);
 
+ try { 
+    await db.query(
+        `INSERT INTO messages (client_id, sender_role, content)
+         VALUES ($1, $2, $3)`,
+        ["clientId", "client", msg.body] // sender_role = client لأنه جاي من الزبون
+    );
+ } catch (err) {
+     console.error("Error saving message:", err);
+     }
+ });
+    
     client.initialize();
+    clients[clientId] = client;
     return client;
 }
 
@@ -38,19 +54,10 @@ function createWhatsAppClient(clientId) {
 function getLatestQR(clientId) {
     return latestQRs[clientId] || null;
 }
-const db = require('./db.js'); // استدعي DB هنا
 
-client.on('message', async (msg) => {
-    console.log("New message:", msg.from, msg.body);
 
-    // خزنه في DB
-    await db.query(
-        `INSERT INTO messages (client_id, sender_role, content)
-         VALUES ($1, $2, $3)`,
-        ["client1", "client", msg.body] // sender_role = client لأنه جاي من الزبون
-    );
-});
+
 // مثال: إنشاء عميل واحد باسم client1
 const client1 = createWhatsAppClient("client1");
 
-module.exports = { createWhatsAppClient, getLatestQR, client1 };
+module.exports = { createWhatsAppClient, getLatestQR, client, client1 };
