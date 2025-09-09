@@ -20,16 +20,14 @@ function createWhatsAppClient(clientId) {
         qrcode.generate(qr, { small: true });
     });
 
-    client.on('ready', () => {
-        console.log(`WhatsApp Client ${clientId} is ready!`);
+    client.on('ready', async() => {
+        console.log(`WhatsApp Client for number ${numberId} is ready!`);
+        await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["active", numberId]);
     });
 
-    client.on('auth-failure', msg => {
-        console.error(`Authentication failure for ${clientId}:`, msg);
-    });
-
-    client.on('disconnected', reason => {
-        console.log(`Client ${clientId} disconnected:`, reason);
+    client.on('disconnected', async (reason) => {
+        console.log(`WhatsApp Client for number ${numberId} disconnected:`, reason);
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["disconnected", numberId]);
     });
 client.on('message', async (msg) => {
     console.log("New message:", msg.from, msg.body);
@@ -57,7 +55,5 @@ function getLatestQR(clientId) {
 
 
 
-// مثال: إنشاء عميل واحد باسم client1
-const client1 = createWhatsAppClient("client1");
 
 module.exports = { createWhatsAppClient, getLatestQR, clients, client1 };
