@@ -1,10 +1,13 @@
 
 const express = require("express");
 const router = express.Router();
-const { addWANumber, getWANumbers, assignNumber, transferNumber, removeNumber, updateStatus } = require("../controllers/waNumbersController");
+const { addWANumber, getWANumbers, assignNumber, transferNumber, removeNumber, updateStatus, getQR } = require("../controllers/waNumbersController");
 
 // إرجاع كل الأرقام مع بحث وفلترة
 router.get("/", getWANumbers);
+
+
+router.get("/:id/qr", getQR);
 
 // إضافة رقم جديد → يعرض QR
 router.post("/", addWANumber);
