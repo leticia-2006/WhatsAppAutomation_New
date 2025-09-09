@@ -1,5 +1,5 @@
 const db = require("../db"); // ملف الاتصال بقاعدة البيانات
-const { Client } = require("whatsapp-web.js");
+const { createWhatsAppClient, getLatestQR, Client } = require("../whatsappClient");
 const qrcode = require("qrcode");
 
 let clients = {}; // لتخزين كل الـ sessions
@@ -19,29 +19,18 @@ exports.addWANumber = async (req, res) => {
   try {
     const { number } = req.body;
 
-    // إنشاء session جديد
-    const client = new Client({
-      puppeteer: { headless: true },
+    const result = await db.query("INSERT INTO wa_numbers (number, status) VALUES ($1, $2) RETURNING id", [number, "pending"]
+    );
+    const numberId = result.rows[0].id;
+
+    createWhatsAppClient(numberId, "client_" + numberId);
+  
+    res.json({
+      message: "Number added. Scan QR to activate.",
+   id: numberId 
     });
-
-    clients[number] = client;
-
-    client.on("qr", async qr => {
-      const qrImage = await qrcode.toDataURL(qr);
-      res.json({ qr: qrImage }); // نرجع صورة QR للواجهة
-    });
-
-    client.on("ready", async () => {
-      console.log(`✅ WhatsApp client ready for number: ${number}`);
-      await db.query("INSERT INTO wa_numbers (number, status) VALUES ($1, $2)", [number, "Active"]);
-    });
-
-    client.on("disconnected", async () => {
-      await db.query("UPDATE wa_numbers SET status=$1 WHERE number=$2", ["Disconnected", number]);
-    });
-
-    client.initialize();
   } catch (err) {
+    console.error("Error adding number:", err);
     res.status(500).json({ error: err.message });
   }
 };
