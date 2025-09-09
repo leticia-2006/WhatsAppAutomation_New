@@ -168,8 +168,9 @@ function renderSessions(data = sessions) {
 
     const noteBtn = `<button onclick="openNoteModal(${id})">📝 Add Note</button>`;
 
-    const row = `<div class="row">
-    onclick="loadMessages(${id})">             
+    const row = document.createElement("div");
+    row.classList.add("row");
+    row.innerHTML = `             
                    <div>${id}</div>
                    <div>${name} / ${phone}</div>
                    <div>${repeatBadge}</div>
@@ -177,8 +178,8 @@ function renderSessions(data = sessions) {
                    <div>${noteBtn}</div>
                    <div>${statusText}</div>
                  </div>`;
-
-    tbody.innerHTML += row;
+    row.addEventListener("click", () => loadMessages(id));
+    tbody.appendChild(row);
   });
 
   document.getElementById('session-count').innerText = `${data.length} sessions found`;
@@ -248,6 +249,7 @@ function saveNote() {
 
 // Load initial sessions
 window.addEventListener("load", fetchUser);
+
 
 
 
