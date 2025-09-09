@@ -246,9 +246,81 @@ function saveNote() {
       loadSessions();})
     .catch (err => console.error(err));
 }
+const API_BASE = "https://chat.ohgo.site"; // غيّر للرابط الحقيقي
+
+const tableBody = document.querySelector("#numbersTable tbody");
+const addNumberBtn = document.getElementById("addNumberBtn");
+const qrModal = document.getElementById("qrModal");
+const qrImage = document.getElementById("qrImage");
+const closeModal = document.getElementById("closeModal");
+const searchInput = document.getElementById("search");
+
+// 1️⃣ تحميل الأرقام من API
+async function loadNumbers() {
+  const res = await fetch(`${API_BASE}/wa-numbers`);
+  const data = await res.json();
+
+  tableBody.innerHTML = "";
+  data.forEach(num => {
+    const row = `
+      <tr>
+        <td>${num.id}</td>
+        <td>${num.number}</td>
+        <td>${num.status}</td>
+        <td>${num.agent_id || "-"}</td>
+        <td>
+          <button onclick="showQR(${num.id})">Show QR</button>
+          <button onclick="transferAgent(${num.id})">Transfer</button>
+          <button onclick="removeNumber(${num.id})">Remove</button>
+        </td>
+      </tr>
+    `;
+    tableBody.innerHTML += row;
+  });
+}
+
+// 2️⃣ عرض QR
+async function showQR(numberId) {
+  const res = await fetch(`${API_BASE}/wa-numbers/qr/${numberId}`);
+  const data = await res.json();
+  qrImage.src = data.qr;
+  qrModal.style.display = "block";
+}
+
+// 3️⃣ إضافة رقم جديد
+addNumberBtn.addEventListener("click", async () => {
+  const number = prompt("Enter WhatsApp number:");
+  if (!number) return;
+
+  const res = await fetch(`${API_BASE}/wa-numbers`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ number })
+  });
+  await loadNumbers();
+});
+
+// 4️⃣ إغلاق المودال
+closeModal.addEventListener("click", () => {
+  qrModal.style.display = "none";
+});
+
+// 5️⃣ فلترة البحث
+searchInput.addEventListener("input", e => {
+  const filter = e.target.value.toLowerCase();
+  Array.from(tableBody.rows).forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(filter)
+      ? ""
+      : "none";
+  });
+});
+
+// تحميل الأرقام عند الفتح
+loadNumbers();
 
 // Load initial sessions
 window.addEventListener("load", fetchUser);
+
 
 
 
