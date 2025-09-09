@@ -33,11 +33,11 @@ exports.addWANumber = async (req, res) => {
 
     client.on("ready", async () => {
       console.log(`✅ WhatsApp client ready for number: ${number}`);
-      await db.query("INSERT INTO wa_numbers (number, status) VALUES (?, ?)", [number, "Active"]);
+      await db.query("INSERT INTO wa_numbers (number, status) VALUES ($1, $2)", [number, "Active"]);
     });
 
     client.on("disconnected", async () => {
-      await db.query("UPDATE wa_numbers SET status=? WHERE number=?", ["Disconnected", number]);
+      await db.query("UPDATE wa_numbers SET status=$1 WHERE number=$2", ["Disconnected", number]);
     });
 
     client.initialize();
@@ -50,7 +50,7 @@ exports.addWANumber = async (req, res) => {
 exports.assignNumber = async (req, res) => {
   const { id } = req.params;
   const { agentId } = req.body;
-  await db.query("UPDATE wa_numbers SET assigned_agent_id=? WHERE id=?", [agentId, id]);
+  await db.query("UPDATE wa_numbers SET assigned_agent_id=$1 WHERE id=$2", [agentId, id]);
   res.json({ success: true });
 };
 
@@ -58,7 +58,7 @@ exports.assignNumber = async (req, res) => {
 exports.transferNumber = async (req, res) => {
   const { id } = req.params;
   const { agentId } = req.body;
-  await db.query("UPDATE wa_numbers SET assigned_agent_id=? WHERE id=?", [agentId, id]);
+  await db.query("UPDATE wa_numbers SET assigned_agent_id=$1 WHERE id=$2", [agentId, id]);
   res.json({ success: true });
 };
 
@@ -66,13 +66,13 @@ exports.transferNumber = async (req, res) => {
 exports.updateStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
-  await db.query("UPDATE wa_numbers SET status=? WHERE id=?", [status, id]);
+  await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", [status, id]);
   res.json({ success: true });
 };
 
 // حذف رقم
 exports.removeNumber = async (req, res) => {
   const { id } = req.params;
-  await db.query("DELETE FROM wa_numbers WHERE id=?", [id]);
+  await db.query("DELETE FROM wa_numbers WHERE id=$1", [id]);
   res.json({ success: true });
 };
