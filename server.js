@@ -9,7 +9,7 @@ const db = require('./db.js');
 const sessionsRouter = require('./routes/sessions');
 const app = express();
 const usersRouter = require('./routes/users');
-                            
+const waNumbersRouter = require('./routes/waNumbers');                            
 
 // Middleware
 app.use(cors({
@@ -50,6 +50,7 @@ function checkRole(role) {
 app.use('/sessions', requireLogin, sessionsRouter);
 app.use('/users', usersRouter);
 app.use('/messages', requireLogin, messagesRouter);
+app.use('/wa-numbers', requireLogin,waNumbersRouter);
 
 // ===== Frontend =====
 const FRONTEND_PATH = path.join(__dirname,'frontend');
@@ -64,6 +65,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
