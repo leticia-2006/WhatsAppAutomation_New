@@ -38,7 +38,18 @@ function createWhatsAppClient(clientId) {
 function getLatestQR(clientId) {
     return latestQRs[clientId] || null;
 }
+const db = require('./db.js'); // استدعي DB هنا
 
+client.on('message', async (msg) => {
+    console.log("New message:", msg.from, msg.body);
+
+    // خزنه في DB
+    await db.query(
+        `INSERT INTO messages (client_id, sender_role, content)
+         VALUES ($1, $2, $3)`,
+        ["client1", "client", msg.body] // sender_role = client لأنه جاي من الزبون
+    );
+});
 // مثال: إنشاء عميل واحد باسم client1
 const client1 = createWhatsAppClient("client1");
 
