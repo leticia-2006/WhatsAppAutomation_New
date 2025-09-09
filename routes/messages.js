@@ -5,7 +5,25 @@ const db = require('../db.js');
 // جلب كل الرسائل لعميل معين
 router.get('/:clientId', async (req, res) => {
     const { clientId } = req.params;
+    const userId = req.session?.user?.id;
+   
+    if (!userId) {
+        return 
+    res.status(401).json({ message: 'Unauthorized' });
+    }
+    
     try {
+        const clientCheck = await db.query(
+            `SELECT id FROM clients WHERE id = $1 AND user_id = $2`,
+            [clientId, userId]);
+        if (clientCheck.rows.length === 0)
+{
+        
+        return 
+    res.status(403).json({ message: 'Forbidden' });
+    }
+        
+        
         const result = await db.query(
             `SELECT * FROM messages 
              WHERE client_id = $1 
