@@ -12,14 +12,13 @@ router.get("/", async (req, res) => {
     let result;
     if (userRole === "agent") {
       result = await db.query(
-        `SELECT s.id, s.client_id, c.name as client_name, 
-                (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-                s.status, s.created_at
-         FROM sessions s
-         JOIN clients c ON c.id = s.client_id
-         JOIN wa_number_agents wna ON wna.wa_number_id = s.wa_number_id
-         WHERE wna.agent_id=$1
-         ORDER BY s.updated_at DESC`,
+      SELECT s.id, s.client_id, c.name as client_name
+            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+            s.status, s.created_at
+            FROM sessions s
+            JOIN clients c ON c.id = s.client_id
+            WHERE s.status=''
+            ORDER BY s.updated_at DESC `,
         [userId]
       );
     } else {
@@ -73,10 +72,13 @@ router.get('/qr/:number_id', async (req, res) => {
 router.get('/all', async (req, res) => {
     try {
         const result = await db.query(`
-            SELECT c.*, m.content AS last_message, m.is_deleted
-            FROM clients c
-            LEFT JOIN messages m ON m.client_id = c.id
-            ORDER BY c.id DESC
+           SELECT s.id, s.client_id, c.name as client_name
+            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+            s.status, s.created_at
+            FROM sessions s
+            JOIN clients c ON c.id = s.client_id
+            WHERE s.status='all'
+            ORDER BY s.updated_at DESC
         `);
         res.json(result.rows);
     } catch (err) {
@@ -90,11 +92,13 @@ router.get('/group/:group_id', async (req, res) => {
     try {
         const groupId = req.params.group_id;
         const result = await db.query(`
-            SELECT c.*, m.content AS last_message, m.is_deleted
-            FROM clients c
-            LEFT JOIN messages m ON m.client_id = c.id
-            WHERE c.group_id = $1
-            ORDER BY c.id DESC
+           SELECT s.id, s.client_id, c.name as client_name
+            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+            s.status, s.created_at
+            FROM sessions s
+            JOIN clients c ON c.id = s.client_id
+            WHERE s.status='group/:group_id'
+            ORDER BY s.updated_at DESC
         `, [groupId]);
         res.json(result.rows);
     } catch (err) {
@@ -107,11 +111,13 @@ router.get('/group/:group_id', async (req, res) => {
 router.get('/unread', async (req, res) => {
     try {
         const result = await db.query(`
-            SELECT c.*, m.content AS last_message, m.is_deleted
-            FROM clients c
-            LEFT JOIN messages m ON m.client_id = c.id
-            WHERE c.status='unread'
-            ORDER BY c.id DESC
+         SELECT s.id, s.client_id, c.name as client_name
+            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+            s.status, s.created_at
+            FROM sessions s
+            JOIN clients c ON c.id = s.client_id
+            WHERE s.status='unread'
+            ORDER BY s.updated_at DESC  
         `);
         res.json(result.rows);
     } catch (err) {
@@ -124,11 +130,13 @@ router.get('/unread', async (req, res) => {
 router.get('/unreplied', async (req, res) => {
     try {
         const result = await db.query(`
-            SELECT c.*, m.content AS last_message, m.is_deleted
-            FROM clients c
-            LEFT JOIN messages m ON m.client_id = c.id
-            WHERE c.status='unreplied'
-            ORDER BY c.id DESC
+            SELECT s.id, s.client_id, c.name as client_name
+            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+            s.status, s.created_at
+            FROM sessions s
+            JOIN clients c ON c.id = s.client_id
+            WHERE s.status='unreplied'
+            ORDER BY s.updated_at DESC
         `);
         res.json(result.rows);
     } catch (err) {
@@ -150,6 +158,7 @@ router.post('/delete-message/:message_id', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
