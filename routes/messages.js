@@ -3,43 +3,38 @@ const router = express.Router();
 const db = require('../db.js');
 const { sendMessageToNumber } = require('../whatsappClient.js');
 
-// routes/sessions.js
-router.get("/", async (req, res) => {
-  const userRole = req.user.role;
-  const userId = req.user.id;
-
-  try {
-    let result;
-    if (userRole === "agent") {
-      result = await db.query(
-        `SELECT s.id, s.client_id, c.name as client_name, 
-                (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-                s.status, s.created_at
-         FROM sessions s
-         JOIN clients c ON c.id = s.client_id
-         JOIN wa_number_agents wna ON wna.wa_number_id = s.wa_number_id
-         WHERE wna.agent_id=$1
-         ORDER BY s.updated_at DESC`,
-        [userId]
-      );
-    } else {
-      result = await db.query(
-        `SELECT s.id, s.client_id, c.name as client_name,
-                (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-                s.status, s.created_at
-         FROM sessions s
-         JOIN clients c ON c.id = s.client_id
-         ORDER BY s.updated_at DESC`
-      );
+/ جلب كل الرسائل لعميل معين
+router.get('/:clientId', async (req, res) => {
+    const { clientId } = req.params;
+    const userId = req.session$1.user$2.id;
+   
+    if (!userId) {
+        return 
+    res.status(401).json({ message: 'Unauthorized' });
     }
-
-    res.json(result.rows);
-  } catch (err) {
-    console.error("Error fetching sessions:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
+    
+    try {
+        const clientCheck = await db.query(
+            `SELECT id FROM clients WHERE id = $1 AND user_id = $2`,
+            [clientId, userId]);
+        if (clientCheck.rows.length === 0)
+{
+        
+        return 
+    res.status(403).json({ message: 'Forbidden' });
+    }
+        
+        
+        const result = await db.query(
+            `SELECT * FROM messages 
+             WHERE client_id = $1 
+             ORDER BY created_at ASC`,
+            [clientId]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching messages:', err);
+        res.status(500).json({ message: 'Server error' });
 // إرسال رسالة جديدة
 router.post('/send', async (req, res) => {
     const { sessionId, senderRole, content, to } = req.body;
