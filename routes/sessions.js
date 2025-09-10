@@ -145,19 +145,10 @@ router.get('/unreplied', async (req, res) => {
     }
 });
 
-// --- 6️⃣ حذف رسالة (لا تحذف فعليًا بل تجعلها "محذوفة") ---
-router.post('/delete-message/:message_id', async (req, res) => {
-    try {
-        const messageId = req.params.message_id;
-        await db.query('UPDATE messages SET is_deleted = TRUE WHERE id = $1', [messageId]);
-        res.json({ message: 'Message marked as deleted' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
+
 
 module.exports = router;
+
 
 
 
