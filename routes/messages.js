@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../db.js');
 const { sendMessageToNumber } = require('../whatsappClient.js');
 
-/ جلب كل الرسائل لعميل معين
+/: جلب كل الرسائل لعميل معين
 router.get('/:clientId', async (req, res) => {
     const { clientId } = req.params;
     const userId = req.session$1.user$2.id;
@@ -35,13 +35,15 @@ router.get('/:clientId', async (req, res) => {
     } catch (err) {
         console.error('Error fetching messages:', err);
         res.status(500).json({ message: 'Server error' });
+}
+    
 // إرسال رسالة جديدة
 router.post('/send', async (req, res) => {
     const { sessionId, senderRole, content, to } = req.body;
     try {
      // ✅ جلب رقم الواتساب المرتبط
         const session = await db.query(
-            `SELECT s.*, wn.number as wa_number FROM sessions s JOIN wa_numbers wn ON wn.id = s.wa_numbers_id WHERE s_id = $1 AND wn.status = 'active' LIMIT 1`,
+            `SELECT s.*, wn.number as wa_number FROM sessions s JOIN wa_numbers wn ON wn.id = s.wa_number_id WHERE s.id = $1 AND wn.status = 'active' LIMIT 1`,
             [sessionId]
         );
 
@@ -52,6 +54,8 @@ router.post('/send', async (req, res) => {
         const { client_id, wa_number } = session.rows[0];
 
         // ✅ إرسال الرسالة عبر الرقم المرتبط
+        const clientData = await db.query(`SELECT phone FROM  clients WHERE id = $1`, [client_id]);
+        const clientPhone = clientData.rows[0].phone;
         await sendMessageToNumber(wa_number, client_id, content);
         const result = await db.query(
             `INSERT INTO messages (session_id, sender_role, content)
