@@ -43,7 +43,7 @@ router.get('/:clientId', async (req, res) => {
 router.post('/send', async (req, res) => {
     const { clientId, senderRole, content, to } = req.body;
     try {
-     / ✅ جلب رقم الواتساب المرتبط
+     // ✅ جلب رقم الواتساب المرتبط
         const waNumber = await db.query(
             `SELECT number FROM wa_numbers WHERE client_id = $1 AND status = 'active' LIMIT 1`,
             [clientId]
