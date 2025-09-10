@@ -3,6 +3,60 @@ const router = express.Router();
 const db = require('../db.js');
 const { getLatestQR } = require('../whatsappClient'); // استدعاء العميل الذي أنشأناه
 
+
+router.get("/", async (req, res) => {
+  const userRole = req.user.role;
+  const userId = req.user.id;
+
+  try {
+    let result;
+    if (userRole === "agent") {
+      result = await db.query(
+        `SELECT s.id, s.client_id, c.name as client_name, 
+                (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+                s.status, s.created_at
+         FROM sessions s
+         JOIN clients c ON c.id = s.client_id
+         JOIN wa_number_agents wna ON wna.wa_number_id = s.wa_number_id
+         WHERE wna.agent_id=$1
+         ORDER BY s.updated_at DESC`,
+        [userId]
+      );
+    } else {
+      result = await db.query(
+        `SELECT s.id, s.client_id, c.name as client_name,
+                (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+                s.status, s.created_at
+         FROM sessions s
+         JOIN clients c ON c.id = s.client_id
+         ORDER BY s.updated_at DESC`
+      );
+    }
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching sessions:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.patch('/:id/status', async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body; // "unread" | "unreplied" | "human"
+
+  try {
+    await db.query(
+      `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2`,
+      [status, id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error updating session status:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 // --- 1️⃣ عرض QR Code لرقم محدد ---
 router.get('/qr/:number_id', async (req, res) => {
     try {
@@ -96,6 +150,7 @@ router.post('/delete-message/:message_id', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
