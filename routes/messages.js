@@ -32,7 +32,8 @@ router.get('/:sessionId', async (req, res) => {
         }
         
         const result = await db.query(
-            `SELECT * FROM messages 
+            `SELECT id, sender_role, content, is_deleted, created_at
+             FROM messages 
              WHERE session_id = $1 
              ORDER BY created_at ASC`,
             [sessionId]
@@ -94,5 +95,30 @@ router.post('/delete', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+    const translate = require('@vitalets/google-translate-api');
+
+router.post('/:id/translate', async (req, res) => {
+    const { id } = req.params;
+    const { targetLang } = req.body;
+
+    try {
+        const result = await db.query(`SELECT content FROM messages WHERE id=$1`, [id]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "Message not found" });
+        }
+
+        const original = result.rows[0].content;
+        const translated = await translate(original, { to: targetLang || 'en' });
+
+        await db.query(`UPDATE messages SET translated_content=$1 WHERE id=$2`, [translated.text, id]);
+
+        res.json({ original, translated: translated.text });
+    } catch (err) {
+        console.error("Error translating:", err);
+        res.status(500).json({ message: "Translation failed" });
+    }
+});
+
 
 module.exports = router;
