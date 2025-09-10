@@ -4,8 +4,8 @@ const db = require('../db.js');
 const { sendMessageToNumber } = require('../whatsappClient.js');
 
 //: جلب كل الرسائل لعميل معين
-router.get('/:clientId', async (req, res) => {
-    const { clientId } = req.params;
+router.get('/:sessionId', async (req, res) => {
+    const { sessionId } = req.params;
     const userId = req.user.id;
    
     if (!userId) {
@@ -28,7 +28,7 @@ router.get('/:clientId', async (req, res) => {
             `SELECT * FROM messages 
              WHERE session_id = $1 
              ORDER BY created_at ASC`,
-            [clientId]
+            [sessionId]
         );
         res.json(result.rows);
     } catch (err) {
@@ -59,7 +59,7 @@ router.post('/send', async (req, res) => {
         const result = await db.query(
             `INSERT INTO messages (session_id, sender_role, content)
              VALUES ($1, $2, $3) RETURNING *`,
-            [sessionId, senderRole, content, client_id, to_number]
+            [sessionId, senderRole, content, client_id]
         );
         res.json({ message: 'Message sent', data: result.rows[0] });
     } catch (err) {
