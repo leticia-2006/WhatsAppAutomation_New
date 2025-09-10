@@ -5,6 +5,9 @@ const { getLatestQR } = require('../whatsappClient'); // استدعاء العم
 
 
 router.get("/", async (req, res) => {
+ if (!req.user) {
+   return res.status(401).json({ message: "Unauthorized" });
+ }
   const userRole = req.user.role;
   const userId = req.user.id;
 
@@ -17,8 +20,8 @@ router.get("/", async (req, res) => {
             s.status, s.created_at, s.updated_at
             FROM sessions s
             JOIN clients c ON c.id = s.client_id
-            ORDER BY s.updated_at DESC `
-      );
+            ORDER BY s.updated_at DESC `, [userId]
+     );
     } else {
       result = await db.query(
         `SELECT s.id, s.client_id, c.name as client_name,
@@ -58,31 +61,17 @@ router.patch('/:id/status', async (req, res) => {
 router.get('/qr/:number_id', async (req, res) => {
     try {
         const numberId = req.params.number_id;
-        const qr = getLatestQR(numberId);
-        res.json({ qr: qr || null });
+        const qr = getLatestQR( "client_" + numberId);
+      if(!qr) {
+        return res.status(404).json({ error: "QR not found or client already connected" });
+      }
+        res.json({ qr });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 });
 
-// --- 2️⃣ عرض كل الجلسات مع حالة الرسائل (محذوفة أم لا) ---
-router.get('/all', async (req, res) => {
-    try {
-        const result = await db.query(`
-           SELECT s.id, s.client_id, c.name as client_name,
-            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-            s.status, s.created_at
-            FROM sessions s
-            JOIN clients c ON c.id = s.client_id
-            ORDER BY s.updated_at DESC
-        `);
-        res.json(result.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
 
 // --- 3️⃣ جلسات حسب المجموعة ---
 router.get('/group/:group_id', async (req, res) => {
@@ -145,6 +134,7 @@ router.get('/unreplied', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
