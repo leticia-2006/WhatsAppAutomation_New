@@ -53,7 +53,13 @@ function getLatestQR(clientId) {
     return latestQRs[clientId] || null;
 }
 
+async function sendMessageToNumber(numberId, to, content) {
+    const clientKey = "client_" + numberId;
+    const client = clients[clientKey];
+    if (!client) throw new Error("Client not initialized");
+
+    await client.sendMessage(to, { text: content });
+}
 
 
-
-module.exports = { createWhatsAppClient, getLatestQR, clients };
+module.exports = { createWhatsAppClient, getLatestQR, clients, sendMessageToNumber };
