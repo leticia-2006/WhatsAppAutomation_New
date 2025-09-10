@@ -3,14 +3,13 @@ const router = express.Router();
 const db = require('../db.js');
 const { sendMessageToNumber } = require('../whatsappClient.js');
 
-/: جلب كل الرسائل لعميل معين
+//: جلب كل الرسائل لعميل معين
 router.get('/:clientId', async (req, res) => {
     const { clientId } = req.params;
-    const userId = req.session$1.user$2.id;
+    const userId = req.user.id;
    
     if (!userId) {
-        return 
-    res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: 'Unauthorized' });
     }
     
     try {
@@ -27,7 +26,7 @@ router.get('/:clientId', async (req, res) => {
         
         const result = await db.query(
             `SELECT * FROM messages 
-             WHERE client_id = $1 
+             WHERE session_id = $1 
              ORDER BY created_at ASC`,
             [clientId]
         );
@@ -56,11 +55,11 @@ router.post('/send', async (req, res) => {
         // ✅ إرسال الرسالة عبر الرقم المرتبط
         const clientData = await db.query(`SELECT phone FROM  clients WHERE id = $1`, [client_id]);
         const clientPhone = clientData.rows[0].phone;
-        await sendMessageToNumber(wa_number, client_id, content);
+        await sendMessageToNumber(wa_number, clientPhone, content);
         const result = await db.query(
             `INSERT INTO messages (session_id, sender_role, content)
              VALUES ($1, $2, $3) RETURNING *`,
-            [sessionId, senderRole, content]
+            [sessionId, senderRole, content, client_id, to_number]
         );
         res.json({ message: 'Message sent', data: result.rows[0] });
     } catch (err) {
@@ -79,8 +78,7 @@ router.post('/delete', async (req, res) => {
             [messageId]
         );
         if (result.rows.length ===0) {
-            return
-     res.status(404).json({ message: "Message not found" });
+            return res.status(404).json({ message: "Message not found" });
         }
         
         res.json({ message: 'Message marked as deleted', data: result.rows[0] });
