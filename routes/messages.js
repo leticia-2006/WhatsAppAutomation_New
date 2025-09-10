@@ -13,16 +13,23 @@ router.get('/:sessionId', async (req, res) => {
     }
     
     try {
-        const clientCheck = await db.query(
-            `SELECT id FROM clients WHERE id = $1 AND user_id = $2`,
-            [clientId, userId]);
-        if (clientCheck.rows.length === 0)
+        const sessionCheck = await db.query(
+            `SELECT s.id, s.client_id, wn.assigned_agent_id
+            FROM sessions s 
+            JOIN wa_numbers wn ON wn.id = s.wa_number_id
+            WHERE s.id = $1`,
+            [sessionId]);
+        if (sessionCheck.rows.length === 0)
 {
         
         return 
-    res.status(403).json({ message: 'Forbidden' });
+    res.status(404).json({ message: "Session not found" });
     }
-        
+        const sessionData = sessionCheck.rows[0];
+        if (req.user.role === "agent" && sessionData.assigned_agent_id !== req.user.id) {
+            return 
+            res.status(403).json({ message: "Forbidden" });
+        }
         
         const result = await db.query(
             `SELECT * FROM messages 
