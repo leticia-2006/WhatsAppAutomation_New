@@ -82,3 +82,23 @@ exports.getQR = async (req, res) => {
   }
 };
 
+// إعادة تفعيل الرقم (Confirm)
+exports.confirmNumber = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // نعيد تشغيل WhatsApp Client علشان يولد QR جديد
+    createWhatsAppClient(id, "client_" + id);
+
+    // نغير حالة الرقم إلى "pending"
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["pending", id]);
+
+    res.json({
+      success: true,
+      message: "Please scan QR again to confirm the number"
+    });
+  } catch (err) {
+    console.error("Error confirming number:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
