@@ -7,8 +7,8 @@ let clients = {}; // لتخزين كل الـ sessions
 // إرجاع كل الأرقام
 exports.getWANumbers = async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM wa_numbers ORDER BY id DESC");
-    res.json(rows);
+    const result = await db.query("SELECT * FROM wa_numbers ORDER BY id DESC");
+    res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -65,8 +65,6 @@ exports.removeNumber = async (req, res) => {
   await db.query("DELETE FROM wa_numbers WHERE id=$1", [id]);
   res.json({ success: true });
 };
-
-const { getLatestQR } = require("../whatsappClient");
 
 // إرجاع QR خاص برقم معين
 exports.getQR = async (req, res) => {
