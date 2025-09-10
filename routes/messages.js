@@ -43,7 +43,20 @@ router.get('/:clientId', async (req, res) => {
 router.post('/send', async (req, res) => {
     const { clientId, senderRole, content, to } = req.body;
     try {
-        await sendMessageToNumber(clientId, to, content });
+     / ✅ جلب رقم الواتساب المرتبط
+        const waNumber = await db.query(
+            `SELECT number FROM wa_numbers WHERE client_id = $1 AND status = 'active' LIMIT 1`,
+            [clientId]
+        );
+
+        if (waNumber.rows.length === 0) {
+            return res.status(400).json({ message: 'No active WhatsApp number linked' });
+        }
+
+        const fromNumber = waNumber.rows[0].number;
+
+        // ✅ إرسال الرسالة عبر الرقم المرتبط
+        await sendMessageToNumber(fromNumber, to, content);
         const result = await db.query(
             `INSERT INTO messages (client_id, sender_role, content)
              VALUES ($1, $2, $3) RETURNING *`,
