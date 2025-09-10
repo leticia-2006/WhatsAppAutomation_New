@@ -2,12 +2,12 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
-const { client1 } = require('../whatsappClient.js');
+const { sendMessageToNumber } = require('../whatsappClient.js');
 
 // جلب كل الرسائل لعميل معين
 router.get('/:clientId', async (req, res) => {
     const { clientId } = req.params;
-    const userId = req.session?.user?.id;
+    const userId = req.session$1.user$2.id;
    
     if (!userId) {
         return 
@@ -41,9 +41,9 @@ router.get('/:clientId', async (req, res) => {
 
 // إرسال رسالة جديدة
 router.post('/send', async (req, res) => {
-    const { clientId, senderRole, content } = req.body;
+    const { clientId, senderRole, content, to } = req.body;
     try {
-        await client1.sendMessage(to,{ text: content });
+        await sendMessageToNumber(clientId, to, content });
         const result = await db.query(
             `INSERT INTO messages (client_id, sender_role, content)
              VALUES ($1, $2, $3) RETURNING *`,
