@@ -1,104 +1,99 @@
-const db = require("../db"); // ملف الاتصال بقاعدة البيانات
-const { createWhatsAppClient, getLatestQR, Client } = require("../whatsappClient");
-const qrcode = require("qrcode");
+const db = require("../config/db");
+const { createWAClient, getLatestQR, sessions } = require("../wa/waClient");
 
-let clients = {}; // لتخزين كل الـ sessions
-
-// إرجاع كل الأرقام
-exports.getWANumbers = async (req, res) => {
-  try {
-    const result = await db.query("SELECT * FROM wa_numbers ORDER BY id DESC");
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// إضافة رقم جديد (وإرجاع QR)
-exports.addWANumber = async (req, res) => {
+// ✅ إضافة رقم جديد وربطه
+exports.addNumber = async (req, res) => {
   try {
     const { number } = req.body;
+    if (!number) return res.status(400).json({ error: "Number required" });
 
-    const result = await db.query("INSERT INTO wa_numbers (number, status) VALUES ($1, $2) RETURNING id", [number, "pending"]
+    // أضف الرقم في DB
+    const result = await db.query(
+      "INSERT INTO wa_numbers (number, status, created_at) VALUES ($1, $2, NOW()) RETURNING id",
+      [number, "pending"]
     );
+
     const numberId = result.rows[0].id;
 
-    createWhatsAppClient(numberId, "client_" + numberId);
-  
-    res.json({
-      message: "Number added. Scan QR to activate.",
-   id: numberId 
-    });
+    // شغل سشن جديد
+    await createWAClient(numberId);
+
+    res.json({ message: "Number added, scan QR to activate", numberId });
   } catch (err) {
-    console.error("Error adding number:", err);
-    res.status(500).json({ error: err.message });
+    console.error("Add Number Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// ربط الرقم بوكيل
-exports.assignNumber = async (req, res) => {
+// ✅ إحضار QR
+exports.getQRCode = async (req, res) => {
   const { id } = req.params;
-  const { agentId } = req.body;
-  await db.query("UPDATE wa_numbers SET assigned_agent_id=$1 WHERE id=$2", [agentId, id]);
-  res.json({ success: true });
+  try {
+    const qr = getLatestQR(id);
+    if (!qr) return res.status(404).json({ error: "QR not available yet" });
+    res.json({ qr });
+  } catch (err) {
+    console.error("QR Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
-// نقل الرقم لوكيل آخر
+// ✅ إزالة رقم
+exports.removeNumber = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.query("DELETE FROM wa_numbers WHERE id=$1", [id]);
+    if (sessions[id]) delete sessions[id];
+    res.json({ message: "Number removed" });
+  } catch (err) {
+    console.error("Remove Number Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// ✅ تأكيد رقم (تغيير status)
+exports.confirmNumber = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["active", id]);
+    res.json({ message: "Number confirmed" });
+  } catch (err) {
+    console.error("Confirm Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// ✅ نقل رقم لوكيل آخر
 exports.transferNumber = async (req, res) => {
   const { id } = req.params;
   const { agentId } = req.body;
-  await db.query("UPDATE wa_numbers SET assigned_agent_id=$1 WHERE id=$2", [agentId, id]);
-  res.json({ success: true });
-};
-
-// تغيير الحالة
-exports.updateStatus = async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", [status, id]);
-  res.json({ success: true });
-};
-
-// حذف رقم
-exports.removeNumber = async (req, res) => {
-  const { id } = req.params;
-  await db.query("DELETE FROM wa_numbers WHERE id=$1", [id]);
-  res.json({ success: true });
-};
-
-// إرجاع QR خاص برقم معين
-exports.getQR = async (req, res) => {
   try {
-    const { id } = req.params;
-    const qr = getLatestQR(id);
-
-    if (!qr) {
-      return res.status(404).json({ error: "QR not found or client already connected" });
-    }
-
-    res.json({ qr });
+    await db.query("UPDATE wa_numbers SET agent_id=$1 WHERE id=$2", [agentId, id]);
+    res.json({ message: "Number transferred to agent" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Transfer Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// إعادة تفعيل الرقم (Confirm)
-exports.confirmNumber = async (req, res) => {
+// ✅ عرض الأرقام حسب الدور
+exports.getNumbersByRole = async (req, res) => {
+  const role = req.session.user.role;
+  const userId = req.session.user.id;
+
   try {
-    const { id } = req.params;
+    let result;
+    if (role === "super_admin") {
+      result = await db.query("SELECT * FROM wa_numbers ORDER BY id DESC");
+    } else if (role === "admin") {
+      result = await db.query("SELECT * FROM wa_numbers WHERE created_by=$1 ORDER BY id DESC", [userId]);
+    } else {
+      result = await db.query("SELECT * FROM wa_numbers WHERE agent_id=$1 ORDER BY id DESC", [userId]);
+    }
 
-    // نعيد تشغيل WhatsApp Client علشان يولد QR جديد
-    createWhatsAppClient(id, "client_" + id);
-
-    // نغير حالة الرقم إلى "pending"
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["pending", id]);
-
-    res.json({
-      success: true,
-      message: "Please scan QR again to confirm the number"
-    });
+    res.json(result.rows);
   } catch (err) {
-    console.error("Error confirming number:", err);
-    res.status(500).json({ error: err.message });
+    console.error("Get Numbers Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
