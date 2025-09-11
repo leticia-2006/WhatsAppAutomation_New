@@ -24,7 +24,7 @@ return res.status(403).json({ error: "You are not allowed to access" });
 router.post("/", requireLogin, checkRole(['super_admin']), addWANumber);
 
 //ربط الرقم بوكيل
-router.post("/:id/assign", requireLogin, checkRole(['admin, ''super_admin']), assignNumber);
+router.post("/:id/assign", requireLogin, checkRole(['admin, 'super_admin']), assignNumber);
 
 //حذف رقم
 router.delete("/:id", requireLogin, checkRole(['super_admin']), removeNumber );
