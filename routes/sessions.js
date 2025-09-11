@@ -5,11 +5,11 @@ const { getLatestQR } = require('../whatsappClient'); // استدعاء العم
 
 
 router.get("/", async (req, res) => {
- if (!req.user) {
+ if (!req.user || !req.session.user) {
    return res.status(401).json({ message: "Unauthorized" });
  }
-  const userRole = req.user.role;
-  const userId = req.user.id;
+  const userRole = req.session.user.role;
+  const userId = req.session.user.id;
 
   try {
     let result;
@@ -136,6 +136,7 @@ router.get('/unreplied', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
