@@ -35,17 +35,17 @@ client.on('message', async (msg) => {
 
  try { 
   const session = await db.query(
-  "SELECT client_id FROM sessions WHERE wa_number_id=$1 ORDER BY created_at DESC LIMIT 1",
+  "SELECT id FROM sessions WHERE wa_number_id=$1 ORDER BY created_at DESC LIMIT 1",
   [numberId]
 );
 
 if (session.rows.length) {
-  const clientId = session.rows[0].client_id;
+  const sessionId = session.rows[0].id;
 
  await db.query(
-    `INSERT INTO messages (client_id, sender_role, content)  
+    `INSERT INTO messages (session_id, sender_role, content)  
      VALUES ($1, $2, $3)`,
-    [clientId, "client", msg.body]
+    [sessionId, "client", msg.body]
   );
   }
 } catch (err) {
