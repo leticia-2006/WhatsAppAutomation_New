@@ -25,20 +25,30 @@ function createWhatsAppClient(numberId, clientId) {
         await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["active", numberId]);
     });
 
-    client.on('disconnected', async (reason) => {
-        console.log(`WhatsApp Client for number ${numberId} disconnected:`, reason);
-        await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["disconnected", numberId]);
+    client.on('disconnected', async () => {
+        console.log(`WhatsApp session for ${numberId} disconnected.
+        Reconnecting...`);
+        initwhatsappClient(numberId);
     });
 client.on('message', async (msg) => {
     console.log("New message:", msg.from, msg.body);
 
  try { 
-    await db.query(
-        `INSERT INTO messages (client_id, sender_role, content)
-         VALUES ($1, $2, $3)`,
-        [numberId, "client", msg.body] // sender_role = client لأنه جاي من الزبون
-    );
- } catch (err) {
+  const session = await db.query(
+  "SELECT client_id FROM sessions WHERE wa_number_id=$1 ORDER BY created_at DESC LIMIT 1",
+  [numberId]
+);
+
+if (session.rows.length) {
+  const clientId = session.rows[0].client_id;
+
+ await db.query(
+    `INSERT INTO messages (client_id, sender_role, content)  
+     VALUES ($1, $2, $3)`,
+    [clientId, "client", msg.body]
+  );
+  }
+} catch (err) {
      console.error("Error saving message:", err);
      }
  });
@@ -58,7 +68,7 @@ async function sendMessageToNumber(numberId, to, content) {
     const client = clients[clientKey];
     if (!client) throw new Error("Client not initialized");
 
-    await client.sendMessage(to, { text: content });
+    await client.sendMessage(to, content);
 }
 
 
