@@ -5,22 +5,32 @@ const { requireLogin, checkRole } = require("../middleware");
 
 
 //جلب الارقام 
-router.get("/", requireLogin, checkRole(['super_admin']), getWANumbers);
+router.get("/", requireLogin, (req, res) => {
+  const { role, id } = req.session.user;
+  
+  if (role === "super_admin") {
+     return getAllWANumbers(res);
+  }
+   if (role === "admin") {
+     return getAdminWANumbers(res);
+   }
+   if (role === "agent") {
+     return getAgentWANumbers(id, res)
+   }
+return res.status(403).json({ error: "You are not allowed to access" });
+});
 
 //اضافة رقم 
-router.post("/", requireLogin, checkRole(['super_admin']), addWANumbers );
+router.post("/", requireLogin, checkRole(['super_admin']), addWANumber);
 
 //ربط الرقم بوكيل
-router.post("/:id/assign", requireLogin, checkRole(['admin']), assignNumber);
+router.post("/:id/assign", requireLogin, checkRole(['admin, ''super_admin']), assignNumber);
 
 //حذف رقم
 router.delete("/:id", requireLogin, checkRole(['super_admin']), removeNumber );
 
 // code qr ارجاع 
 router.get("/:id/qr", getQR);
-
-// ربط الرقم بوكيل
-router.post("/:id/assign", assignNumber);
 
 // نقل الرقم لوكيل آخر
 router.post("/:id/transfer", transferNumber);
@@ -31,7 +41,5 @@ router.post("/:id/confirm", requireLogin, checkRole(['super_admin']), confirmNum
 // تغيير الحالة (Active, Blocked, Disconnected)
 router.patch("/:id/status", updateStatus);
 
-// حذف رقم
-router.delete("/:id", removeNumber);
 
 module.exports = router;
