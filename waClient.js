@@ -1,84 +1,69 @@
 const makeWASocket = require("@adiwajshing/baileys").default;
-const { useMultiFileAuthState } = require("@adiwajshing/baileys");
-const { Boom } = require("@hapi/boom");
-const db = require("../config/db");
+const { useMultiFileAuthState, fetchLatestBaileysVersion, DisconnectReason } = require("@adiwajshing/baileys");
+const { Pool } = require("pg");
+const path = require("path");
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+const clients = {};
 const qrCodes = {};
 
-const sessions = {}; // نخزن كل السشنز
+async function initClient(numberId) {
+  const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));
+  const { version } = await fetchLatestBaileysVersion();
 
-async function createWAClient(numberId) {
-  const { state, saveCreds } = await useMultiFileAuthState(`./auth/${numberId}`);
+  const sock = makeWASocket({ version, auth: state });
 
-  const sock = makeWASocket({
-    auth: state,
-    printQRInTerminal: false,
-  });
-
-  // حفظ QR لما يطلع
-  sock.ev.on("connection.update", (update) => {
-    const { connection, qr } = update;
-    if (qr) {
-      qrCodes[numberId] = qr;
-      console.log(`QR for ${numberId}: ${qr}`);
-    }
+  sock.ev.on("connection.update", ({ connection, lastDisconnect, qr }) => {
+    if (qr) qrCodes[numberId] = qr;
     if (connection === "close") {
-      console.log(`Session closed for ${numberId}, reconnecting...`);
-      createWAClient(numberId);
-    }
-    if (connection === "open") {
-      console.log(`✅ Connected: ${numberId}`);
-    }
-  });
-
-  // استقبال رسائل جديدة
-  sock.ev.on("messages.upsert", async (m) => {
-    const msg = m.messages[0];
-    if (!msg.message) return;
-
-    const sender = msg.key.remoteJid;
-    const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
-
-    try {
-      await db.query(
-        `INSERT INTO messages (wa_number_id, sender, content, is_deleted, created_at) 
-         VALUES ($1, $2, $3, false, NOW())`,
-        [numberId, sender, text]
-      );
-    } catch (err) {
-      console.error("DB Insert Error:", err);
-    }
-  });
-
-  // تحديث الرسائل (مثلاً حذف)
-  sock.ev.on("messages.update", async (updates) => {
-    for (let upd of updates) {
-      if (upd.update.message === null) {
-        // الرسالة اتمسحت
-        try {
-          await db.query(
-            `UPDATE messages SET is_deleted=true WHERE id=$1`,
-            [upd.key.id]
-          );
-        } catch (err) {
-          console.error("DB Update Error:", err);
-        }
-      }
+      const reason = lastDisconnect?.error?.output?.statusCode;
+      if (reason !== DisconnectReason.loggedOut) initClient(numberId);
     }
   });
 
   sock.ev.on("creds.update", saveCreds);
 
-  sessions[numberId] = sock;
+  sock.ev.on("messages.upsert", async ({ messages }) => {
+    for (let msg of messages) {
+      if (!msg.message) continue;
+      const sessionRes = await pool.query(
+        "SELECT id FROM sessions WHERE wa_number_id=$1 ORDER BY created_at DESC LIMIT 1",
+        [numberId]
+      );
+      if (sessionRes.rowCount === 0) continue;
+      const sessionId = sessionRes.rows[0].id;
+
+      await pool.query(
+        "INSERT INTO messages(session_id, sender_role, content, is_deleted, created_at) VALUES($1,$2,$3,$4,NOW())",
+        [sessionId, "client", msg.message.conversation || "", false]
+      );
+    }
+  });
+
+  sock.ev.on("messages.update", async (updates) => {
+    for (let { key, update } of updates) {
+      if (update.messageStubType === 1) {
+        await pool.query("UPDATE messages SET is_deleted=true WHERE id=$1", [key.id]);
+      }
+    }
+  });
+
+  clients[numberId] = sock;
 }
 
-// ترجّع آخر QR
-function getLatestQR(numberId) {
+function getQRForNumber(numberId) {
   return qrCodes[numberId] || null;
 }
 
-module.exports = {
-  createWAClient,
-  getLatestQR,
-  sessions,
-};
+async function sendMessageToNumber(numberId, jid, text) {
+  const sock = clients[numberId];
+  if (!sock) throw new Error("Client not initialized");
+  await sock.sendMessage(jid, { text });
+}
 
+function getClientStatus(numberId) {
+  return clients[numberId] ? "connected" : "disconnected";
+}
+
+module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus };
