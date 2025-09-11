@@ -64,7 +64,8 @@ router.post('/send', async (req, res) => {
         // ✅ إرسال الرسالة عبر الرقم المرتبط
         const clientData = await db.query(`SELECT phone FROM  clients WHERE id = $1`, [client_id]);
         const clientPhone = clientData.rows[0].phone;
-        await sendMessageToNumber(wa_number, clientPhone, content);
+        const numberId = session.rows[0].wa_number_id;
+        await sendMessageToNumber(numberId, clientPhone, content);
         const result = await db.query(
             `INSERT INTO messages (session_id, sender_role, content, client_id)
              VALUES ($1, $2, $3, $4) RETURNING *`,
