@@ -4,35 +4,32 @@ const db = require("../db");
 const { connectWA, getQRForNumber } = require("../waClient");
 const { requireLogin, checkRole } = require("../middleware");
 
-// 📌 جلب جميع الأرقام
+// جلب الأرقام
 router.get("/", requireLogin, async (req, res) => {
   const { role, id } = req.session.user;
 
   try {
-    let result;
     if (role === "super_admin") {
-      result = await db.query("SELECT * FROM wa_numbers ORDER BY id DESC");
-    } else if (role === "admin") {
-      result = await db.query(
-        "SELECT * FROM wa_numbers WHERE created_by=$1 ORDER BY id DESC",
-        [id]
-      );
-    } else if (role === "agent") {
-      result = await db.query(
-        "SELECT * FROM wa_numbers WHERE assigned_agent_id=$1 ORDER BY id DESC",
-        [id]
-      );
-    } else {
-      return res.status(403).json({ error: "You are not allowed to access" });
+      const result = await db.query("SELECT * FROM wa_numbers ORDER BY id DESC");
+      return res.json(result.rows);
     }
 
-    res.json(result.rows);
+    if (role === "admin") {
+      const result = await db.query("SELECT * FROM wa_numbers WHERE assigned_agent_id IS NOT NULL ORDER BY id DESC");
+      return res.json(result.rows);
+    }
+
+    if (role === "agent") {
+      const result = await db.query("SELECT id, number, status FROM wa_numbers WHERE assigned_agent_id=$1", [id]);
+      return res.json(result.rows);
+    }
+
+    return res.status(403).json({ error: "Not allowed" });
   } catch (err) {
-    console.error("Error fetching wa_numbers:", err);
+    console.error("Error fetching numbers:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
-
 // 📌 إضافة رقم جديد + إنشاء جلسة
 router.post("/", requireLogin, checkRole(["super_admin"]), async (req, res) => {
   try {
