@@ -1,45 +1,178 @@
 const express = require("express");
 const router = express.Router();
-const { addWANumber, getWANumbers, assignNumber, transferNumber, removeNumber, updateStatus, getQR, confirmNumber } = require("../controllers/waNumbersController");
+const db = require("../db");
+const { connectWA, getQRForNumber } = require("../waClient");
 const { requireLogin, checkRole } = require("../middleware");
 
-
-//جلب الارقام 
-router.get("/", requireLogin, (req, res) => {
+// 📌 جلب جميع الأرقام
+router.get("/", requireLogin, async (req, res) => {
   const { role, id } = req.session.user;
-  
-  if (role === "super_admin") {
-     return getAllWANumbers(res);
+
+  try {
+    let result;
+    if (role === "super_admin") {
+      result = await db.query("SELECT * FROM wa_numbers ORDER BY id DESC");
+    } else if (role === "admin") {
+      result = await db.query(
+        "SELECT * FROM wa_numbers WHERE created_by=$1 ORDER BY id DESC",
+        [id]
+      );
+    } else if (role === "agent") {
+      result = await db.query(
+        "SELECT * FROM wa_numbers WHERE assigned_agent_id=$1 ORDER BY id DESC",
+        [id]
+      );
+    } else {
+      return res.status(403).json({ error: "You are not allowed to access" });
+    }
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching wa_numbers:", err);
+    res.status(500).json({ error: "Server error" });
   }
-   if (role === "admin") {
-     return getAdminWANumbers(res);
-   }
-   if (role === "agent") {
-     return getAgentWANumbers(id, res)
-   }
-return res.status(403).json({ error: "You are not allowed to access" });
 });
 
-//اضافة رقم 
-router.post("/", requireLogin, checkRole(['super_admin']), addWANumber);
+// 📌 إضافة رقم جديد + إنشاء جلسة
+router.post("/", requireLogin, checkRole(["super_admin"]), async (req, res) => {
+  try {
+    const { number } = req.body;
 
-//ربط الرقم بوكيل
-router.post("/:id/assign", requireLogin, checkRole(['admin, 'super_admin']), assignNumber);
+    const result = await db.query(
+      "INSERT INTO wa_numbers (number, status) VALUES ($1, $2) RETURNING id",
+      [number, "pending"]
+    );
 
-//حذف رقم
-router.delete("/:id", requireLogin, checkRole(['super_admin']), removeNumber );
+    const numberId = result.rows[0].id;
 
-// code qr ارجاع 
-router.get("/:id/qr", getQR);
+    // تشغيل اتصال Baileys للرقم
+    connectWA(numberId);
 
-// نقل الرقم لوكيل آخر
-router.post("/:id/transfer", transferNumber);
+    res.json({
+      message: "Number added. Please scan QR to activate.",
+      id: numberId,
+    });
+  } catch (err) {
+    console.error("Error adding wa_number:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
-//تاكيد/اعادة تفعيل الرقم 
-router.post("/:id/confirm", requireLogin, checkRole(['super_admin']), confirmNumber);
+// 📌 ربط الرقم بوكيل
+router.post(
+  "/:id/assign",
+  requireLogin,
+  checkRole(["admin", "super_admin"]),
+  async (req, res) => {
+    const { id } = req.params;
+    const { agentId } = req.body;
 
-// تغيير الحالة (Active, Blocked, Disconnected)
-router.patch("/:id/status", updateStatus);
+    try {
+      await db.query(
+        "UPDATE wa_numbers SET assigned_agent_id=$1 WHERE id=$2",
+        [agentId, id]
+      );
+      res.json({ success: true });
+    } catch (err) {
+      console.error("Error assigning number:", err);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
 
+// 📌 نقل الرقم لوكيل آخر
+router.post("/:id/transfer", requireLogin, async (req, res) => {
+  const { id } = req.params;
+  const { agentId } = req.body;
+
+  try {
+    await db.query(
+      "UPDATE wa_numbers SET assigned_agent_id=$1 WHERE id=$2",
+      [agentId, id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error transferring number:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// 📌 حذف رقم
+router.delete(
+  "/:id",
+  requireLogin,
+  checkRole(["super_admin"]),
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      await db.query("DELETE FROM wa_numbers WHERE id=$1", [id]);
+      res.json({ success: true });
+    } catch (err) {
+      console.error("Error deleting number:", err);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+// 📌 استرجاع QR Code لرقم معين
+router.get("/:id/qr", requireLogin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const qr = getQRForNumber(id);
+
+    if (!qr) {
+      return res
+        .status(404)
+        .json({ error: "QR not found or client already connected" });
+    }
+
+    res.json({ qr });
+  } catch (err) {
+    console.error("Error fetching QR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// 📌 تأكيد / إعادة تفعيل الرقم
+router.post(
+  "/:id/confirm",
+  requireLogin,
+  checkRole(["super_admin"]),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // إعادة تشغيل جلسة Baileys
+      connectWA(id);
+
+      await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", [
+        "pending",
+        id,
+      ]);
+
+      res.json({
+        success: true,
+        message: "Please scan QR again to confirm the number",
+      });
+    } catch (err) {
+      console.error("Error confirming number:", err);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+// 📌 تغيير حالة الرقم (Active, Blocked, Disconnected)
+router.patch("/:id/status", requireLogin, async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", [status, id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error updating status:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 module.exports = router;
