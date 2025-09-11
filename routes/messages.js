@@ -67,8 +67,8 @@ router.post('/send', async (req, res) => {
         await sendMessageToNumber(wa_number, clientPhone, content);
         const result = await db.query(
             `INSERT INTO messages (session_id, sender_role, content, client_id)
-             VALUES ($1, $2, $3) RETURNING *`,
-            [sessionId, senderRole, content, clientId]
+             VALUES ($1, $2, $3, $4) RETURNING *`,
+            [sessionId, senderRole, content, client_id]
         );
         res.json({ message: 'Message sent', data: result.rows[0] });
     } catch (err) {
