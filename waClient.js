@@ -19,11 +19,25 @@ async function connectWA(numberId) {
             console.log(`❌ WhatsApp disconnected: ${numberId}`)
         }
     })
+sock.ev.on('messages.upsert', async (msg) => {
+    const m = msg.messages[0]
+    const data = {
+        from: m.key.remoteJid,
+        content: m.message?.conversation || m.message?.extendedTextMessage?.text
+    }
+    console.log("📩 New message:", data)
 
-    sock.ev.on('messages.upsert', (msg) => {
-        console.log("📩 New message:", msg)
-        // هنا تقدر تخزن الرسائل في PostgreSQL
-    })
+    // خزّن الرسالة في PostgreSQL
+})
+    
+sock.ev.on('messages.update', async (updates) => {
+    for (const update of updates) {
+        if (update.update.messageStubType === 68) { // delete event
+            console.log("❌ Message deleted:", update.key.id)
+            // حدث UPDATE في PostgreSQL → is_deleted = true
+        }
+    }
+})
 
     return sock
 }
