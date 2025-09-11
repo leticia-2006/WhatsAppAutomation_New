@@ -10,6 +10,8 @@ const sessionsRouter = require('./routes/sessions');
 const app = express();
 const usersRouter = require('./routes/users');
 const waNumbersRouter = require('./routes/waNumbers');                            
+const { connectWA } = require('./waClient')
+
 
 // Middleware
 app.use(cors({
@@ -65,6 +67,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
