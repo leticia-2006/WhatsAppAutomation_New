@@ -42,7 +42,8 @@ router.get('/:sessionId', async (req, res) => {
     } catch (err) {
         console.error('Error fetching messages:', err);
         res.status(500).json({ message: 'Server error' });
-}
+    }
+});
     
 // إرسال رسالة جديدة
 router.post('/send', async (req, res) => {
@@ -65,9 +66,9 @@ router.post('/send', async (req, res) => {
         const clientPhone = clientData.rows[0].phone;
         await sendMessageToNumber(wa_number, clientPhone, content);
         const result = await db.query(
-            `INSERT INTO messages (session_id, sender_role, content)
+            `INSERT INTO messages (session_id, sender_role, content, client_id)
              VALUES ($1, $2, $3) RETURNING *`,
-            [sessionId, senderRole, content, client_id]
+            [sessionId, senderRole, content, clientId]
         );
         res.json({ message: 'Message sent', data: result.rows[0] });
     } catch (err) {
