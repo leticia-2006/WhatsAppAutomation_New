@@ -5,7 +5,7 @@ const { requireLogin, checkRole } = require("../middleware");
 
 
 //جلب الارقام 
-router.get("/", requireLogin, checkRole(['admin']), getWANumbers);
+router.get("/", requireLogin, checkRole(['super_admin']), getWANumbers);
 
 //اضافة رقم 
 router.post("/", requireLogin, checkRole(['super_admin']), addWANumbers );
@@ -16,14 +16,8 @@ router.post("/:id/assign", requireLogin, checkRole(['admin']), assignNumber);
 //حذف رقم
 router.delete("/:id", requireLogin, checkRole(['super_admin']), removeNumber );
 
-// إرجاع كل الأرقام مع بحث وفلترة
-router.get("/", getWANumbers);
-
 // code qr ارجاع 
 router.get("/:id/qr", getQR);
-
-// إضافة رقم جديد → يعرض QR
-router.post("/", addWANumber);
 
 // ربط الرقم بوكيل
 router.post("/:id/assign", assignNumber);
