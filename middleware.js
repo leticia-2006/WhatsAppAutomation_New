@@ -4,13 +4,13 @@ function requireLogin(req, res, next) {
     next();
 }
 
-function checkRole(role) {
+function checkRole(allowedRoles) {
     return (req, res, next) => {
         const userRole= req.session.user.role;
         if (userRole === 'super_admin') {
             return  next();
         }
-        if (roles.inculdes(userRole)) {
+        if (allowedRoles.inculdes(userRole)) {
                 return next();
             }
         return
