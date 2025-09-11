@@ -10,7 +10,7 @@ function checkRole(allowedRoles) {
         if (userRole === 'super_admin') {
             return  next();
         }
-        if (allowedRoles.inculdes(userRole)) {
+        if (allowedRoles.includes(userRole)) {
                 return next();
             }
         return
