@@ -82,7 +82,7 @@ router.get('/group/:group_id', async (req, res) => {
         const result = await db.query(`
            SELECT s.id, s.client_id, c.name as client_name,
             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-            s.status, s.created_at
+            s.status, s.created_at, s.updated_at
             FROM sessions s
             JOIN clients c ON c.id = s.client_id
             WHERE s.group_id = $1
@@ -101,7 +101,7 @@ router.get('/unread', async (req, res) => {
         const result = await db.query(`
          SELECT s.id, s.client_id, c.name as client_name,
             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-            s.status, s.created_at
+            s.status, s.created_at, s.updated_at
             FROM sessions s
             JOIN clients c ON c.id = s.client_id
             WHERE s.status='unread'
@@ -120,7 +120,7 @@ router.get('/unreplied', async (req, res) => {
         const result = await db.query(`
             SELECT s.id, s.client_id, c.name as client_name,
             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-            s.status, s.created_at
+            s.status, s.created_at, s.updated_at
             FROM sessions s
             JOIN clients c ON c.id = s.client_id
             WHERE s.status='unreplied'
@@ -136,6 +136,7 @@ router.get('/unreplied', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
