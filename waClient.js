@@ -20,6 +20,16 @@ async function initClient(numberId) {
       const reason = lastDisconnect?.error?.output?.statusCode;
       if (reason !== DisconnectReason.loggedOut) initClient(numberId);
     }
+    sock.ev.on('connection.update', async ({ connection }) => {
+  if (connection === 'open') {
+    console.log(`✅ WhatsApp connected: ${numberId}`);
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["active", numberId]);
+  }
+  if (connection === 'close') {
+    console.log(`❌ WhatsApp disconnected: ${numberId}`);
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["disconnected", numberId]);
+  }
+});
   });
 
   sock.ev.on("creds.update", saveCreds);
