@@ -28,7 +28,7 @@ function createWhatsAppClient(numberId, clientId) {
     client.on('disconnected', async () => {
         console.log(`WhatsApp session for ${numberId} disconnected.
         Reconnecting...`);
-        initwhatsappClient(numberId);
+        createwhatsappClient(numberId, clientId);
     });
 client.on('message', async (msg) => {
     console.log("New message:", msg.from, msg.body);
