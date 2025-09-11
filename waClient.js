@@ -1,45 +1,84 @@
-const makeWASocket = require('@whiskeysockets/baileys').default
-const { useMultiFileAuthState } = require('@whiskeysockets/baileys')
-const path = require('path')
+const makeWASocket = require("@adiwajshing/baileys").default;
+const { useMultiFileAuthState } = require("@adiwajshing/baileys");
+const { Boom } = require("@hapi/boom");
+const db = require("../config/db");
+const qrCodes = {};
 
-async function connectWA(numberId) {
-    const { state, saveCreds } = await useMultiFileAuthState(
-        path.join(__dirname, 'sessions', numberId)
-    )
+const sessions = {}; // نخزن كل السشنز
 
-    const sock = makeWASocket({ auth: state })
+async function createWAClient(numberId) {
+  const { state, saveCreds } = await useMultiFileAuthState(`./auth/${numberId}`);
 
-    sock.ev.on('creds.update', saveCreds)
+  const sock = makeWASocket({
+    auth: state,
+    printQRInTerminal: false,
+  });
 
-    sock.ev.on('connection.update', ({ connection }) => {
-        if (connection === 'open') {
-            console.log(`✅ WhatsApp connected: ${numberId}`)
-        }
-        if (connection === 'close') {
-            console.log(`❌ WhatsApp disconnected: ${numberId}`)
-        }
-    })
-sock.ev.on('messages.upsert', async (msg) => {
-    const m = msg.messages[0]
-    const data = {
-        from: m.key.remoteJid,
-        content: m.message?.conversation || m.message?.extendedTextMessage?.text
+  // حفظ QR لما يطلع
+  sock.ev.on("connection.update", (update) => {
+    const { connection, qr } = update;
+    if (qr) {
+      qrCodes[numberId] = qr;
+      console.log(`QR for ${numberId}: ${qr}`);
     }
-    console.log("📩 New message:", data)
-
-    // خزّن الرسالة في PostgreSQL
-})
-    
-sock.ev.on('messages.update', async (updates) => {
-    for (const update of updates) {
-        if (update.update.messageStubType === 68) { // delete event
-            console.log("❌ Message deleted:", update.key.id)
-            // حدث UPDATE في PostgreSQL → is_deleted = true
-        }
+    if (connection === "close") {
+      console.log(`Session closed for ${numberId}, reconnecting...`);
+      createWAClient(numberId);
     }
-})
+    if (connection === "open") {
+      console.log(`✅ Connected: ${numberId}`);
+    }
+  });
 
-    return sock
+  // استقبال رسائل جديدة
+  sock.ev.on("messages.upsert", async (m) => {
+    const msg = m.messages[0];
+    if (!msg.message) return;
+
+    const sender = msg.key.remoteJid;
+    const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
+
+    try {
+      await db.query(
+        `INSERT INTO messages (wa_number_id, sender, content, is_deleted, created_at) 
+         VALUES ($1, $2, $3, false, NOW())`,
+        [numberId, sender, text]
+      );
+    } catch (err) {
+      console.error("DB Insert Error:", err);
+    }
+  });
+
+  // تحديث الرسائل (مثلاً حذف)
+  sock.ev.on("messages.update", async (updates) => {
+    for (let upd of updates) {
+      if (upd.update.message === null) {
+        // الرسالة اتمسحت
+        try {
+          await db.query(
+            `UPDATE messages SET is_deleted=true WHERE id=$1`,
+            [upd.key.id]
+          );
+        } catch (err) {
+          console.error("DB Update Error:", err);
+        }
+      }
+    }
+  });
+
+  sock.ev.on("creds.update", saveCreds);
+
+  sessions[numberId] = sock;
 }
 
-module.exports = { connectWA }
+// ترجّع آخر QR
+function getLatestQR(numberId) {
+  return qrCodes[numberId] || null;
+}
+
+module.exports = {
+  createWAClient,
+  getLatestQR,
+  sessions,
+};
+
