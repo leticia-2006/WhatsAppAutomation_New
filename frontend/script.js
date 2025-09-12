@@ -12,7 +12,7 @@ if (logoutBtn) {
 
 // QR Modal
 function closeQRModal() {
-  document.getElementById('qr-modal').style.display = 'none';
+  document.getElementById('qrModal').style.display = 'none';
 }
 
 // جلب بيانات المستخدم عند تحميل الصفحة
@@ -65,6 +65,7 @@ function applyFilters() {
 
 // Load initial data
 window.addEventListener("load", fetchUser, );
+
 
 
 
