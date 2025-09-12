@@ -111,11 +111,11 @@ function renderSessions(sessions, filterType = "all") {
 
   document.querySelectorAll(".tab-link")
   .forEach(tab => {
-    tab.addEventListener("click" () => {
+    tab.addEventListener("click", () => {
        const type = tab.dataset.tab;
-  renderSessions(allSessions, type);
+  renderSessions(sessions, type);
   });
-}
+});
 
 
 
