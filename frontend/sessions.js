@@ -142,4 +142,15 @@ function saveNote() {
     })
     .catch(err => console.error(err));
 }
+async function sendMessage() {
+  const input = document.getElementById("msgInput");
+  const text = input.value.trim();
+  if (!text || !sessions.length) return;
+
+  // اختار أول جلسة حالياً أو اللي معمول لها load
+  const clientId = sessions[0]?.id;
+  await axios.post(`/messages/send`, { clientId, text });
+  input.value = "";
+  loadMessages(clientId);
+}
 
