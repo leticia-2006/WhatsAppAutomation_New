@@ -156,18 +156,16 @@
 </div>
 
   <!-- Add Number Modal -->
-<div class="modal fade" id="addNumberModal" tabindex="-1" role="dialog" aria-labelledby="addNumberLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="addNumberModal" tabindex="-1" aria-labelledby="addNumberModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addNumberLabel">Link WhatsApp Number</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title" id="addNumberModalLabel">Link WhatsApp Number</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">
-        <p>Scan this QR Code with your WhatsApp</p>
-        <canvas id="new-qr-canvas"></canvas>
+        <div id="qr-loading">Loading QR...</div>     
+        <canvas id="qr-canvas" style="display:none;"></canvas>
       </div>
     </div>
   </div>
