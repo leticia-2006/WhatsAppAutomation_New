@@ -43,19 +43,38 @@ async function showQR(numberId) {
 }
 
 // إضافة رقم جديد
-if (addNumberBtn) {
-  addNumberBtn.addEventListener("click", async () => {
-    const number = prompt("Enter WhatsApp number:");
-    if (!number) return;
+document.getElementById("addNumberBtn").addEventListener("click", async () => {
+  // افتح المودال
+  const addNumberModal = new bootstrap.Modal(document.getElementById("addNumberModal"));
+  addNumberModal.show();
 
-    await fetch(`${API_BASE}/wa-numbers`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ number })
+  // أظهر رسالة تحميل مؤقتة
+  document.getElementById("qr-loading").style.display = "block";
+  const qrCanvas = document.getElementById("qr-canvas");
+  const ctx = qrCanvas.getContext("2d");
+  ctx.clearRect(0, 0, qrCanvas.width, qrCanvas.height);
+
+  try {
+    // اطلب QR من السيرفر (الذي يستخدم Baileys)
+    const response = await fetch("/api/numbers/new-session", { method: "POST" });
+    if (!response.ok) throw new Error("Failed to generate QR");
+
+    const data = await response.json();
+    const qr = data.qr;
+
+    // أرسم QR في الـ canvas
+    document.getElementById("qr-loading").style.display = "none";
+    QRCode.toCanvas(qrCanvas, qr, function (error) {
+      if (error) console.error(error);
     });
-    await loadNumbers();
-  });
-}
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("qr-loading").innerText = "Error loading QR!";
+  }
+});
+
+
 
 // إغلاق المودال
 if (closeModal) {
