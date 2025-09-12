@@ -39,11 +39,13 @@ async function fetchUser() {
   } catch (err) {
     console.error("Not logged in", err);
     window.location.href = 'index.html';
+    document.getElementById("numbers-section").style.display = "block";
   }
 }
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
