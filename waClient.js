@@ -1,9 +1,9 @@
 const makeWASocket = require("@adiwajshing/baileys").default;
 const { useMultiFileAuthState, fetchLatestBaileysVersion, DisconnectReason } = require("@adiwajshing/baileys");
-const  pool = require("./db");
+const db = require("./db");
 const path = require("path");
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
 
 const clients = {};
 const qrCodes = {};
@@ -14,23 +14,19 @@ async function initClient(numberId) {
 
   const sock = makeWASocket({ version, auth: state });
 
-  sock.ev.on("connection.update", ({ connection, lastDisconnect, qr }) => {
+  sock.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {
     if (qr) qrCodes[numberId] = qr;
-    if (connection === "close") {
+    if (connection === "open") {
+    console.log(`✅ WhatsApp connected: ${numberId}`);
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["active", numberId]);}
+    if (connection === 'close') {
+    console.log(`❌ WhatsApp disconnected: ${numberId}`);
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["disconnected", numberId]);
+
       const reason = lastDisconnect?.error?.output?.statusCode;
       if (reason !== DisconnectReason.loggedOut) initClient(numberId);
     }
-    sock.ev.on('connection.update', async ({ connection }) => {
-  if (connection === 'open') {
-    console.log(`✅ WhatsApp connected: ${numberId}`);
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["active", numberId]);
-  }
-  if (connection === 'close') {
-    console.log(`❌ WhatsApp disconnected: ${numberId}`);
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["disconnected", numberId]);
-  }
 });
-  });
 
  sock.ev.on("creds.update", saveCreds);
 
@@ -43,14 +39,14 @@ async function initClient(numberId) {
     const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
 
     // 1. خزّن الرسالة في قاعدة البيانات
-    const insertRes = await pool.query(
+    const insertRes = await db.query(
       "INSERT INTO messages (sender, content, wa_number_id, created_at) VALUES ($1, $2, $3, NOW()) RETURNING id",
       [sender, text, 1] // مبدئيًا wa_number_id = 1 (تغير حسب الجلسة)
     );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
 
     // 2. تحقق من عدد الرسائل المرسلة من هذا العميل
-    const countRes = await pool.query(
+    const countRes = await db.query(
       "SELECT COUNT(*) FROM messages WHERE sender = $1",
       [sender]
     );
@@ -58,7 +54,7 @@ async function initClient(numberId) {
 
     // 3. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
     if (msgCount === 3) {
-      await pool.query(
+      await db.query(
         "UPDATE sessions SET group_id = 2 WHERE phone = $1",
         [sender]
       );
@@ -73,7 +69,7 @@ async function initClient(numberId) {
 sock.ev.on("messages.update", async (updates) => {
     for (let { key, update } of updates) {
       if (update.messageStubType === 1) {
-        await pool.query("UPDATE messages SET is_deleted=true WHERE id=$1", [key.id]);
+        await db.query("UPDATE messages SET is_deleted=true WHERE id=$1", [key.id]);
       }
     }
   });
