@@ -32,41 +32,80 @@ async function loadSessions() {
 }
 
 // Render Sessions
-function renderSessions(data = sessions) {
-  const tbody = document.getElementById('sessions-body');
-  if (!tbody) return;
+function renderSessions(sessions, filterType = "all") {
+  const container = document.getElementById("sessions-body");
+  container.innerHTML = "";
 
-  tbody.innerHTML = '';
+  // 🔹 Search bar
+  const searchBar = document.createElement("input");
+  searchBar.type = "text";
+  searchBar.className = "form-control mb-2";
+  searchBar.placeholder = "Search clients...";
+  searchBar.oninput = () => {
+    renderSessions(sessions.filter(s => 
+      s.name.toLowerCase().includes(searchBar.value.toLowerCase()) || 
+      s.phone.includes(searchBar.value)
+    ), filterType);
+  };
+  container.appendChild(searchBar);
 
-  if (!data.length) {
-    tbody.innerHTML = '<div class="row">No sessions found</div>';
-    document.getElementById('session-count').innerText = '0 sessions found';
-    return;
-  }
+  // 🔹 Table layout
+  const table = document.createElement("table");
+  table.className = "table table-hover table-sm";
+  table.innerHTML = `
+    <thead class="table-light">
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Status</th>
+        <th>Tags</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody = table.querySelector("tbody");
 
-  data.forEach(session => {
-    const id = session.id || '-';
-    const name = session.name || '-';
-    const phone = session.phone || '-';
-    const group = session.group_id ? `Group ${session.group_id}` : '-';
-    const tags = session.tags ? session.tags.split(',').map(t => `<span class="tag">${t}</span>`).join(' ') : '-';
-    const statusText = session.status || '-';
+  sessions.forEach(session => {
+    // Apply filter
+    if (filterType === "unread" && !session.unread) return;
+    if (filterType === "unreplied" && !session.unreplied) return;
+    if (filterType === "group" && !session.group) return;
 
-    const noteBtn = `<button onclick="openNoteModal(${id})">📝 Note</button>`;
+    const tr = document.createElement("tr");
 
-    const row = document.createElement("div");
-    row.classList.add("row");
-    row.innerHTML = `
-       <div>${id}</div>
-       <div>${name} / ${phone}</div>
-       <div>${group}</div>
-       <div>${tags}</div>
-       <div>${noteBtn}</div>
-       <div>${statusText}</div>
+    // Name + repeat mark
+    let name = session.name || "Unknown";
+    if (session.repeat) {
+      name += ` <span class="badge bg-warning text-dark">Repeat (${session.repeatAgents.join(", ")})</span>`;
+    }
+
+    tr.innerHTML = `
+      <td>${name}</td>
+      <td>${session.phone}</td>
+      <td>
+        <span class="badge ${session.unread ? "bg-danger" : "bg-success"}">
+          ${session.unread ? "Unread" : "Active"}
+        </span>
+      </td>
+      <td>
+        ${session.tags.map(tag => `<span class="badge bg-info text-dark me-1">${tag}</span>`).join("")}
+      </td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary" onclick="openNoteModal('${session.id}')">
+          <i class="fas fa-sticky-note"></i>
+        </button>
+      </td>
     `;
-    row.addEventListener("click", () => loadMessages(id));
-    tbody.appendChild(row);
+
+    // Click to open chat
+    tr.style.cursor = "pointer";
+    tr.onclick = () => loadChat(session.id);
+
+    tbody.appendChild(tr);
   });
+
+  container.appendChild(table);
 
   document.getElementById('session-count').innerText = `${data.length} sessions found`;
 }
