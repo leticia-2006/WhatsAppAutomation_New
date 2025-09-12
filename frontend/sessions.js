@@ -100,7 +100,7 @@ function renderSessions(sessions, filterType = "all") {
 
     // Click to open chat
     tr.style.cursor = "pointer";
-    tr.onclick = () => loadChat(session.id);
+    tr.onclick = () => loadMessages(session.id);
 
     tbody.appendChild(tr);
   });
