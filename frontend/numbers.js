@@ -2,9 +2,6 @@ const API_BASE = "https://chat.ohgo.site"; // غيّر للرابط الحقيق
 
 const tableBody = document.querySelector("#numbersTable tbody");
 const addNumberBtn = document.getElementById("addNumberBtn");
-const qrModal = document.getElementById("qrModal");
-const qrImage = document.getElementById("qrImage");
-const closeModal = document.getElementById("closeModal");
 const searchInput = document.getElementById("search");
 
 // تحميل الأرقام
