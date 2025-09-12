@@ -108,7 +108,18 @@ function renderSessions(sessions, filterType = "all") {
   container.appendChild(table);
 
   document.getElementById('session-count').innerText = `${data.length} sessions found`;
+
+  document.querySelectorAll(".tab-link")
+  .forEach(tab => {
+    tab.addEventListener("click, () => {
+       const type = tab.dataset.tab;
+  renderSessions(allSessions, type);
+  });
 }
+
+
+
+
 
 // Load Messages
 async function loadMessages(clientId) {
