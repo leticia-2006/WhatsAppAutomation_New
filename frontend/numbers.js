@@ -54,8 +54,8 @@ document.getElementById("addNumberBtn").addEventListener("click", async () => {
  
   try {
     // اطلب QR من السيرفر (الذي يستخدم Baileys)
-    const res = await axios.get("/sessions/new");",
-    if (!response.ok) throw new Error("Failed to generate QR");
+    const res = await axios.get("/sessions/new");
+    if (!res.data.qr) throw new Error("Failed to generate QR");
     const qr = res.data.qr;
 
     // أرسم QR في الـ canvas
