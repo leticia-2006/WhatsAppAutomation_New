@@ -45,32 +45,31 @@ async function showQR(numberId) {
 // إضافة رقم جديد
 document.getElementById("addNumberBtn").addEventListener("click", async () => {
   // افتح المودال
-  const addNumberModal = new bootstrap.Modal(document.getElementById("addNumberModal"));
-  addNumberModal.show();
+  const modal = new bootstrap.Modal(document.getElementById("addNumberModal"));
+  modal.show();
 
   // أظهر رسالة تحميل مؤقتة
   document.getElementById("qr-loading").style.display = "block";
-  const qrCanvas = document.getElementById("qr-canvas");
-  const ctx = qrCanvas.getContext("2d");
-  ctx.clearRect(0, 0, qrCanvas.width, qrCanvas.height);
-
+  document.getElementById("qr-canvas").style.display = "none";
+ 
   try {
     // اطلب QR من السيرفر (الذي يستخدم Baileys)
-    const response = await fetch("/api/numbers/new-session", { method: "POST" });
+    const res = await axios.get("/sessions/new");",
     if (!response.ok) throw new Error("Failed to generate QR");
-
-    const data = await response.json();
-    const qr = data.qr;
+    const qr = res.data.qr;
 
     // أرسم QR في الـ canvas
-    document.getElementById("qr-loading").style.display = "none";
-    QRCode.toCanvas(qrCanvas, qr, function (error) {
+   const canvas = document.getElementById("qr-canvas");
+    const QRCode = window.QRCode; QRCode.toCanvas(canvas, qr, function(error) { 
       if (error) console.error(error);
+      console.log("QR generated!");
     });
+    document.getElementById("qr-loading").style.display = "none";
+    canvas.style.display = "block";
 
   } catch (err) {
-    console.error(err);
-    document.getElementById("qr-loading").innerText = "Error loading QR!";
+    console.error("Error fetching QR:", err);
+    document.getElementById("qr-loading").innerText = "Failed to loadQR!";
   }
 });
 
