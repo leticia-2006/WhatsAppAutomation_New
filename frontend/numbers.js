@@ -21,9 +21,12 @@ async function loadNumbers() {
         <td>${num.status}</td>
         <td>${num.agent_id || "-"}</td>
         <td>
-          <button onclick="showQR(${num.id})">Show QR</button>
-          <button onclick="transferAgent(${num.id})">Transfer</button>
-          <button onclick="removeNumber(${num.id})">Remove</button>
+          <button class="btn btn-sm btn-info" onclick="showQR(${num.id})" title="Show QR">
+          <i class="fas fa-qrcode"></i></button>
+          <button class="btn btn-sm btn-warning" onclick="transferAgent(${num.id})" title="Transfer">
+          <i class="fas fa-exchange-alt"></i></button>
+          <button class="btn btn-sm btn-danger" onclick="removeNumber(${num.id})" title="Remove">
+          <i class="fas fa-trash"></i></button>
         </td>
       </tr>
     `;
