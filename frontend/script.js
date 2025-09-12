@@ -39,8 +39,7 @@ async function fetchUser() {
   } catch (err) {
     console.error("Not logged in", err);
     window.location.href = 'index.html';
-    document.getElementById("numbers-section").style.display = "block";
-  }
+   }
 }
 function applyFilters() {
   const searchValue = document.getElementById("search-input").value.toLowerCase();
@@ -65,6 +64,7 @@ function applyFilters() {
 
 // Load initial data
 window.addEventListener("load", fetchUser, );
+
 
 
 
