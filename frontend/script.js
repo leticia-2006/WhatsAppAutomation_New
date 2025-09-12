@@ -42,9 +42,30 @@ async function fetchUser() {
     document.getElementById("numbers-section").style.display = "block";
   }
 }
+function applyFilters() {
+  const searchValue = document.getElementById("search-input").value.toLowerCase();
+  const tagValue = document.getElementById("tag-filter").value;
+
+  const sessions = document.querySelectorAll("#sessions-body .session-item");
+
+  sessions.forEach(session => {
+    const name = session.querySelector(".session-name")?.textContent.toLowerCase() || "";
+    const tag = session.getAttribute("data-tag") || "";
+
+    const matchesSearch = name.includes(searchValue);
+    const matchesTag = tagValue === "" || tag === tagValue;
+
+    if (matchesSearch && matchesTag) {
+      session.style.display = "block";
+    } else {
+      session.style.display = "none";
+    }
+  });
+}
 
 // Load initial data
-window.addEventListener("load", fetchUser);
+window.addEventListener("load", fetchUser, );
+
 
 
 
