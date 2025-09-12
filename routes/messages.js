@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { Pool } = require("pg");
 const { sendMessageToNumber } = require("../waClient");
-const translate = require("vitalets/google-translate-api");
-
+const translate = require("@vitalets/google-translate-api");
+const db = require("../db");
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const { client } = require("../waClient");
 
 // جلب الرسائل لجلسة
 router.get("/:sessionId", async (req, res) => {
