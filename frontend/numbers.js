@@ -60,10 +60,12 @@ document.getElementById("addNumberBtn").addEventListener("click", async () => {
 
     // أرسم QR في الـ canvas
    const canvas = document.getElementById("qr-canvas");
-    const QRCode = window.QRCode; QRCode.toCanvas(canvas, qr, function(error) { 
+    QRCode.toCanvas(canvas, qr, (error) => { 
       if (error) console.error(error);
       console.log("QR generated!");
     });
+    const addNumberModal = new bootstrap.Modal(document.getElementById("addNumberModal"));
+    addNumberModal.show();
     document.getElementById("qr-loading").style.display = "none";
     canvas.style.display = "block";
 
