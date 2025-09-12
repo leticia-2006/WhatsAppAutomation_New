@@ -63,7 +63,8 @@ function applyFilters() {
 }
 
 // Load initial data
-window.addEventListener("load", fetchUser, );
+window.addEventListener("load", fetchUser);
+
 
 
 
