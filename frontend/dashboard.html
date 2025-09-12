@@ -142,17 +142,7 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <!-- QR Modal -->
-  <div class="modal fade" id="qrModal"
-    tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content p-3 text-center">
-        <img id="qrImage" src="" style="max-width:100%;"/>
-        <button id="closeModal" class="btn btn-secondary mt-3">Close</button>
-      </div>
-    </div>
-  </div>
-
+ 
 </div>
 
   <!-- Add Number Modal -->
@@ -164,8 +154,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">
-        <div id="qr-loading">Loading QR...</div>     
-        <canvas id="qr-canvas" style="display:none;"></canvas>
+        <div id="qr-loading" class="mb-3">Generating QR...</div>     
+        <canvas id="qr-canvas"></canvas>
       </div>
     </div>
   </div>
