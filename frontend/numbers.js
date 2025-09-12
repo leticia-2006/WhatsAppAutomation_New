@@ -31,19 +31,13 @@ async function loadNumbers() {
   });
 }
 
-// عرض QR
-async function showQR(numberId) {
-  const res = await fetch(`${API_BASE}/wa-numbers/qr/${numberId}`);
-  const data = await res.json();
-  qrImage.src = data.qr;
-  qrModal.style.display = "block";
-}
-
 // إضافة رقم جديد
-document.getElementById("addNumberBtn").addEventListener("click", async () => {
-  // افتح المودال
-  const modal = new bootstrap.Modal(document.getElementById("addNumberModal"));
+addNumberBtn.addEventListener("click", async () => {
+  const modal = new 
+    bootstrap.Modal(document.getElementById("addNumberModal"));
   modal.show();
+
+ 
 
   // أظهر رسالة تحميل مؤقتة
   document.getElementById("qr-loading").style.display = "block";
@@ -61,8 +55,7 @@ document.getElementById("addNumberBtn").addEventListener("click", async () => {
       if (error) console.error(error);
       console.log("QR generated!");
     });
-    const addNumberModal = new bootstrap.Modal(document.getElementById("addNumberModal"));
-    addNumberModal.show();
+    
     document.getElementById("qr-loading").style.display = "none";
     canvas.style.display = "block";
 
