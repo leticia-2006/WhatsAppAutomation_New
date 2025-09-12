@@ -41,7 +41,7 @@ async function initClient(numberId) {
     // 1. خزّن الرسالة في قاعدة البيانات
     const insertRes = await db.query(
       "INSERT INTO messages (sender, content, wa_number_id, created_at) VALUES ($1, $2, $3, NOW()) RETURNING id",
-      [sender, text, 1] // مبدئيًا wa_number_id = 1 (تغير حسب الجلسة)
+      [sender, text, waNumberId] // مبدئيًا wa_number_id = 1 (تغير حسب الجلسة)
     );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
 
