@@ -107,11 +107,11 @@ function renderSessions(sessions, filterType = "all") {
 
   container.appendChild(table);
 
-  document.getElementById('session-count').innerText = `${data.length} sessions found`;
+  document.getElementById('session-count').innerText = `${sessions.length} sessions found`;
 
   document.querySelectorAll(".tab-link")
   .forEach(tab => {
-    tab.addEventListener("click, () => {
+    tab.addEventListener("click" () => {
        const type = tab.dataset.tab;
   renderSessions(allSessions, type);
   });
