@@ -1,6 +1,6 @@
 const makeWASocket = require("@adiwajshing/baileys").default;
 const { useMultiFileAuthState, fetchLatestBaileysVersion, DisconnectReason } = require("@adiwajshing/baileys");
-const { Pool } = require("pg");
+const  pool = require("./db");
 const path = require("path");
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -32,26 +32,45 @@ async function initClient(numberId) {
 });
   });
 
-  sock.ev.on("creds.update", saveCreds);
+ sock.ev.on("creds.update", saveCreds);
 
-  sock.ev.on("messages.upsert", async ({ messages }) => {
-    for (let msg of messages) {
-      if (!msg.message) continue;
-      const sessionRes = await pool.query(
-        "SELECT id FROM sessions WHERE wa_number_id=$1 ORDER BY created_at DESC LIMIT 1",
-        [numberId]
-      );
-      if (sessionRes.rowCount === 0) continue;
-      const sessionId = sessionRes.rows[0].id;
+ sock.ev.on("messages.upsert", async (m) => {
+  try {
+    const msg = m.messages[0];
+    if (!msg.message || msg.key.fromMe) return; // تجاهل الرسائل الفارغة أو المرسلة من البوت نفسه
 
+    const sender = msg.key.remoteJid; 
+    const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
+
+    // 1. خزّن الرسالة في قاعدة البيانات
+    const insertRes = await pool.query(
+      "INSERT INTO messages (sender, content, wa_number_id, created_at) VALUES ($1, $2, $3, NOW()) RETURNING id",
+      [sender, text, 1] // مبدئيًا wa_number_id = 1 (تغير حسب الجلسة)
+    );
+    console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
+
+    // 2. تحقق من عدد الرسائل المرسلة من هذا العميل
+    const countRes = await pool.query(
+      "SELECT COUNT(*) FROM messages WHERE sender = $1",
+      [sender]
+    );
+    const msgCount = parseInt(countRes.rows[0].count);
+
+    // 3. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
+    if (msgCount === 3) {
       await pool.query(
-        "INSERT INTO messages(session_id, sender_role, content, is_deleted, created_at) VALUES($1,$2,$3,$4,NOW())",
-        [sessionId, "client", msg.message.conversation || "", false]
+        "UPDATE sessions SET group_id = 2 WHERE phone = $1",
+        [sender]
       );
+      console.log(`🚀 المستخدم ${sender} تم نقله إلى الجروب 2 بعد ${msgCount} رسائل`);
     }
-  });
 
-  sock.ev.on("messages.update", async (updates) => {
+  } catch (err) {
+    console.error("خطأ أثناء معالجة الرسالة:", err);
+  }
+});
+  
+sock.ev.on("messages.update", async (updates) => {
     for (let { key, update } of updates) {
       if (update.messageStubType === 1) {
         await pool.query("UPDATE messages SET is_deleted=true WHERE id=$1", [key.id]);
