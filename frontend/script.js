@@ -35,6 +35,7 @@ async function fetchUser() {
 
     // تحميل أرقام الواتساب إذا سوبر أدمن
     if (user.role === 'super_admin' && typeof loadNumbers === "function") {
+      document.getElementById("numbers-section").style.display = "block";
       loadNumbers();
     }
 
@@ -66,6 +67,7 @@ function applyFilters() {
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
