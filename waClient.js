@@ -1,4 +1,4 @@
-const makeWASocket = require("@adiwajshing/baileys").default;
+const makeWASocket = require("@whiskeysockets/baileys").default;
 const { useMultiFileAuthState, fetchLatestBaileysVersion, DisconnectReason } = require("@adiwajshing/baileys");
 const db = require("./db");
 const path = require("path");
