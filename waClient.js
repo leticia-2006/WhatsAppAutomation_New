@@ -61,7 +61,10 @@ await db.query(
   "INSERT INTO messages (session_id, sender, content, wa_number_id, created_at) VALUES ($1,$2,$3,$4,NOW())",
   [sessionId, sender, text, numberId]
 );
-   
+   const insertRes = await db.query(
+  "INSERT INTO messages (session_id, sender, content, wa_number_id, created_at) VALUES ($1,$2,$3,$4,NOW()) RETURNING id",
+  [sessionId, sender, text, numberId]
+);
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
 
     // 2. تحقق من عدد الرسائل المرسلة من هذا العميل
