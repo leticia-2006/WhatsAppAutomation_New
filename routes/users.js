@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
 const bcrypt = require('bcrypt');
-const { requireLogin, checkRole } = require('../middleware')
+const { requireLogin, checkRole } = require('../middleware/auth')
 
 
 router.get('/me', requireLogin, (req, res) => {
@@ -94,6 +94,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
