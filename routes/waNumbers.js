@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const { connectWA, getQRForNumber } = require("../waClient");
-const { requireLogin, checkRole } = require("../middleware");
+const { requireLogin, checkRole } = require("../middleware/auth");
 
 // جلب الأرقام
 router.get("/", requireLogin, async (req, res) => {
