@@ -1,4 +1,4 @@
-
+ 
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
@@ -9,10 +9,11 @@ router.use(requireLogin);
 router.get('/', async (req, res) => {
     try {
         const result = await db.query(`
-            SELECT c.*, m.content AS last_message, m.is_deleted
-            FROM clients c
-            LEFT JOIN messages m ON m.client_id = c.id
-            ORDER BY c.id DESC
+           SELECT c.*,
+       (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+       (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted
+FROM clients c
+ORDER BY c.id DESC;
         `);
         res.json(result.rows);
     } catch (err) {
@@ -39,6 +40,7 @@ router.get('/:client_id', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
