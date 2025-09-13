@@ -140,7 +140,7 @@ router.post(
       const { id } = req.params;
 
       // إعادة تشغيل جلسة Baileys
-      connectWA(id);
+      initClientF(id);
 
       await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", [
         "pending",
