@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
-const { requireLogin } = require('../middleware');
+const { requireLogin } = require('../middleware/auth');
 
 router.use(requireLogin);
 // كل العملاء مع آخر رسالة
@@ -39,6 +39,7 @@ router.get('/:client_id', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
