@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
-const { connectWA, getQRForNumber } = require("../waClient");
+const { initClient, getQRForNumber } = require("../waClient");
 const { requireLogin, checkRole } = require("../middleware/auth");
 
 // جلب الأرقام
@@ -43,7 +43,7 @@ router.post("/", requireLogin, checkRole(["super_admin"]), async (req, res) => {
     const numberId = result.rows[0].id;
 
     // تشغيل اتصال Baileys للرقم
-    connectWA(numberId);
+    initClient(numberId);
 
     res.json({
       message: "Number added. Please scan QR to activate.",
