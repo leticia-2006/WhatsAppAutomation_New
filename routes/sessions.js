@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
-const { getLatestQR } = require('../whatsappClient'); // استدعاء العميل الذي أنشأناه
+const { getQRForNumber } = require('../waClient'); // استدعاء العميل الذي أنشأناه
 
 
 router.get("/", async (req, res) => {
@@ -136,6 +136,7 @@ router.get('/unreplied', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
