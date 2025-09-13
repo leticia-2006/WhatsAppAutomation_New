@@ -38,11 +38,30 @@ async function initClient(numberId) {
     const sender = msg.key.remoteJid; 
     const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
 
-    // 1. خزّن الرسالة في قاعدة البيانات
-    const insertRes = await db.query(
-      "INSERT INTO messages (sender, content, wa_number_id, created_at) VALUES ($1, $2, $3, NOW()) RETURNING id",
-      [sender, text, numberId] // مبدئيًا wa_number_id = 1 (تغير حسب الجلسة)
-    );
+   
+  // ابحث عن session
+let sessionRes = await db.query(
+  "SELECT id FROM sessions WHERE phone=$1 AND wa_number_id=$2",
+  [sender, numberId]
+);
+
+let sessionId;
+if (sessionRes.rowCount === 0) {
+  const newSession = await db.query(
+    "INSERT INTO sessions (phone, wa_number_id, group_id, status, created_at, updated_at) VALUES ($1,$2,1,'unread',NOW(),NOW()) RETURNING id",
+    [sender, numberId]
+  );
+  sessionId = newSession.rows[0].id;
+} else {
+  sessionId = sessionRes.rows[0].id;
+}
+
+// 1. خزّن الرسالة مرتبطة بالجلسة
+await db.query(
+  "INSERT INTO messages (session_id, sender, content, wa_number_id, created_at) VALUES ($1,$2,$3,$4,NOW())",
+  [sessionId, sender, text, numberId]
+);
+   
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
 
     // 2. تحقق من عدد الرسائل المرسلة من هذا العميل
