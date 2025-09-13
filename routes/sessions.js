@@ -63,7 +63,7 @@ router.patch('/:id/status', async (req, res) => {
 router.get('/qr/:number_id', async (req, res) => {
     try {
         const numberId = req.params.number_id;
-        const qr = getLatestQR( "client_" + numberId);
+        const qr = getQRForNumber( "client_" + numberId);
       if(!qr) {
         return res.status(404).json({ error: "QR not found or client already connected" });
       }
@@ -136,6 +136,7 @@ router.get('/unreplied', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
