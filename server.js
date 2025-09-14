@@ -31,7 +31,7 @@ app.use(session({
   pool: pool,
   tableName: 'session'
  }),
- secret: process.env.SESSION_SECRET || 'wa_automation_secret',, // يمكن تغييره
+ secret: process.env.SESSION_SECRET || 'wa_automation_secret', // يمكن تغييره
  resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 2 * 60 * 60 * 1000, 
@@ -79,6 +79,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
