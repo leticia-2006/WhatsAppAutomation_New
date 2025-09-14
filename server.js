@@ -25,7 +25,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 2 * 60 * 60 * 1000, 
-           secure: false,
+           secure: true,
           sameSite: 'lax'
           } // 2 ساعات
 }));
@@ -68,6 +68,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
