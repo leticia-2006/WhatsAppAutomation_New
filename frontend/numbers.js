@@ -6,7 +6,7 @@ const searchInput = document.getElementById("search");
 
 // تحميل الأرقام
 async function loadNumbers() {
-  const res = await fetch(`${API_BASE}/wa-numbers`);
+  const res = await fetch(`${API_BASE}/wa-numbers`, {credentials: "include"});
   const data = await res.json();
 
   tableBody.innerHTML = "";
@@ -45,7 +45,7 @@ addNumberBtn.addEventListener("click", async () => {
  
   try {
     // اطلب QR من السيرفر (الذي يستخدم Baileys)
-    const res = await axios.get("/sessions/new");
+    const res = await axios.get(`${API_BASE}/sessions/new`, {withCredentials: true});
     if (!res.data.qr) throw new Error("Failed to generate QR");
     const qr = res.data.qr;
 
