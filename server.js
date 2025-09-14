@@ -32,6 +32,7 @@ app.use(session({
 
 app.use((req, res, next) => {
     res.setHeader("Content-Security-Policy","default-src * 'unsafe-inline' 'unsafe-eval'");
+ console.log("Cookies from client:",
     next();
 });
 
@@ -67,6 +68,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
