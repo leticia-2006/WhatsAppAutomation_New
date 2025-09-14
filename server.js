@@ -28,7 +28,7 @@ const pool = new Pool({
 app.use(session({
  
  store: new pgSession({
-  pool; pool,
+  pool: pool,
   tableName: 'session'
  }),
  secret: process.env.SESSION_SECRET || 'wa_automation_secret',, // يمكن تغييره
@@ -79,6 +79,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
