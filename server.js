@@ -1,4 +1,4 @@
-const express = require('express');
+ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const path = require('path');
@@ -25,8 +25,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 2 * 60 * 60 * 1000, 
-           secure: process.env.NODE_ENV ==='production',
-          sameSite: 'none'
+           secure: false,
+          sameSite: 'lax'
           } // 2 ساعات
 }));
 
@@ -67,6 +67,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
