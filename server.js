@@ -19,14 +19,15 @@ app.use(cors({
   credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.set('trust proxy', 1);
+app.set('trust proxy', true);
 app.use(session({
   secret: 'wa_automation_secret', // يمكن تغييره
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 2 * 60 * 60 * 1000, 
+           httpOnly: true,
            secure: true,
-          sameSite: 'none'
+          sameSite: "none"
           } // 2 ساعات
 }));
 
@@ -68,6 +69,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
