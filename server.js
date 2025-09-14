@@ -3,6 +3,8 @@ const cors = require('cors');
 const http = require('http');
 const path = require('path');
 const session = require('express-session'); // لإدارة الجلسات
+const pgSession = require('connect-pg-simple')(session);
+const { Pool } = require('pg');
 const bcrypt = require('bcrypt'); // لتشفير الباسورد
 const messagesRouter = require('./routes/messages')
 const db = require('./db.js');
@@ -12,7 +14,6 @@ const usersRouter = require('./routes/users');
 const waNumbersRouter = require('./routes/waNumbers');                            
 const { connectWA } = require('./waClient')
 
-
 // Middleware
 app.use(cors({
   origin: "https://chat.ohgo.site",
@@ -20,9 +21,18 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('trust proxy', true);
+const pool = new Pool({
+ connectionString:
+  process.env.DATABASE_URL,
+ ssl: { rejectUnauthorized: false }});
 app.use(session({
-  secret: 'wa_automation_secret', // يمكن تغييره
-  resave: false,
+ 
+ store: new pgSession({
+  pool; pool,
+  tableName: 'session'
+ }),
+ secret: process.env.SESSION_SECRET || 'wa_automation_secret',, // يمكن تغييره
+ resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 2 * 60 * 60 * 1000, 
            httpOnly: true,
@@ -69,6 +79,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
