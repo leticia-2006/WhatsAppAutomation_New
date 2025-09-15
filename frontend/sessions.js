@@ -17,7 +17,8 @@ tabLinks.forEach(link => {
 async function loadSessions() {
   try {
     const res = await axios.get(`/sessions/${currentTab}`, { withCredentials: true });
-    sessions = res.data || [];
+    console.log("/sessions response:", res.data);
+    sessions = Array.isArray(res.data) ? res.data : [];
 
     // لو Agent → فلترة الجلسات الخاصة بيه فقط
     let filteredSessions = sessions;
@@ -32,7 +33,11 @@ async function loadSessions() {
 }
 
 // Render Sessions
-function renderSessions(sessions, filterType = "all") {
+function renderSessions(sessions = [], filterType = "all") {
+  if (!Array.isArray(sessions)) {
+    console.error("renderSessions: sessions is not an array", sessions);
+    return;
+  }
   const container = document.getElementById("sessions-body");
   container.innerHTML = "";
 
