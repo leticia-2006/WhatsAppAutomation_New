@@ -109,17 +109,6 @@ function renderSessions(sessions, filterType = "all") {
 
   document.getElementById('session-count').innerText = `${sessions.length} sessions found`;
 
-  document.querySelectorAll(".tab-link")
-  .forEach(tab => {
-    tab.addEventListener("click", () => {
-       const type = tab.dataset.tab;
-  renderSessions(sessions, type);
-  });
-});
-
-
-
-
 
 // Load Messages
 async function loadMessages(clientId) {
