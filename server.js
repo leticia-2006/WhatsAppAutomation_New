@@ -20,7 +20,7 @@ app.use(cors({
   credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 const pool = new Pool({
  connectionString:
   process.env.DATABASE_URL,
@@ -86,6 +86,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
