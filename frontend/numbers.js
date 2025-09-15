@@ -68,9 +68,13 @@ addNumberBtn.addEventListener("click", async () => {
 
 
 // إغلاق المودال
-if (closeModal) {
-  closeModal.addEventListener("click", () => {
-    qrModal.style.display = "none";
+const qrModal = document.getElementById("addNumberModal");
+const closeBtn = qrModal?.querySelector(".btn-close");
+
+if (closeBtn) {
+  closeBtn.addEventListener("click", () => {
+    const modal = bootstrap.Modal.getInstance(qrModal);
+    modal.hide();
   });
 }
 
