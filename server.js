@@ -69,7 +69,7 @@ app.use('/wa-numbers', requireLogin,waNumbersRouter);
 // ===== Frontend =====
 const FRONTEND_PATH = path.join(__dirname,'frontend');
 app.use(express.static(FRONTEND_PATH));
-app.get('*', (req, res) => { res.sendFile(path.join(FRONTEND_PATH,'index.html')); });
+app.get('/dashboard.html', requireLogin, (req, res) => { res.sendFile(path.join(FRONTEND_PATH,'dashboard.html')); });
 
 const PORT = process.env.PORT || 5008;
 const server = http.createServer(app);
@@ -79,6 +79,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
