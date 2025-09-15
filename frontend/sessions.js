@@ -108,7 +108,7 @@ function renderSessions(sessions, filterType = "all") {
   container.appendChild(table);
 
   document.getElementById('session-count').innerText = `${sessions.length} sessions found`;
-
+}
 
 // Load Messages
 async function loadMessages(clientId) {
