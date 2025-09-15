@@ -75,11 +75,18 @@ app.get('*', (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html')
 const PORT = process.env.PORT || 5008;
 const server = http.createServer(app);
 
+/ Error handler لتشخيص المشاكل
+app.use((err, req, res, next) => {
+  console.error("Error caught:", err);
+  res.status(500).send("Internal Server Error: " + err.message);
+});
+
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
 
 module.exports = server;
+
 
 
 
