@@ -49,7 +49,7 @@ app.use((req, res, next) => {
 
 // ===== Middleware للتحقق من تسجيل الدخول =====
 function requireLogin(req, res, next) {
-    if (!req.session.user) return res.status(401).json({ message: 'Login required' });
+    if (!req.session.user) { return res.redirect('/');}
     next();
 }
 
@@ -70,6 +70,7 @@ app.use('/wa-numbers', requireLogin,waNumbersRouter);
 const FRONTEND_PATH = path.join(__dirname,'frontend');
 app.use(express.static(FRONTEND_PATH));
 app.get('/dashboard.html', requireLogin, (req, res) => { res.sendFile(path.join(FRONTEND_PATH,'dashboard.html')); });
+app.get('*', (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html'));});
 
 const PORT = process.env.PORT || 5008;
 const server = http.createServer(app);
@@ -79,6 +80,7 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 
 module.exports = server;
+
 
 
 
