@@ -8,6 +8,8 @@ exports.requireLogin = (req, res, next) => {
 exports.checkRole = (roles) => {
   return (req, res, next) => {
     if (!req.session.user) {
+      console.log("Session lost.Cookies:", req.headers.cookie);
+      console.log("Current session object:", req.session);
       return res.status(401).json({ error: "Unauthorized" });
     }
     if (!roles.includes(req.session.user.role)) {
