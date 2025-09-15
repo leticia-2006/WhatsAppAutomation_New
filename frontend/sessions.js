@@ -77,6 +77,9 @@ function renderSessions(sessions = [], filterType = "all") {
     if (filterType === "unreplied" && !session.unreplied) return;
     if (filterType === "group" && !session.group) return;
 
+  const tags = Array.isArray(session.tags) ? session.tags : [];
+  const notes = Array.isArray(session.notes) ? session.notes : [];
+   
     const tr = document.createElement("tr");
 
     // Name + repeat mark
@@ -94,7 +97,7 @@ function renderSessions(sessions = [], filterType = "all") {
         </span>
       </td>
       <td>
-        ${session.tags.map(tag => `<span class="badge bg-info text-dark me-1">${tag}</span>`).join("")}
+        ${tags.map(tag => `<span class="badge bg-info text-dark me-1">${tag}</span>`).join("")}
       </td>
       <td>
         <button class="btn btn-sm btn-outline-primary" onclick="openNoteModal('${session.id}')">
