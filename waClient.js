@@ -18,10 +18,10 @@ async function initClient(numberId) {
     if (qr) qrCodes[numberId] = qr;
     if (connection === "open") {
     console.log(`✅ WhatsApp connected: ${numberId}`);
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["active", numberId]);}
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);}
     if (connection === 'close') {
     console.log(`❌ WhatsApp disconnected: ${numberId}`);
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["disconnected", numberId]);
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
 
       const reason = lastDisconnect?.error?.output?.statusCode;
       if (reason !== DisconnectReason.loggedOut) initClient(numberId);
