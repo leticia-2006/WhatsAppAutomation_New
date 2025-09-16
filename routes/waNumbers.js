@@ -37,7 +37,7 @@ router.post("/", requireLogin, checkRole(["super_admin"]), async (req, res) => {
 
     const result = await db.query(
       "INSERT INTO wa_numbers (number, status) VALUES ($1, $2) RETURNING id",
-      [number, "pending"]
+      [number, "Disconnected"]
     );
 
     const numberId = result.rows[0].id;
