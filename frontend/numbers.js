@@ -1,5 +1,5 @@
 const API_BASE = "https://chat.ohgo.site"; // غيّر للرابط الحقيقي
-
+ 
 const tableBody = document.querySelector("#numbersTable tbody");
 const addNumberBtn = document.getElementById("addNumberBtn");
 const searchInput = document.getElementById("search");
@@ -33,6 +33,8 @@ async function loadNumbers() {
 
 // إضافة رقم جديد
 addNumberBtn.addEventListener("click", async () => {
+ const phone = prompt("Enter whatsApp number (with country code);");
+  if (!phone) return;
   const modal = new 
     bootstrap.Modal(document.getElementById("addNumberModal"));
   modal.show();
@@ -45,16 +47,15 @@ addNumberBtn.addEventListener("click", async () => {
  
   try {
     //اضف الرقم  الجديد 
-    const addRes = await axios.post(`${API_BASE}/wa-numbers`, { number: "new_number" }, { withCredentials: true });
+    const addRes = await axios.post(`${API_BASE}/wa-numbers`, { number: phone }, { withCredentials: true });
     const numberId = addRes.data.id;
     // اطلب QR من السيرفر (الذي يستخدم Baileys)
     const res = await axios.get(`${API_BASE}/wa-numbers/${numberId}/qr`, {withCredentials: true});
     if (!res.data.qr) throw new Error("Failed to generate QR");
-    const qr = res.data.qr;
 
     // أرسم QR في الـ canvas
    const canvas = document.getElementById("qr-canvas");
-    QRCode.toCanvas(canvas, qr, (error) => { 
+    QRCode.toCanvas(canvas, res.data.qr, (error) => { 
       if (error) console.error(error);
       console.log("QR generated!");
     });
