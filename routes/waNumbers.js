@@ -146,7 +146,7 @@ router.post(
         "Disconnected",
         id,
       ]);
-
+      initClient(id);
       res.json({
         success: true,
         message: "Please scan QR again to confirm the number",
