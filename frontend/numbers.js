@@ -93,3 +93,54 @@ if (searchInput) {
     });
   });
 }
+
+// 📌 إظهار QR لرقم معين
+async function showQR(id) {
+  try {
+    const modal = new bootstrap.Modal(document.getElementById("addNumberModal"));
+    modal.show();
+
+    document.getElementById("qr-loading").style.display = "block";
+    document.getElementById("qr-canvas").style.display = "none";
+
+    const res = await axios.get(`${API_BASE}/wa-numbers/${id}/qr`, { withCredentials: true });
+    if (!res.data.qr) throw new Error("Failed to load QR");
+
+    const canvas = document.getElementById("qr-canvas");
+    QRCode.toCanvas(canvas, res.data.qr, (error) => {
+      if (error) console.error(error);
+      console.log("QR generated!");
+    });
+
+    document.getElementById("qr-loading").style.display = "none";
+    canvas.style.display = "block";
+  } catch (err) {
+    console.error("Error showing QR:", err);
+    document.getElementById("qr-loading").innerText = "Failed to load QR!";
+  }
+}
+
+// 📌 حذف رقم
+async function removeNumber(id) {
+  if (!confirm("Are you sure you want to delete this number?")) return;
+
+  try {
+    await axios.delete(`${API_BASE}/wa-numbers/${id}`, { withCredentials: true });
+    loadNumbers(); // تحديث الجدول بعد الحذف
+  } catch (err) {
+    console.error("Error deleting number:", err);
+  }
+}
+
+// 📌 نقل الرقم لوكيل آخر (ممكن تطور لاحقاً)
+async function transferAgent(id) {
+  const agentId = prompt("Enter the Agent ID to transfer this number:");
+  if (!agentId) return;
+
+  try {
+    await axios.post(`${API_BASE}/wa-numbers/${id}/transfer`, { agentId }, { withCredentials: true });
+    loadNumbers(); // تحديث الجدول بعد النقل
+  } catch (err) {
+    console.error("Error transferring number:", err);
+  }
+}
