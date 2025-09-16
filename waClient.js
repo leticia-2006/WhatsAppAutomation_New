@@ -15,16 +15,22 @@ async function initClient(numberId) {
   const sock = makeWASocket({ version, auth: state });
 
   sock.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {
-    if (qr) qrCodes[numberId] = qr;
+    if (qr) {
+      qrCodes[numberId] = qr;
+    console.log(` QR generated for number ${numberId}`);
+    }
+    
     if (connection === "open") {
     console.log(`✅ WhatsApp connected: ${numberId}`);
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);}
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);
+    delete qrCodes[numberId];
+    }
+    
     if (connection === 'close') {
     console.log(`❌ WhatsApp disconnected: ${numberId}`);
     await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
-
-      const reason = lastDisconnect?.error?.output?.statusCode;
-      if (reason !== DisconnectReason.loggedOut) initClient(numberId);
+    const reason = lastDisconnect?.error?.output?.statusCode;
+    if (reason !== DisconnectReason.loggedOut) initClient(numberId);
     }
 });
 
