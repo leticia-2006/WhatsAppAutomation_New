@@ -17,9 +17,9 @@ async function initClient(numberId) {
   sock.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {
     if (qr) {
       qrCodes[numberId] = qr;
-    console.log(` QR generated for number ${numberId}`);
+    console.log("✅ QR STORED for numberId:", numberId, qr.substring(0,20));
     }
-    
+    console.log("Connection update:", connection, numberId);});
     if (connection === "open") {
     console.log(`✅ WhatsApp connected: ${numberId}`);
     await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);
