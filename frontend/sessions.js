@@ -192,12 +192,18 @@ function saveNote() {
 async function sendMessage() {
   const input = document.getElementById("msgInput");
   const text = input.value.trim();
-  if (!text || !sessions.length) return;
+  if (!text || !currentSession) return;
 
   // اختار أول جلسة حالياً أو اللي معمول لها load
   const clientId = sessions[0]?.id;
-  await axios.post(`/messages/send`, { clientId, text });
+  await axios.post(`/messages/${currentSession.id}/send`, {
+    text,
+    waNumberId:
+   currentSession.wa_number_id,
+  jid: currentSession.jid
+  });
+                                                          });
   input.value = "";
-  loadMessages(clientId);
+  loadMessages(currentSession.id);
 }
 
