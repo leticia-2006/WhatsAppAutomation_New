@@ -115,7 +115,7 @@ router.delete(
 router.get("/:id/qr", requireLogin, async (req, res) => {
   try {
     const { id } = req.params;
-    const qr = getQRForNumber(id);
+    const qr = getQRForNumber(parseInt(id));
 
     if (!qr) {
       return res
