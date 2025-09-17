@@ -117,6 +117,8 @@ router.get("/:id/qr", requireLogin, async (req, res) => {
     const { id } = req.params;
     const qr = getQRForNumber(parseInt(id));
 
+    console.log("API /qr called for:", id, "result:", qr ? "FOUND" : "NULL");
+
     if (!qr) {
       return res.json({
         qr: null,
