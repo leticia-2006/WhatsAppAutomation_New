@@ -1,5 +1,16 @@
 const API_BASE = "https://chat.ohgo.site"; // غيّر للرابط الحقيقي
- 
+ async function waitForQR(id) {
+  let tries = 0;
+  while (tries < 5) { // يجرب 5 مرات
+    const res = await axios.get(`${API_BASE}/wa-numbers/${id}/qr`, { withCredentials: true });
+    if (res.data.qr) {
+      return res.data.qr;
+    }
+    await new Promise(resolve => setTimeout(resolve, 3000)); // انتظر 3 ثواني
+    tries++;
+  }
+  throw new Error("QR not available yet");
+}
 const tableBody = document.querySelector("#numbersTable tbody");
 const addNumberBtn = document.getElementById("addNumberBtn");
 const searchInput = document.getElementById("search");
@@ -104,12 +115,9 @@ async function showQR(id) {
     document.getElementById("qr-loading").style.display = "block";
     document.getElementById("qr-canvas").style.display = "none";
     console.log("showQR called with id:", id);
-    const res = await axios.get(`${API_BASE}/wa-numbers/${id}/qr`, { withCredentials: true });
-    console.log("Response from /qr:", res.data);
-    if (!res.data.qr) throw new Error("Failed to load QR");
-
+    const qrCode = await waitForQR(numberId);
     const canvas = document.getElementById("qr-canvas");
-    QRCode.toCanvas(canvas, res.data.qr, (error) => {
+    QRCode.toCanvas(canvas, qrCode, (error) => {
       if (error) console.error(error);
       console.log("QR generated!");
     });
