@@ -23,7 +23,7 @@ async function initClient(numberId) {
     if (connection === "open") {
     console.log(`✅ WhatsApp connected: ${numberId}`);
     await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);
-    delete qrCodes[numberId];
+    setTimeout => delete qrCodes[numberId], 60000);
     }
     
     if (connection === 'close') {
