@@ -61,12 +61,11 @@ addNumberBtn.addEventListener("click", async () => {
     const addRes = await axios.post(`${API_BASE}/wa-numbers`, { number: phone }, { withCredentials: true });
     const numberId = addRes.data.id;
     // اطلب QR من السيرفر (الذي يستخدم Baileys)
-    const res = await axios.get(`${API_BASE}/wa-numbers/${numberId}/qr`, {withCredentials: true});
-    if (!res.data.qr) throw new Error("Failed to generate QR");
+    const qrCode = await waitForQR(numberId);
 
     // أرسم QR في الـ canvas
    const canvas = document.getElementById("qr-canvas");
-    QRCode.toCanvas(canvas, res.data.qr, (error) => { 
+    QRCode.toCanvas(canvas, qrCode, (error) => { 
       if (error) console.error(error);
       console.log("QR generated!");
     });
@@ -115,7 +114,7 @@ async function showQR(id) {
     document.getElementById("qr-loading").style.display = "block";
     document.getElementById("qr-canvas").style.display = "none";
     console.log("showQR called with id:", id);
-    const qrCode = await waitForQR(numberId);
+    const qrCode = await waitForQR(id);
     const canvas = document.getElementById("qr-canvas");
     QRCode.toCanvas(canvas, qrCode, (error) => {
       if (error) console.error(error);
