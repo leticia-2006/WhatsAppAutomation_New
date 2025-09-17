@@ -118,11 +118,11 @@ router.get("/:id/qr", requireLogin, async (req, res) => {
     const qr = getQRForNumber(parseInt(id));
 
     if (!qr) {
-      return res
-        .status(404)
-        .json({ error: "QR not found or client already connected" });
+      return res.json({
+        qr: null,
+        message: "QR expired or client already connected"
+      });
     }
-
     res.json({ qr });
   } catch (err) {
     console.error("Error fetching QR:", err);
