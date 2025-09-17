@@ -96,14 +96,16 @@ if (searchInput) {
 
 // 📌 إظهار QR لرقم معين
 async function showQR(id) {
+ 
   try {
     const modal = new bootstrap.Modal(document.getElementById("addNumberModal"));
     modal.show();
 
     document.getElementById("qr-loading").style.display = "block";
     document.getElementById("qr-canvas").style.display = "none";
-
+    console.log("showQR called with id:", id);
     const res = await axios.get(`${API_BASE}/wa-numbers/${id}/qr`, { withCredentials: true });
+    console.log("Response from /qr:", res.data);
     if (!res.data.qr) throw new Error("Failed to load QR");
 
     const canvas = document.getElementById("qr-canvas");
