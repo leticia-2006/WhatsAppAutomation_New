@@ -65,7 +65,7 @@ if (sessionRes.rowCount === 0) {
 // 1. خزّن الرسالة مرتبطة بالجلسة
 const insertRes = await db.query(
   "INSERT INTO messages (session_id, sender, content, wa_number_id, created_at) VALUES ($1,$2,$3,$4,NOW()) RETURNING id",
-  [sessionId, sender, text, numberId]
+  [sessionId, "client", text, numberId]
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
     
