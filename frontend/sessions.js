@@ -108,8 +108,10 @@ function renderSessions(sessions = [], filterType = "all") {
 
     // Click to open chat
     tr.style.cursor = "pointer";
-    tr.onclick = () => loadMessages(session.id);
-
+    tr.onclick = () => { 
+      currentSession = session;
+      loadMessages(session.id);
+  };
     tbody.appendChild(tr);
   });
 
@@ -119,9 +121,9 @@ function renderSessions(sessions = [], filterType = "all") {
 }
 
 // Load Messages
-async function loadMessages(clientId) {
+async function loadMessages(sessionId) {
   try {
-    const res = await axios.get(`/messages/${clientId}`, { withCredentials: true });
+    const res = await axios.get(`/messages/${sessionId}`, { withCredentials: true });
     const messages = res.data;
     const chatBox = document.getElementById('chatMessages');
     if (!chatBox) return;
