@@ -1,6 +1,6 @@
 let sessions = [];
 let currentTab = 'all';
-let currrentSession = null;
+let currentSession = null;
 
 // Tabs switching
 const tabLinks = document.querySelectorAll('.tab-link');
