@@ -17,8 +17,8 @@ router.post("/:sessionId/send", async (req, res) => {
   try {
     await sendMessageToNumber(waNumberId, jid, text);
     await db.query(
-      "INSERT INTO messages(session_id, sender_role, content, is_deleted, created_at) VALUES($1,$2,$3,$4,NOW())",
-      [req.params.sessionId, "agent", text, false]
+      "INSERT INTO messages(session_id, sender_role, content, wa_number_id, is_deleted, created_at) VALUES($1,$2,$3,$4,$5,NOW())",
+      [req.params.sessionId, "agent", text, waNumberId, false]
     );
     res.json({ success: true });
   } catch (err) {
