@@ -146,7 +146,7 @@ async function loadMessages(sessionId) {
 async function translateMessage(messageId) {
   try {
     const res = await axios.post(`/messages/${messageId}/translate`, { lang: "en" }, { withCredentials: true });
-    alert("Translated: " + res.data.translation);
+    alert("Translated: " + res.data.translated);
   } catch (err) {
     console.error("Error translating message:", err);
   }
