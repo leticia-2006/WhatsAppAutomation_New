@@ -63,24 +63,20 @@ if (sessionRes.rowCount === 0) {
 }
 
 // 1. خزّن الرسالة مرتبطة بالجلسة
-await db.query(
-  "INSERT INTO messages (session_id, sender, content, wa_number_id, created_at) VALUES ($1,$2,$3,$4,NOW())",
-  [sessionId, sender, text, numberId]
-);
-   const insertRes = await db.query(
+const insertRes = await db.query(
   "INSERT INTO messages (session_id, sender, content, wa_number_id, created_at) VALUES ($1,$2,$3,$4,NOW()) RETURNING id",
   [sessionId, sender, text, numberId]
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
-
-    // 2. تحقق من عدد الرسائل المرسلة من هذا العميل
+    
+// 2. تحقق من عدد الرسائل المرسلة من هذا العميل
     const countRes = await db.query(
       "SELECT COUNT(*) FROM messages WHERE sender = $1",
       [sender]
     );
     const msgCount = parseInt(countRes.rows[0].count);
 
-    // 3. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
+// 3. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
     if (msgCount === 3) {
       await db.query(
         "UPDATE sessions SET group_id = 2 WHERE phone = $1",
