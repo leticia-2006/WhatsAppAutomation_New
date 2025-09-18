@@ -194,15 +194,13 @@ async function sendMessage() {
   const text = input.value.trim();
   if (!text || !currentSession) return;
 
-  // اختار أول جلسة حالياً أو اللي معمول لها load
-  const clientId = sessions[0]?.id;
   await axios.post(`/messages/${currentSession.id}/send`, {
-    text,
-    waNumberId:
-   currentSession.wa_number_id,
+  text,
+  waNumberId:
+  currentSession.wa_number_id,
   jid: currentSession.jid
   });
-                                                          });
+                                                          
   input.value = "";
   loadMessages(currentSession.id);
 }
