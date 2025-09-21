@@ -37,10 +37,12 @@ async function initClient(numberId) {
  sock.ev.on("creds.update", saveCreds);
 
  sock.ev.on("messages.upsert", async (m) => {
+   console.log("New message in WhatsApp:", JSON.stringify(m, null, 2));
   try {
     const msg = m.messages[0];
     if (!msg.message || msg.key.fromMe) return; // تجاهل الرسائل الفارغة أو المرسلة من البوت نفسه
-
+    console.log("Content of the message:", msg.message);
+    console.log("The sender:", msg.key.remoteJid);
     const sender = msg.key.remoteJid; 
     const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
 
