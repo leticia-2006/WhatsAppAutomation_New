@@ -44,18 +44,28 @@ async function initClient(numberId) {
     const sender = msg.key.remoteJid; 
     const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
 
-   
-  // ابحث عن session
+let clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [sender]);
+let clientId;
+if (clientRes.rowCount === 0) {
+  const newClient = await db.query(
+    "INSERT INTO clients (name, phone) VALUES ($1,$2) RETURNING id",
+    ["Unknown", sender]
+  );
+  clientId = newClient.rows[0].id;
+} else {
+  clientId = clientRes.rows[0].id;
+}   
+// ابحث عن session
 let sessionRes = await db.query(
-  "SELECT id FROM sessions WHERE phone=$1 AND wa_number_id=$2",
-  [sender, numberId]
+  "SELECT id FROM sessions WHERE client_id=$1 AND wa_number_id=$2",
+  [clientId, numberId]
 );
 
 let sessionId;
 if (sessionRes.rowCount === 0) {
   const newSession = await db.query(
-    "INSERT INTO sessions (phone, wa_number_id, group_id, status, created_at, updated_at) VALUES ($1,$2,1,'unread',NOW(),NOW()) RETURNING id",
-    [sender, numberId]
+    "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at) VALUES ($1,$2,1,'unread',NOW(),NOW()) RETURNING id",
+    [clientId, numberId]
   );
   sessionId = newSession.rows[0].id;
 } else {
@@ -64,8 +74,8 @@ if (sessionRes.rowCount === 0) {
 
 // 1. خزّن الرسالة مرتبطة بالجلسة
 const insertRes = await db.query(
-  "INSERT INTO messages (session_id, sender, content, wa_number_id, created_at) VALUES ($1,$2,$3,$4,NOW()) RETURNING id",
-  [sessionId, "client", text, numberId]
+  "INSERT INTO messages (session_id, client_id, sender_role, content, wa_number_id, id_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,false,NOW(),$6) RETURNING id",
+  [sessionId, clientId, "client", text, numberId, sender]
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
     
