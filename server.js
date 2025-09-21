@@ -14,6 +14,7 @@ const usersRouter = require('./routes/users');
 const waNumbersRouter = require('./routes/waNumbers');                            
 const { connectWA } = require('./waClient')
 
+console.log("Server file started running...");
 // Middleware
 app.use(cors({
   origin: "https://chat.ohgo.site",
@@ -47,6 +48,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+ console.log(`Incoming request: ${req.method} ${req.url}`);
+ next();
+});
 // ===== Middleware للتحقق من تسجيل الدخول =====
 function requireLogin(req, res, next) {
     if (!req.session.user) { return res.redirect('/');}
@@ -85,7 +90,15 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
 
+process.on("uncaughtException", (err) => {
+ console.error("Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+console.error("Unhandled Rejection:", reason);
+});
 module.exports = server;
+
 
 
 
