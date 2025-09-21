@@ -37,19 +37,30 @@ async function initClient(numberId) {
  sock.ev.on("creds.update", saveCreds);
 
  sock.ev.on("messages.upsert", async (m) => {
-   console.log("New message in WhatsApp:", JSON.stringify(msg.message, null, 2));
+   console.log("Event messages.upsert Triggered");
   try {
     const msg = m.messages[0];
-    if (!msg.message || msg.key.fromMe) return; // تجاهل الرسائل الفارغة أو المرسلة من البوت نفسه
-    console.log("Content of the message:", msg.message);
-    console.log("The sender:", msg.key.remoteJid);
+    console.log("Raw message object:", JSON.stringify(msg, null, 2));
+    
+    if (!msg.message) {
+      console.log("An empthy message that was ignored"); 
+    return;
+    }
+    if (msg.key.fromMe)  {
+      console.log("A message sent by the bot itself was ignored");
+      return;
+    }
+    
     const sender = msg.key.remoteJid; 
+    console.log("Sender:", sender);
+    
     let text = null;
 if (msg.message.conversation) text = msg.message.conversation;
 else if (msg.message.extendedTextMessage?.text) text = msg.message.extendedTextMessage.text;
 else if (msg.message.imageMessage) text = "[📷 صورة]";
 else if (msg.message.videoMessage) text = "[🎥 فيديو]";
 else text = "[رسالة غير مدعومة]";
+    console.log("Content of the message", text);
 
 
 let clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [sender]);
