@@ -37,14 +37,20 @@ async function initClient(numberId) {
  sock.ev.on("creds.update", saveCreds);
 
  sock.ev.on("messages.upsert", async (m) => {
-   console.log("New message in WhatsApp:", JSON.stringify(m, null, 2));
+   console.log("New message in WhatsApp:", JSON.stringify(msg.message, null, 2));
   try {
     const msg = m.messages[0];
     if (!msg.message || msg.key.fromMe) return; // تجاهل الرسائل الفارغة أو المرسلة من البوت نفسه
     console.log("Content of the message:", msg.message);
     console.log("The sender:", msg.key.remoteJid);
     const sender = msg.key.remoteJid; 
-    const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
+    let text = null;
+if (msg.message.conversation) text = msg.message.conversation;
+else if (msg.message.extendedTextMessage?.text) text = msg.message.extendedTextMessage.text;
+else if (msg.message.imageMessage) text = "[📷 صورة]";
+else if (msg.message.videoMessage) text = "[🎥 فيديو]";
+else text = "[رسالة غير مدعومة]";
+
 
 let clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [sender]);
 let clientId;
@@ -83,7 +89,7 @@ const insertRes = await db.query(
     
 // 2. تحقق من عدد الرسائل المرسلة من هذا العميل
     const countRes = await db.query(
-      "SELECT COUNT(*) FROM messages WHERE sender = $1",
+      "SELECT COUNT(*) FROM messages WHERE jid = $1",
       [sender]
     );
     const msgCount = parseInt(countRes.rows[0].count);
@@ -91,8 +97,8 @@ const insertRes = await db.query(
 // 3. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
     if (msgCount === 3) {
       await db.query(
-        "UPDATE sessions SET group_id = 2 WHERE phone = $1",
-        [sender]
+        "UPDATE sessions SET group_id = 2 WHERE client_id = $1",
+        [clientId]
       );
       console.log(`🚀 المستخدم ${sender} تم نقله إلى الجروب 2 بعد ${msgCount} رسائل`);
     }
