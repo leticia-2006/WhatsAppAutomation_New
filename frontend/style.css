@@ -256,3 +256,21 @@ header p { font-size: 14px; color: #777; margin-bottom: 24px; }
   color: #555;
   margin-bottom: 4px;
 }
+.translate-btn {
+  text-align: right;
+  margin-top: 4px;
+}
+
+.translate-btn button {
+  background: #f1f1f1;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.translate-btn button:hover {
+  background: #ddd;
+}
