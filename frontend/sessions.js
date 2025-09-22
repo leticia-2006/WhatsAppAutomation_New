@@ -131,13 +131,30 @@ async function loadMessages(sessionId) {
 
     chatBox.innerHTML = '';
     messages.forEach(msg => {
-      const content = msg.is_deleted ? `<i>Message deleted</i>` : msg.content;
-      const div = `<div class="message ${msg.sender_role}">
-                    ${content}
-                    <button onclick="translateMessage(${msg.id})">🌐</button>
-                   </div>`;
+     let content = msg.is_deleted ? `<i>Message deleted</i>` : msg.content;
+
+      // لو الرسالة صورة
+      if (msg.content_type === "image" && msg.media_url) {
+        content = `<img src="${msg.media_url}" alt="image" style="max-width:200px; border-radius:8px;">`;
+      }
+
+      // فقاعة الرسالة + زر الترجمة صغير
+      const div = `
+        <div class="message ${msg.sender_role}">
+          ${content}
+          <div style="text-align:right; margin-top:4px;">
+            <button onclick="translateMessage(${msg.id})" 
+              style="background:none; border:none; cursor:pointer; font-size:14px;">
+              🌐
+            </button>
+          </div>
+        </div>
+      `;
       chatBox.innerHTML += div;
     });
+
+    // النزول للأسفل تلقائياً
+    chatBox.scrollTop = chatBox.scrollHeight;
   } catch (err) {
     console.error("Error loading messages:", err);
   }
