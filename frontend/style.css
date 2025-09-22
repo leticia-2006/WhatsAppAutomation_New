@@ -1,49 +1,77 @@
-/* فقاعات المحادثة */
+/* المنطقة الرئيسية للدردشة */
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  background: #efeae2;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* قائمة الرسائل */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  background: url("https://i.ibb.co/7JfqXxB/chat-bg.png"); /* خلفية واتساب */
+  background-size: cover;
+}
+
+/* كل رسالة */
 .message {
   max-width: 70%;
-  padding: 10px 14px;
-  border-radius: 18px;
+  padding: 8px 12px;
+  border-radius: 8px;
   margin: 6px 0;
   font-size: 14px;
   line-height: 1.4;
+  position: relative;
   display: inline-block;
   clear: both;
+  word-wrap: break-word;
 }
 
+/* رسائل العميل (على اليسار) */
 .message.client {
-  background: #e1ffc7; /* أخضر فاتح */
+  background: #ffffff;
   float: left;
-  text-align: left;
+  border-radius: 0px 8px 8px 8px;
 }
 
+/* رسائل الوكيل (على اليمين) */
 .message.agent {
-  background: #dcf8c6; /* أزرق فاتح */
+  background: #dcf8c6;
   float: right;
-  text-align: right;
+  border-radius: 8px 0px 8px 8px;
 }
 
-.message strong {
-  display: block;
-  font-size: 12px;
-  color: #555;
-  margin-bottom: 4px;
-}
-.translate-btn {
-  text-align: right;
-  margin-top: 4px;
+/* وقت الرسالة */
+.message .time {
+  font-size: 11px;
+  color: gray;
+  position: absolute;
+  bottom: 2px;
+  right: 8px;
 }
 
-.translate-btn button {
-  background: #f1f1f1;
-  border: none;
+/* شريط الكتابة تحت */
+.chat-footer {
+  display: flex;
+  align-items: center;
+  background: #f0f2f5;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+.chat-footer input {
+  flex: 1;
+  margin-right: 8px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+}
+.chat-footer button {
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  font-size: 14px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
 }
-
-.translate-btn button:hover {
-  background: #ddd;
-}
-
