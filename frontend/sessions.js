@@ -138,15 +138,14 @@ async function loadMessages(sessionId) {
         content = `<img src="${msg.media_url}" alt="image" style="max-width:200px; border-radius:8px;">`;
       }
 
+      const senderClass = msg.sender_type === "client" ? "client" : "agent";
+
       // فقاعة الرسالة + زر الترجمة صغير
       const div = `
-        <div class="message ${msg.sender_role}">
+        <div class="message ${senderClass}">
           ${content}
-          <div style="text-align:right; margin-top:4px;">
-            <button onclick="translateMessage(${msg.id})" 
-              style="background:none; border:none; cursor:pointer; font-size:14px;">
-              🌐
-            </button>
+          <div class="translate-btn">
+            <button onclick="translateMessage(${msg.id}">🌐</button>
           </div>
         </div>
       `;
