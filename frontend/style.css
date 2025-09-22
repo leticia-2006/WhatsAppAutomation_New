@@ -15,6 +15,7 @@
   padding: 15px;
   background: url("https://static.whatsapp.net/rsrc.php/v4/yq/r/MHVytaGe3gh.png"); /* خلفية واتساب */
   background-size: auto;
+  background-color: #efeae2;
   background-repeat: repeat;
 }
 
@@ -105,6 +106,7 @@
 .translate-btn button:hover {
   color: #111;
 }
+
 
 
 
