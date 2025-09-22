@@ -139,11 +139,14 @@ async function loadMessages(sessionId) {
       }
 
       const senderClass = msg.sender_type === "client" ? "client" : "agent";
+      const time = new
+        Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
       // فقاعة الرسالة + زر الترجمة صغير
       const div = `
         <div class="message ${senderClass}">
           ${content}
+          <span class="time">${time}</span>
           <div class="translate-btn">
             <button onclick="translateMessage(${msg.id}">🌐</button>
           </div>
