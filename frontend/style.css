@@ -226,3 +226,33 @@ header p { font-size: 14px; color: #777; margin-bottom: 24px; }
     background: #0056b3;
 }
 
+/* فقاعات المحادثة */
+.message {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  margin: 6px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  display: inline-block;
+  clear: both;
+}
+
+.message.client {
+  background: #e1ffc7; /* أخضر فاتح */
+  float: left;
+  text-align: left;
+}
+
+.message.agent {
+  background: #dcf8c6; /* أزرق فاتح */
+  float: right;
+  text-align: right;
+}
+
+.message strong {
+  display: block;
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 4px;
+}
