@@ -133,8 +133,8 @@ async function loadMessages(sessionId) {
     messages.forEach(msg => {
       const content = msg.is_deleted ? `<i>Message deleted</i>` : msg.content;
       const div = `<div class="message ${msg.sender_role}">
-                     <strong>${msg.sender_role}:</strong> ${content}
-                     <button onclick="translateMessage(${msg.id})">🌐</button>
+                    ${content}
+                    <button onclick="translateMessage(${msg.id})">🌐</button>
                    </div>`;
       chatBox.innerHTML += div;
     });
