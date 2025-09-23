@@ -222,8 +222,13 @@ async function sendMessage() {
   currentSession.wa_number_id,
   jid: currentSession.jid
   });
-                                                          
-  input.value = "";
-  loadMessages(currentSession.id);
+  .then(() => {
+    loadMessages(currentSession.id);
+    input.value = "";
+  });
+  .catch(err => {
+    console.error("‎Error while sending the message:", err);
+  });
 }
-
+                                                          
+ 
