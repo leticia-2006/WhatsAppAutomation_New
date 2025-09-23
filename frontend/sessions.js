@@ -215,20 +215,19 @@ async function sendMessage() {
   const input = document.getElementById("msgInput");
   const text = input.value.trim();
   if (!text || !currentSession) return;
-
+try {
   await axios.post(`/messages/${currentSession.id}/send`, {
   text,
   waNumberId:
   currentSession.wa_number_id,
   jid: currentSession.jid
-  });
-  .then(() => {
+  }, { withCredentials: true });
+  
     loadMessages(currentSession.id);
     input.value = "";
-  });
-  .catch(err => {
+  } catch (err) {
     console.error("‎Error while sending the message:", err);
-  });
+  }
 }
                                                           
  
