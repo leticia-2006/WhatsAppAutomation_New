@@ -239,9 +239,9 @@ try {
   ${text}
   <span class="time">${time}</span>
   </div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      });
-    input.value = "";
+ chatBox.scrollTop = chatBox.scrollHeight;
+    
+  input.value = "";
   } catch (err) {
     console.error("‎Error while sending the message:", err);
   }
