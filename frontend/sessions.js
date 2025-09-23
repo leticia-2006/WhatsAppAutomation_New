@@ -93,8 +93,8 @@ function renderSessions(sessions = [], filterType = "all") {
       <td>${name}</td>
       <td>${session.phone}</td>
       <td>
-        <span class="badge ${session.unread ? "bg-danger" : "bg-success"}">
-          ${session.unread ? "Unread" : "Active"}
+        <span class="badge ${session.status === "unread" ? "bg-danger" : "bg-success"}">
+          ${session.status}
         </span>
       </td>
       <td>
