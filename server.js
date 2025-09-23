@@ -60,9 +60,14 @@ function requireLogin(req, res, next) {
 
 function checkRole(role) {
     return (req, res, next) => {
-        if (req.session.user.role === role || req.session.user.role === 'super_admin') next();
-        else res.status(403).json({ message: 'Access denied' });
-    }
+        if (req.session.user.role === role || req.session.user.role === 'super_admin' || 
+           (role === 'agent' && req.session.user.role === 'supervisor')
+           ) {
+         next();
+        } else {
+         res.status(403).json({ message: 'Acces deniend' });
+        }
+   }
 }
 
 // ===== Routes تطبيقية =====
@@ -99,6 +104,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
