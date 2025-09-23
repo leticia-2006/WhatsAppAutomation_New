@@ -185,8 +185,8 @@ async function translateMessage(messageId) {
   try {
     const res = await axios.post(`/messages/${messageId}/translate`, { lang: "en" }, { withCredentials: true });
     const msgEl = document.querySelector(`.message[data-id="${messageId}"]`);
-    if (msgEl) {
-      msgEl.innerHTML += `<div class="translation">🌐 ${res.data.translated}</div>`;
+    if (msgEl && res.data.translated) {
+       msgEl.innerHTML += `<div class="translation">🌐 ${res.data.translated}</div>`;
     }
   } catch (err) {
     console.error("Error translating message:", err);
