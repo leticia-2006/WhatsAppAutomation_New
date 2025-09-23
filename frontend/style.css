@@ -111,6 +111,12 @@
   color: #111;
 }
 
+.message .translation {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #0066cc;
+  font-style: italic;
+}
 
 
 
