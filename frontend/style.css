@@ -1,68 +1,83 @@
-/* المنطقة الرئيسية للدردشة */
-.chat {
+/* Header */
+.chat-header {
+  height: 60px;
+  background: #f0f2f5;
+  border-bottom: 1px solid #ddd;
   display: flex;
-  flex-direction: column;
-  height: 500px;
-  background: #efeae2;
-  border-radius: 8px;
-  overflow: hidden;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* قائمة الرسائل */
+/* Messages */
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: 15px;
-  background: url("https://static.whatsapp.net/rsrc.php/v4/yq/r/MHVytaGe3gh.png"); /* خلفية واتساب */
-  background-size: auto;
-  background-color: #efeae2;
-  background-repeat: repeat;
+  padding: 20px;
+  background: url("https://static.whatsapp.net/rsrc.php/v4/yq/r/MHVytaGe3gh.png") repeat;
 }
 
-/* كل رسالة */
+/* Message bubble */
 .message {
-  background-clip: padding-box;
-  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
   max-width: 70%;
-  padding: 8px 12px;
+  padding: 8px 12px 20px 12px; /* extra bottom for time */
   border-radius: 8px;
   margin: 6px 0;
   font-size: 14px;
   line-height: 1.4;
   position: relative;
-  display: inline-block;
-  clear: both;
   word-wrap: break-word;
+  clear: both;
 }
 
-/* رسائل العميل (على اليسار) */
+/* Client left */
 .message.client {
   background: #ffffff;
   float: left;
-  border-radius: 0px 8px 8px 8px;
+  border-radius: 0 8px 8px 8px;
 }
 
-/* رسائل الوكيل (على اليمين) */
+/* Agent right */
 .message.agent {
   background: #dcf8c6;
   float: right;
-  border-radius: 8px 0px 8px 8px;
+  border-radius: 8px 0 8px 8px;
 }
 
-/* وقت الرسالة */
+/* Time inside bubble */
 .message .time {
   font-size: 11px;
   color: gray;
   position: absolute;
-  bottom: -15px;
-  right: 8px;
+  bottom: 4px;
+  right: 10px;
 }
+
+/* Translation */
+.message .translation {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #0066cc;
+  font-style: italic;
+}
+
+/* Translate button */
 .message .translate-btn {
   position: absolute;
   top: 4px;
-  right: -28px;
+  right: 8px;
 }
-/* شريط الكتابة تحت */
+.message .translate-btn button {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #888;
+  cursor: pointer;
+}
+.message .translate-btn button:hover {
+  color: #111;
+}
+
+/* Footer */
 .chat-footer {
   display: flex;
   align-items: center;
@@ -72,7 +87,7 @@
 }
 .chat-footer input {
   flex: 1;
-  margin-right: 8px;
+  margin: 0 8px;
   border-radius: 20px;
   border: 1px solid #ccc;
   padding: 8px 15px;
@@ -91,35 +106,5 @@
 .chat-footer button:hover {
   background: #20b358;
 }
-.translate-btn {
-  position: absolute;
-  bottom: 2px;
-  left: 8px;
-}
-
-.translate-btn button {
-  background: none;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 0;
-  color: #888;
-}
-
-.translate-btn button:hover {
-  color: #111;
-}
-
-.message .translation {
-  margin-top: 4px;
-  font-size: 13px;
-  color: #0066cc;
-  font-style: italic;
-}
-
-
-
-
 
 
