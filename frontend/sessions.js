@@ -141,6 +141,16 @@ async function loadMessages(sessionId) {
       if (msg.content_type === "image" && msg.media_url) {
         content = `<img src="${msg.media_url}" alt="image" style="max-width:200px; border-radius:8px;">`;
       }
+      if (msg.content_type === "video" && msg.media_url) {
+  content = `<video controls style="max-width:250px; border-radius:8px;">
+               <source src="${msg.media_url}" type="video/mp4">
+             </video>`;
+}
+      if (msg.content_type === "audio" && msg.media_url) {
+  content = `<audio controls>
+               <source src="${msg.media_url}" type="audio/mpeg">
+             </audio>`;
+}
 
       let translation = "";
       if (msg.translated_content) {
