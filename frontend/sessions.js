@@ -111,6 +111,11 @@ function renderSessions(sessions = [], filterType = "all") {
     tr.style.cursor = "pointer";
     tr.onclick = () => { 
       currentSession = session;
+
+      const chatHeader = document.getElementById("chatHeader");
+      if (chatHeader) {
+        chatHeader.innerText = `${session.phone} | Lang: ${session.lang || "Unknown"}`;
+      }
       loadMessages(session.id);
   };
     tbody.appendChild(tr);
