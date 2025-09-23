@@ -255,6 +255,9 @@ try {
   currentSession.wa_number_id,
   jid: currentSession.jid
   }, { withCredentials: true });
+  input.value = "";
+  loadMessages(currentSession.id);
+  
 
   const chatBox = document.getElementById("chatMessages");
   const time = new
