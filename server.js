@@ -86,6 +86,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error: " + err.message);
 });
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
@@ -98,6 +99,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
