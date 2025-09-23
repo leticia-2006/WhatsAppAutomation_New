@@ -251,7 +251,7 @@ async function sendMessage() {
 try {
   await axios.post(`/messages/${currentSession.id}/send`, {
   text,
-  wa_number_id:
+  waNumberId:
   currentSession.wa_number_id,
   jid: currentSession.jid
   }, { withCredentials: true });
