@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
      );
     } else {
       result = await db.query(
-        `SELECT s.id, s.client_id, c.name As name, c.phone AS phone, 
+        `SELECT s.id, s.client_id, c.name As name, c.phone AS phone, c.avatar_url, 
                 (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
                 s.status, s.created_at, s.updated_at,
                 wn.assigned_agent_id AS agent_id,
@@ -158,6 +158,7 @@ router.get('/unreplied', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
