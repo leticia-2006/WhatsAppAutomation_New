@@ -154,10 +154,23 @@ router.get('/unreplied', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
-
+router.post("/add-note", async (req, res) => {
+  const { clientId, note } = req.body;
+  try {
+    await db.query(
+      "INSERT INTO notes (client_id, note, created_at) VALUES ($1, $2, NOW())",
+      [clientId, note]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error saving note:", err);
+    res.status(500).json({ error: "Failed to save note" });
+  }
+});
 
 
 module.exports = router;
+
 
 
 
