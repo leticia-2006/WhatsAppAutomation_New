@@ -46,11 +46,8 @@ async function initClient(numberId) {
       console.log("An empthy message that was ignored"); 
     return;
     }
-    if (msg.key.fromMe)  {
-      console.log("A message sent by the bot itself was ignored");
-      return;
-    }
-    
+
+    const isFromMe = msg.key.fromMe;
     const sender = msg.key.remoteJid; 
     console.log("Sender:", sender);
     
@@ -99,7 +96,8 @@ if (sessionRes.rowCount === 0) {
 // 1. خزّن الرسالة مرتبطة بالجلسة
 const insertRes = await db.query(
   "INSERT INTO messages (session_id, client_id, sender_role, content, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,false,NOW(),$6) RETURNING id",
-  [sessionId, clientId, "client", text, numberId, sender]
+  [sessionId, clientId, isFromMe ? "agent" : "client", text, numberId, sender]
+  
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
     
@@ -111,6 +109,14 @@ const insertRes = await db.query(
     const msgCount = parseInt(countRes.rows[0].count);
 
 // 3. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
+   if (!isFromMe) {
+     const countRes = await db.query(
+       "SELECT COUNT(*) FROM messages WHERE jid = $1 AND sender_role='client'",
+       [sender]
+     );
+     const msgCount = 
+parseInt(countRes.rows[0].count);
+     
     if (msgCount === 3) {
       await db.query(
         "UPDATE sessions SET group_id = 2 WHERE client_id = $1",
