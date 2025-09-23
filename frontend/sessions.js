@@ -114,7 +114,7 @@ function renderSessions(sessions = [], filterType = "all") {
 
         document.getElementById("chatClient").innerText = session.name || session.phone;
         document.getElementById("chatStatus").innerText = `Lang: ${session.lang || "Unknown"}`;
-      }
+      
       loadMessages(session.id);
   };
     tbody.appendChild(tr);
