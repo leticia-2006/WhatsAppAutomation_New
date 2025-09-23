@@ -143,6 +143,9 @@ async function loadMessages(sessionId) {
         content = `<img src="${msg.media_url}" alt="image" style="max-width:200px; border-radius:8px;">`;
       }
 
+      let translation = "";
+      if (msg.translated_content) {
+      translation = `<div class="translation">🌐 ${msg.translated_content}</div>`;}
       const senderClass = msg.sender_type === "client" ? "client" : "agent";
       const time = new
         Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -151,6 +154,7 @@ async function loadMessages(sessionId) {
       const div = `
         <div class="message ${senderClass}">
           ${content}
+          ${translation}
           <span class="time">${time}</span>
           <div class="translate-btn">
             <button onclick="translateMessage(${msg.id})">🌐</button>
