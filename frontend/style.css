@@ -54,10 +54,14 @@
   font-size: 11px;
   color: gray;
   position: absolute;
-  bottom: 2px;
+  bottom: -15px;
   right: 8px;
 }
-
+.message .translate-btn {
+  position: absolute;
+  top: 4px;
+  right: -28px;
+}
 /* شريط الكتابة تحت */
 .chat-footer {
   display: flex;
@@ -106,6 +110,7 @@
 .translate-btn button:hover {
   color: #111;
 }
+
 
 
 
