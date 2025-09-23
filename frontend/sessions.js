@@ -112,9 +112,8 @@ function renderSessions(sessions = [], filterType = "all") {
     tr.onclick = () => { 
       currentSession = session;
 
-      const chatHeader = document.getElementById("chatHeader");
-      if (chatHeader) {
-        chatHeader.innerText = `${session.phone} | Lang: ${session.lang || "Unknown"}`;
+        document.getElementById("chatClient").innerText = session.name || session.phone;
+        document.getElementById("chatStatus").innerText = `Lang: ${session.lang || "Unknown"}`;
       }
       loadMessages(session.id);
   };
@@ -232,7 +231,12 @@ try {
   jid: currentSession.jid
   }, { withCredentials: true });
   
-    loadMessages(currentSession.id);
+    loadMessages(currentSession.id).then(() =>
+      {
+        const chatBox = 
+          document.getElementById("chatMessages");
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
     input.value = "";
   } catch (err) {
     console.error("‎Error while sending the message:", err);
