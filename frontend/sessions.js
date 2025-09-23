@@ -79,7 +79,7 @@ function renderSessions(sessions = [], filterType = "all") {
     // Apply filter
     if (filterType === "unread" && session.status !== "unread") return;
     if (filterType === "unreplied" && session.status !== "unreplied") return;
-    if (filterType === "group" && session.group_id) return;
+    if (filterType === "group" && !session.group_id) return;
 
   const tags = Array.isArray(session.tags) ? session.tags : [];
   const notes = Array.isArray(session.notes) ? session.notes : [];
