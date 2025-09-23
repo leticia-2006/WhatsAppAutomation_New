@@ -161,7 +161,7 @@ async function loadMessages(sessionId) {
 
       // فقاعة الرسالة + زر الترجمة صغير
       const div = `
-        <div class="message ${senderClass}">
+        <div class="message ${senderClass}"data-id="${msg.id}">
           ${content}
           ${translation}
           <span class="time">${time}</span>
@@ -184,7 +184,10 @@ async function loadMessages(sessionId) {
 async function translateMessage(messageId) {
   try {
     const res = await axios.post(`/messages/${messageId}/translate`, { lang: "en" }, { withCredentials: true });
-    alert("Translated: " + res.data.translated);
+    const msgEl = document.querySelector(`.message[data-id="${messageId}"]`);
+    if (msgEl) {
+      msgEl.innerHTML += `<div class="translation">🌐 ${res.data.translated}</div>`;
+    }
   } catch (err) {
     console.error("Error translating message:", err);
   }
