@@ -63,6 +63,14 @@
   right: 10px;
 }
 
+.message img,
+.message video {
+  max-width: 100%;
+  border-radius: 8px;
+}
+.message audio {
+  width: 100%;
+}
 /* Translation */
 .message .translation {
   margin-top: 4px;
@@ -117,6 +125,7 @@
 .chat-footer button:hover {
   background: #20b358;
 }
+
 
 
 
