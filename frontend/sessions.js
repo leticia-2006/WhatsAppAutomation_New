@@ -226,15 +226,19 @@ async function sendMessage() {
 try {
   await axios.post(`/messages/${currentSession.id}/send`, {
   text,
-  waNumberId:
-  currentSession.wa_number,
+  wa_number_id:
+  currentSession.wa_number_id,
   jid: currentSession.jid
   }, { withCredentials: true });
-  
-    loadMessages(currentSession.id).then(() =>
-      {
-        const chatBox = 
-          document.getElementById("chatMessages");
+
+  const chatBox = document.getElementById("chatMessages");
+  const time = new
+    Date().toLocaleString([], { hour: '2-digit', minute: '2-digit' });
+  chatBox.innerHTML += `
+  <div class="message agent">
+  ${text}
+  <span class="time">${time}</span>
+  </div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
       });
     input.value = "";
