@@ -165,11 +165,60 @@ function getQRForNumber(numberId) {
   return qrCodes[numberId] || null;
 }
 
-async function sendMessageToNumber(numberId, jid, text) {
+async function sendMessageToNumber(numberId, phone, text) {
   const sock = clients[numberId];
   if (!sock) throw new Error("Client not initialized");
+
+  // 1️⃣ جهّز الـ JID
+  const jid = phone.includes("@s.whatsapp.net")
+    ? phone
+    : phone + "@s.whatsapp.net";
+
+  // 2️⃣ ابحث عن client
+  let clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [jid]);
+  let clientId;
+  if (clientRes.rowCount === 0) {
+    const newClient = await db.query(
+      "INSERT INTO clients (name, phone) VALUES ($1,$2) RETURNING id",
+      ["Unknown", jid]
+    );
+    clientId = newClient.rows[0].id;
+  } else {
+    clientId = clientRes.rows[0].id;
+  }
+
+  // 3️⃣ ابحث عن session
+  let sessionRes = await db.query(
+    "SELECT id FROM sessions WHERE client_id=$1 AND wa_number_id=$2",
+    [clientId, numberId]
+  );
+
+  let sessionId;
+  if (sessionRes.rowCount === 0) {
+    const newSession = await db.query(
+      "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, jid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
+      [clientId, numberId, jid]
+    );
+    sessionId = newSession.rows[0].id;
+  } else {
+    sessionId = sessionRes.rows[0].id;
+  }
+
+  // 4️⃣ أرسل الرسالة للواتساب
   await sock.sendMessage(jid, { text });
+
+  // 5️⃣ خزّن الرسالة في DB
+  const insertRes = await db.query(
+    "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,NOW(),$8) RETURNING *",
+    [sessionId, "agent", text, "text", null, numberId, false, jid]
+  );
+
+  console.log("✅ رسالة أُرسلت وخُزنت:", insertRes.rows[0]);
+
+  // 6️⃣ أرجع الرسالة الجديدة للواجهة (حتى تظهر فورًا)
+  return insertRes.rows[0];
 }
+
 
 function getClientStatus(numberId) {
   return clients[numberId] ? "connected" : "disconnected";
