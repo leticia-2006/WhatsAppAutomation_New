@@ -93,11 +93,16 @@ function renderSessions(sessions = [], filterType = "all") {
     }
 
     tr.innerHTML = `
-      <td>${name}</td>
-      <td>${session.phone}</td>
+     <td>
+      <img src="${session.avatar_url || '/default-avatar.png'}"
+           alt="avatar"
+           style="width:32px; height:32px; border-radius:50%; margin-right:6px;">
+      ${name}
+     </td>
+     <td>${session.phone}</td>
       <td>
         <span class="badge ${session.status === "unread" ? "bg-danger" : "bg-success"}">
-          ${session.status}
+         ${session.status}
         </span>
       </td>
       <td>
@@ -165,6 +170,10 @@ async function loadMessages(sessionId) {
       // فقاعة الرسالة + زر الترجمة صغير
       const div = `
         <div class="message ${senderClass}"data-id="${msg.id}">
+       <img src="${msg.sender_avatar || '/default-avatar.png'}"
+       alt="avatar"
+       style="width:28px; height:28px; border-radius:50%; margin-height:6px; vertical-align:middle;">
+       <div class="bubble">
           ${content}
           ${translation}
           <span class="time">${time}</span>
