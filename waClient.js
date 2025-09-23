@@ -165,14 +165,13 @@ function getQRForNumber(numberId) {
   return qrCodes[numberId] || null;
 }
 
-async function sendMessageToNumber(numberId, phone, text) {
+async function sendMessageToNumber(numberId, jid, text) {
   const sock = clients[numberId];
   if (!sock) throw new Error("Client not initialized");
 
   // 1️⃣ جهّز الـ JID
-  const jid = phone.includes("@s.whatsapp.net")
-    ? phone
-    : phone + "@s.whatsapp.net";
+  const finalJid = jid.includes("@s.whatsapp.net")
+    ? jid : jid + "@s.whatsapp.net";
 
   // 2️⃣ ابحث عن client
   let clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [jid]);
@@ -205,7 +204,7 @@ async function sendMessageToNumber(numberId, phone, text) {
   }
 
   // 4️⃣ أرسل الرسالة للواتساب
-  await sock.sendMessage(jid, { text });
+  await sock.sendMessage(finalJid, { text });
 
   // 5️⃣ خزّن الرسالة في DB
   const insertRes = await db.query(
