@@ -9,6 +9,12 @@
 }
 
 /* Messages */
+#chatMessages {
+  height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
 .messages {
   flex: 1;
   overflow-y: auto;
@@ -106,5 +112,6 @@
 .chat-footer button:hover {
   background: #20b358;
 }
+
 
 
