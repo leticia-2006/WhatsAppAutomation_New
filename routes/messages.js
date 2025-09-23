@@ -7,7 +7,11 @@ const db = require("../db");
 
 // جلب الرسائل لجلسة
 router.get("/:sessionId", async (req, res) => {
-  const result = await db.query("SELECT * FROM messages WHERE session_id=$1 ORDER BY created_at ASC", [req.params.sessionId]);
+  const result = await db.query("SELECT m.*, c.name AS name, c.avatar_url
+  FROM messages m 
+  JOIN sessions s ON m.session_id = s.id
+  JOIN clients c ON c.id = s.client_id WHERE m.session_id=$1
+  ORDER BY created_at ASC`, [req.params.sessionId]);
   res.json(result.rows);
 });
 
