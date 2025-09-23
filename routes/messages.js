@@ -7,7 +7,14 @@ const db = require("../db");
 
 // جلب الرسائل لجلسة
 router.get("/:sessionId", async (req, res) => {
-  const result = await db.query("SELECT m.*, c.name AS name, c.avatar_url
+  const result = await db.query(`
+  SELECT m.*,
+       CASE 
+         WHEN m.sender_type = 'client'
+  THEN c.avatar_url 
+         ELSE 'default-agent.png'
+       END AS sender_avatar,
+        c.name AS client_name, 
   FROM messages m 
   JOIN sessions s ON m.session_id = s.id
   JOIN clients c ON c.id = s.client_id WHERE m.session_id=$1
