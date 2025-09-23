@@ -219,7 +219,7 @@ try {
   await axios.post(`/messages/${currentSession.id}/send`, {
   text,
   waNumberId:
-  currentSession.wa_number_id,
+  currentSession.wa_number,
   jid: currentSession.jid
   }, { withCredentials: true });
   
