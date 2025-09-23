@@ -120,7 +120,7 @@ const insertRes = await db.query(
 // 3. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
    if (!isFromMe) {
      const countRes = await db.query(
-       "SELECT COUNT(*) FROM messages WHERE jid = $1 AND sender_role='client'",
+       "SELECT COUNT(*) FROM messages WHERE jid = $1 AND sender_type='client'",
        [sender]
      );
      const msgCount = 
