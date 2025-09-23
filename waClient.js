@@ -2,6 +2,8 @@ const makeWASocket = require("@whiskeysockets/baileys").default;
 const { useMultiFileAuthState, fetchLatestBaileysVersion, DisconnectReason } = require("@whiskeysockets/baileys");
 const db = require("./db");
 const path = require("path");
+const { downloadMediaMessage } = require("@whiskeysockets/baileys");
+const fs = require("fs");
 
 
 
@@ -61,11 +63,19 @@ if (msg.message.conversation) {
   text = msg.message.extendedTextMessage.text;
 } else if (msg.message.imageMessage) {
   contentType = "image";
-  mediaUrl = msg.message.imageMessage?.url || null;
+  const buffer = await downloadMediaMessage(msg, "buffer", {});
+  const fileName = `${Date.now()}.jpg`;
+  const filePath = path.join(__dirname, "uploads", fileName);
+  fs.writeFileSync(filePath, buffer);
+  mediaUrl = `/uploads/${fileName}`;
   text = "[📷 صورة]";
 } else if (msg.message.videoMessage) {
   contentType = "video";
-  mediaUrl = msg.message.videoMessage?.url || null;
+  const buffer = await downloadMediaMessage(msg, "buffer", {});
+  const fileName = `${Date.now()}.mp4`;
+  const filePath = path.join(__dirname, "uploads", fileName);
+  fs.writeFileSync(filePath, buffer);
+  mediaUrl = `/uploads/${fileName}`;
   text = "[🎥 فيديو]";
 }
 console.log("Content of the message", text, "نوع:", contentType, "رابط:", mediaUrl);
