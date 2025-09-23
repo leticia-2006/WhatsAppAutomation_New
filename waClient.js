@@ -116,7 +116,7 @@ const insertRes = await db.query(
      );
      const msgCount = 
 parseInt(countRes.rows[0].count);
-     
+   }     
     if (msgCount === 3) {
       await db.query(
         "UPDATE sessions SET group_id = 2 WHERE client_id = $1",
@@ -127,8 +127,9 @@ parseInt(countRes.rows[0].count);
 
   } catch (err) {
     console.error("خطأ أثناء معالجة الرسالة:", err);
-  }
-});
+  };
+ });
+
   
 sock.ev.on("messages.update", async (updates) => {
     for (let { key, update } of updates) {
