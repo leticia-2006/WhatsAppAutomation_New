@@ -148,7 +148,7 @@ async function loadMessages(sessionId) {
           ${content}
           <span class="time">${time}</span>
           <div class="translate-btn">
-            <button onclick="translateMessage(${msg.id}">🌐</button>
+            <button onclick="translateMessage(${msg.id})">🌐</button>
           </div>
         </div>
       `;
