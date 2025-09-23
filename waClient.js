@@ -51,14 +51,24 @@ async function initClient(numberId) {
     const sender = msg.key.remoteJid; 
     console.log("Sender:", sender);
     
-    let text = null;
-if (msg.message.conversation) text = msg.message.conversation;
-else if (msg.message.extendedTextMessage?.text) text = msg.message.extendedTextMessage.text;
-else if (msg.message.imageMessage) text = "[📷 صورة]";
-else if (msg.message.videoMessage) text = "[🎥 فيديو]";
-else text = "[رسالة غير مدعومة]";
-    console.log("Content of the message", text);
+let text = "[رسالة غير مدعومة]";
+let contentType = "text";
+let mediaUrl = null;
 
+if (msg.message.conversation) {
+  text = msg.message.conversation;
+} else if (msg.message.extendedTextMessage?.text) {
+  text = msg.message.extendedTextMessage.text;
+} else if (msg.message.imageMessage) {
+  contentType = "image";
+  mediaUrl = msg.message.imageMessage?.url || null;
+  text = "[📷 صورة]";
+} else if (msg.message.videoMessage) {
+  contentType = "video";
+  mediaUrl = msg.message.videoMessage?.url || null;
+  text = "[🎥 فيديو]";
+}
+console.log("Content of the message", text, "نوع:", contentType, "رابط:", mediaUrl);
 
 let clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [sender]);
 let clientId;
@@ -95,8 +105,8 @@ if (sessionRes.rowCount === 0) {
 
 // 1. خزّن الرسالة مرتبطة بالجلسة
 const insertRes = await db.query(
-  "INSERT INTO messages (session_id, sender_type, content, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,NOW(),$6) RETURNING id",
-  [sessionId, isFromMe ? "agent" : "client", text, numberId, false, sender]
+  "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,NOW(),$8) RETURNING id",
+  [sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, sender]
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
     
