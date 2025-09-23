@@ -17,7 +17,10 @@ tabLinks.forEach(link => {
 // Load Sessions
 async function loadSessions() {
   try {
-    const res = await axios.get(`/sessions/${currentTab}`, { withCredentials: true });
+    let url = `/sessions/${currentTab}`;
+    if (currentTab === "group") {
+      url = "/sessions/group/2";}
+    const res = await axios.get(url, { withCredentials: true });
     console.log("/sessions response:", res.data);
     sessions = Array.isArray(res.data) ? res.data : [];
 
