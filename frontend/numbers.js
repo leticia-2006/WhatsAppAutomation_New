@@ -1,138 +1,121 @@
-const API_BASE = "https://chat.ohgo.site"; // غيّر للرابط الحقيقي
- async function waitForQR(id) {
-  let tries = 0;
-  while (tries < 5) { // يجرب 5 مرات
-    const res = await axios.get(`${API_BASE}/wa-numbers/${id}/qr`, { withCredentials: true });
-    if (res.data.qr) {
-      return res.data.qr;
-    }
-    await new Promise(resolve => setTimeout(resolve, 3000)); // انتظر 3 ثواني
-    tries++;
-  }
-  throw new Error("QR not available yet");
-}
-const tableBody = document.querySelector("#numbersTable tbody");
-const addNumberBtn = document.getElementById("addNumberBtn");
-const searchInput = document.getElementById("search");
+// numbers.js
 
-// تحميل الأرقام
-async function loadNumbers() {
-  const res = await fetch(`${API_BASE}/wa-numbers`, {credentials: "include"});
-  const data = await res.json();
+// FIXED: التأكد من تحميل الـ DOM قبل التنفيذ
+document.addEventListener("DOMContentLoaded", () => {
+  loadNumbers();
 
-  tableBody.innerHTML = "";
-  data.forEach(num => {
-    const row = `
-      <tr>
-        <td>${num.id}</td>
-        <td>${num.number}</td>
-        <td>${num.status}</td>
-        <td>${num.agent_id || "-"}</td>
-        <td>
-          <button class="btn btn-sm btn-info" onclick="showQR(${num.id})" title="Show QR">
-          <i class="fas fa-qrcode"></i></button>
-          <button class="btn btn-sm btn-warning" onclick="transferAgent(${num.id})" title="Transfer">
-          <i class="fas fa-exchange-alt"></i></button>
-          <button class="btn btn-sm btn-danger" onclick="removeNumber(${num.id})" title="Remove">
-          <i class="fas fa-trash"></i></button>
-        </td>
-      </tr>
-    `;
-    tableBody.innerHTML += row;
-  });
-}
-
-// إضافة رقم جديد
-document.getElementById("addNumberBtn").addEventListener("click", () => {
- const phoneInput = document.getElementById("phone-input").value;
-  if (!phoneInput) {
-   alert("Please enter a valid number.");
-   return;
+  const addBtn = document.getElementById("addNumberBtn");
+  if (addBtn) {
+    addBtn.addEventListener("click", showAddNumberModal);
   }
 
- axios.post("/numbers", { phone:phoneInput })
- .then(res => {
- 
-  document.getElementById("qr-loading").innerText = "Scan QR with WhatsApp!"
-  QRCode.toCanvas(document.getElementById("qr-canvas"), res.data.qr);
- })
- 
-  .catch(() => {
-document.getElementById("qr-loading").innerText = "Failed to loadQR!";
-  });
+  const searchInput = document.getElementById("search");
+  if (searchInput) {
+    searchInput.addEventListener("input", applyNumberFilter);
+  }
 });
 
-
-
-// إغلاق المودال
-const qrModal = document.getElementById("addNumberModal");
-const closeBtn = qrModal?.querySelector(".btn-close");
-
-if (closeBtn) {
-  closeBtn.addEventListener("click", () => {
-    const modal = bootstrap.Modal.getInstance(qrModal);
-    modal.hide();
-  });
-}
-
-// فلترة البحث
-if (searchInput) {
-  searchInput.addEventListener("input", e => {
-    const filter = e.target.value.toLowerCase();
-    Array.from(tableBody.rows).forEach(row => {
-      row.style.display = row.innerText.toLowerCase().includes(filter)
-        ? ""
-        : "none";
-    });
-  });
-}
-
-// 📌 إظهار QR لرقم معين
-async function showQR(id) {
- 
+// ====== جلب الأرقام من السيرفر ======
+async function loadNumbers() {
   try {
-    const modal = new bootstrap.Modal(document.getElementById("addNumberModal"));
-    modal.show();
-
-    document.getElementById("qr-loading").style.display = "block";
-    document.getElementById("qr-canvas").style.display = "none";
-    console.log("showQR called with id:", id);
-    const qrCode = await waitForQR(id);
-    const canvas = document.getElementById("qr-canvas");
-    QRCode.toCanvas(canvas, qrCode, (error) => {
-      if (error) console.error(error);
-      console.log("QR generated!");
-    });
-
-    document.getElementById("qr-loading").style.display = "none";
-    canvas.style.display = "block";
+    const res = await axios.get("/wa-numbers");
+    renderNumbers(res.data);
   } catch (err) {
-    console.error("Error showing QR:", err);
-    document.getElementById("qr-loading").innerText = "Failed to load QR!";
+    console.error("Error loading numbers:", err);
   }
 }
 
-// 📌 حذف رقم
-async function removeNumber(id) {
+// ====== عرض الأرقام في الجدول ======
+function renderNumbers(numbers) {
+  const tbody = document.querySelector("#numbersTable tbody");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  numbers.forEach((num) => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${num.id}</td>
+      <td>${num.number}</td>
+      <td>
+        <span class="badge ${num.status === "connected" ? "bg-success" : "bg-danger"}">
+          ${num.status}
+        </span>
+      </td>
+      <td>${num.agent || "-"}</td>
+      <td>
+        <button class="btn btn-sm btn-info" onclick="linkQR(${num.id})">
+          <i class="fas fa-qrcode"></i>
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="deleteNumber(${num.id})">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ====== تصفية الأرقام ======
+function applyNumberFilter() {
+  const query = document.getElementById("search").value.toLowerCase();
+  const rows = document.querySelectorAll("#numbersTable tbody tr");
+
+  rows.forEach((row) => {
+    const number = row.cells[1].textContent.toLowerCase();
+    row.style.display = number.includes(query) ? "" : "none";
+  });
+}
+
+// ====== إظهار مودال إضافة رقم جديد ======
+function showAddNumberModal() {
+  const modal = new bootstrap.Modal(document.getElementById("addNumberModal"));
+  modal.show();
+
+  // FIXED: عرض QR جديد عند فتح المودال
+  document.getElementById("qr-loading").style.display = "block";
+  document.getElementById("qr-canvas").style.display = "none";
+
+  generateQR();
+}
+
+// ====== إنشاء QR وربطه ======
+async function generateQR() {
+  try {
+    const res = await axios.post("/wa-numbers/generate-qr");
+    const qrData = res.data.qr;
+
+    document.getElementById("qr-loading").style.display = "none";
+    const canvas = document.getElementById("qr-canvas");
+    canvas.style.display = "block";
+
+    await QRCode.toCanvas(canvas, qrData);
+  } catch (err) {
+    console.error("Error generating QR:", err);
+    document.getElementById("qr-loading").textContent = "Error generating QR";
+  }
+}
+
+// ====== ربط رقم عبر QR ======
+async function linkQR(id) {
+  try {
+    const res = await axios.post(`/wa-numbers/${id}/link`);
+    alert("Number linked successfully!");
+    loadNumbers(); // FIXED: إعادة تحميل الجدول بعد الربط
+  } catch (err) {
+    console.error("Error linking number:", err);
+  }
+}
+
+// ====== حذف رقم ======
+async function deleteNumber(id) {
   if (!confirm("Are you sure you want to delete this number?")) return;
 
   try {
-    await axios.delete(`${API_BASE}/wa-numbers/${id}`, { withCredentials: true });
-    loadNumbers(); // تحديث الجدول بعد الحذف
+    await axios.delete(`/wa-numbers/${id}`);
+    loadNumbers(); // FIXED: إعادة تحميل الجدول بعد الحذف
   } catch (err) {
     console.error("Error deleting number:", err);
-  }
-}
-
-// 📌 نقل الرقم لوكيل آخر (ممكن تطور لاحقاً)
-async function transferAgent(id) {
-  const agentId = prompt("Enter the Agent ID to transfer this number:");
-  if (!agentId) return;
-
-  try {
-    await axios.post(`${API_BASE}/wa-numbers/${id}/transfer`, { agentId }, { withCredentials: true });
-    loadNumbers(); // تحديث الجدول بعد النقل
-  } catch (err) {
-    console.error("Error transferring number:", err);
   }
 }
