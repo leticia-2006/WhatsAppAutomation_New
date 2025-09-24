@@ -43,7 +43,16 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy","default-src * 'unsafe-inline' 'unsafe-eval'");
+// FIXED: سياسة أمان أوضح
+res.setHeader(
+  "Content-Security-Policy",
+  "default-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+  "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+  "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+  "img-src 'self' data: https://*; " +
+  "font-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;"
+);
+
  console.log("Cookies from client:", req.headers.cookie);
     next();
 });
@@ -72,7 +81,7 @@ function checkRole(role) {
 
 // ===== Routes تطبيقية =====
 app.use('/sessions', requireLogin, sessionsRouter);
-app.use('/users', usersRouter);
+app.use('/users', requireLogin, usersRouter);
 app.use('/messages', requireLogin, messagesRouter);
 app.use('/wa-numbers', requireLogin,waNumbersRouter);
 
@@ -85,13 +94,15 @@ app.get('*', (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html')
 const PORT = process.env.PORT || 5008;
 const server = http.createServer(app);
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Error handler لتشخيص المشاكل
 app.use((err, req, res, next) => {
   console.error("Error caught:", err);
   res.status(500).send("Internal Server Error: " + err.message);
 });
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
@@ -104,6 +115,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
