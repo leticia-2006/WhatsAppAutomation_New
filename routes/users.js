@@ -56,6 +56,53 @@ router.post('/add-super-admin',requireLogin, checkRole(['super_admin']), async (
         res.status(500).json({ message: 'Server error' });
     }
 });
+// إضافة Admin
+router.post('/add-admin', requireLogin, checkRole(['super_admin']), async (req, res) => {
+  try {
+    const { name, phone, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await db.query(
+      "INSERT INTO users (name, phone, role, password) VALUES ($1, $2, 'admin', $3)",
+      [name, phone, hashedPassword]
+    );
+    res.json({ message: 'Admin added successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// عرض جميع المستخدمين
+router.get('/', requireLogin, checkRole(['super_admin']), async (req, res) => {
+  try {
+    const result = await db.query("SELECT id, name, phone, role FROM users ORDER BY id ASC");
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// تعديل مستخدم
+router.put('/:id', requireLogin, checkRole(['super_admin']), async (req, res) => {
+  try {
+    const { name, phone, role } = req.body;
+    await db.query("UPDATE users SET name=$1, phone=$2, role=$3 WHERE id=$4",
+      [name, phone, role, req.params.id]);
+    res.json({ message: 'User updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// حذف مستخدم
+router.delete('/:id', requireLogin, checkRole(['super_admin']), async (req, res) => {
+  try {
+    await db.query("DELETE FROM users WHERE id=$1", [req.params.id]);
+    res.json({ message: 'User deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 //login
 router.post('/login', async (req, res) => {
@@ -94,6 +141,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
