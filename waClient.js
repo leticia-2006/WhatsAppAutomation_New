@@ -32,7 +32,13 @@ async function initClient(numberId) {
     console.log(`❌ WhatsApp disconnected: ${numberId}`);
     await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
     const reason = lastDisconnect?.error?.output?.statusCode;
-    if (reason !== DisconnectReason.loggedOut) initClient(numberId);
+    if (reason === DisconnectReason.loggedOut) {
+  console.log(`⚠️ رقم ${numberId} تم تسجيل الخروج بالكامل`);
+  // امسح بيانات الاعتماد من السيرفر
+  fs.rmSync(path.join(__dirname, "..", "auth_info", `${numberId}`), { recursive: true, force: true });
+  await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["LoggedOut", numberId]);
+} else {
+  initClient(numberId);
     }
 });
 
