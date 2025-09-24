@@ -70,7 +70,7 @@ if (msg.message.conversation) {
 } else if (msg.message.imageMessage) {
   contentType = "image";
   const buffer = await downloadMediaMessage(msg, "buffer", {});
-  const fileName = `${Date.now()}.jpg`;
+  const fileName = `${numberId}_${Date.now()}.jpg`;
   const filePath = path.join(__dirname, "uploads", fileName);
   fs.writeFileSync(filePath, buffer);
   mediaUrl = `/uploads/${fileName}`;
@@ -78,7 +78,7 @@ if (msg.message.conversation) {
 } else if (msg.message.videoMessage) {
   contentType = "video";
   const buffer = await downloadMediaMessage(msg, "buffer", {});
-  const fileName = `${Date.now()}.mp4`;
+  const fileName = `${numberId}_${Date.now()}.mp4`;
   const filePath = path.join(__dirname, "uploads", fileName);
   fs.writeFileSync(filePath, buffer);
   mediaUrl = `/uploads/${fileName}`;
@@ -122,19 +122,14 @@ if (sessionRes.rowCount === 0) {
 // 1. خزّن الرسالة مرتبطة بالجلسة
 const insertRes = await db.query(
   "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,NOW(),$8) RETURNING id",
-  [sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, sender]
+  [sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, finalJid]
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
     
-// 2. تحقق من عدد الرسائل المرسلة من هذا العميل
-    const countRes = await db.query(
-      "SELECT COUNT(*) FROM messages WHERE jid = $1",
-      [sender]
-    );
-    const msgCount = parseInt(countRes.rows[0].count);
 
-// 3. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
-   if (!isFromMe) {
+// 2. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
+let msgCount = 0;
+    if (!isFromMe) {
      const countRes = await db.query(
        "SELECT COUNT(*) FROM messages WHERE jid = $1 AND sender_type='client'",
        [sender]
