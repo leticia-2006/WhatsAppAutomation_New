@@ -135,6 +135,11 @@ function renderSessions(list = [], filterType = "all") {
     tr.style.cursor = "pointer";
     tr.onclick = () => openChat(session);
 
+    tr.oncontextmenu = (e) => {
+      e.preventDefault();
+      showContextMenu(e, sesssion);
+    };
+    
     tbody.appendChild(tr);
   });
 
