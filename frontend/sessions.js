@@ -137,7 +137,7 @@ function renderSessions(list = [], filterType = "all") {
 
     tr.oncontextmenu = (e) => {
       e.preventDefault();
-      showContextMenu(e, sesssion);
+      showContextMenu(e, session);
     };
     
     tbody.appendChild(tr);
