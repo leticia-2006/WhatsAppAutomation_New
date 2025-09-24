@@ -125,6 +125,87 @@
 .chat-footer button:hover {
   background: #20b358;
 }
+/* ===== Dashboard Layout ===== */
+/* NEW: تقسيم الصفحة الرئيسية */
+.content-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+/* NEW: العمود الخاص بالجلسات (يسار) */
+#sessions-body {
+  max-height: 600px;
+  overflow-y: auto;
+}
+#sessions-body li {
+  cursor: pointer;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+}
+#sessions-body li:hover {
+  background: #f5f5f5;
+}
+#sessions-body li.active {
+  background: #e6f7ff;
+  border-left: 4px solid #007bff;
+}
+
+/* ===== Sidebar (Main Menu) ===== */
+.main-sidebar {
+  background: #1e1e2d;
+}
+.main-sidebar .nav-link {
+  font-size: 15px;
+}
+.main-sidebar .nav-link.active {
+  background: #007bff;
+  color: #fff;
+  border-radius: 5px;
+}
+
+/* ===== Chat View Enhancements ===== */
+/* NEW: تحسين الترجمة */
+.message .translation {
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: #f0f7ff;
+  border-left: 3px solid #007bff;
+  font-size: 13px;
+  color: #0056b3;
+  font-style: italic;
+  display: block;
+}
+
+/* NEW: زر الترجمة */
+.message .translate-btn button {
+  font-size: 12px;
+  color: #007bff;
+  transition: 0.2s;
+}
+.message .translate-btn button:hover {
+  color: #0056b3;
+}
+
+/* ===== Numbers Table ===== */
+#numbersTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+#numbersTable th,
+#numbersTable td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+#numbersTable th {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+#numbersTable tr:hover {
+  background: #f5f5f5;
+}
+
 
 
 
