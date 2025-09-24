@@ -177,8 +177,40 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// تحديث صلاحيات Supervisor
+router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (req, res) => {
+  try {
+    const { can_manage_users, can_manage_numbers } = req.body;
+
+    // هل للمشرف صلاحيات موجودة مسبقاً؟
+    const check = await db.query(
+      "SELECT * FROM supervisor_permissions WHERE supervisor_id=$1",
+      [req.params.id]
+    );
+
+    if (check.rows.length > 0) {
+      // تحديث الصلاحيات
+      await db.query(
+        "UPDATE supervisor_permissions SET can_manage_users=$1, can_manage_numbers=$2 WHERE supervisor_id=$3",
+        [can_manage_users, can_manage_numbers, req.params.id]
+      );
+    } else {
+      // إدخال أول مرة
+      await db.query(
+        "INSERT INTO supervisor_permissions (supervisor_id, can_manage_users, can_manage_numbers) VALUES ($1, $2, $3)",
+        [req.params.id, can_manage_users, can_manage_numbers]
+      );
+    }
+
+    res.json({ message: 'Supervisor permissions updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 module.exports = router;
+
 
 
 
