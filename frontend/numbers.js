@@ -43,40 +43,23 @@ async function loadNumbers() {
 }
 
 // إضافة رقم جديد
-addNumberBtn.addEventListener("click", async () => {
- const phone = prompt("Enter whatsApp number (with country code);");
-  if (!phone) return;
-  const modal = new 
-    bootstrap.Modal(document.getElementById("addNumberModal"));
-  modal.show();
-
- 
-
-  // أظهر رسالة تحميل مؤقتة
-  document.getElementById("qr-loading").style.display = "block";
-  document.getElementById("qr-canvas").style.display = "none";
- 
-  try {
-    //اضف الرقم  الجديد 
-    const addRes = await axios.post(`${API_BASE}/wa-numbers`, { number: phone }, { withCredentials: true });
-    const numberId = addRes.data.id;
-    // اطلب QR من السيرفر (الذي يستخدم Baileys)
-    const qrCode = await waitForQR(numberId);
-
-    // أرسم QR في الـ canvas
-   const canvas = document.getElementById("qr-canvas");
-    QRCode.toCanvas(canvas, qrCode, (error) => { 
-      if (error) console.error(error);
-      console.log("QR generated!");
-    });
-    
-    document.getElementById("qr-loading").style.display = "none";
-    canvas.style.display = "block";
-
-  } catch (err) {
-    console.error("Error fetching QR:", err);
-    document.getElementById("qr-loading").innerText = "Failed to loadQR!";
+document.getElementById("addNumberBtn").addEventListener("click", () => {
+ const phoneInput = document.getElementById("phone-input").value;
+  if (!phoneInput) {
+   alert("Please enter a valid number.");
+   return;
   }
+
+ axios.post("/numbers", { phone:phoneInput })
+ .then(res => {
+ 
+  document.getElementById("qr-loading").innerText = "Scan QR with WhatsApp!"
+  QRCode.toCanvas(document.getElementById("qr-canvas"), res.data.qr);
+ })
+ 
+  .catch(() => {
+document.getElementById("qr-loading").innerText = "Failed to loadQR!";
+  });
 });
 
 
