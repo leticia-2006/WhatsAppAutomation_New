@@ -4,7 +4,7 @@ const http = require('http');
 const path = require('path');
 const session = require('express-session'); // لإدارة الجلسات
 const pgSession = require('connect-pg-simple')(session);
-const { Pool } = require('pg');
+const pool = require('./db.js');
 const bcrypt = require('bcrypt'); // لتشفير الباسورد
 const messagesRouter = require('./routes/messages')
 const db = require('./db.js');
@@ -13,19 +13,19 @@ const app = express();
 const usersRouter = require('./routes/users');
 const waNumbersRouter = require('./routes/waNumbers');                            
 const { connectWA } = require('./waClient')
+const { requireLogin, checkRole } = require('./middleware/auth.js');
+const multer = require('multer');
+const upload = multer({ dest: 
+ path.join(__dirname, 'uploads') });
 
 console.log("Server file started running...");
 // Middleware
 app.use(cors({
-  origin: "https://chat.ohgo.site",
+  origin: "https://whatsappautomation-new-4fec.onrender.com",
   credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('trust proxy', 1);
-const pool = new Pool({
- connectionString:
-  process.env.DATABASE_URL,
- ssl: { rejectUnauthorized: false }});
 app.use(session({
  
  store: new pgSession({
@@ -61,24 +61,9 @@ app.use((req, res, next) => {
  console.log(`Incoming request: ${req.method} ${req.url}`);
  next();
 });
-// ===== Middleware للتحقق من تسجيل الدخول =====
-function requireLogin(req, res, next) {
-    if (!req.session.user) { return res.redirect('/');}
-    next();
-}
 
-function checkRole(role) {
-    return (req, res, next) => {
-        if (req.session.user.role === role || req.session.user.role === 'super_admin' || 
-           (role === 'agent' && req.session.user.role === 'supervisor')
-           ) {
-         next();
-        } else {
-         res.status(403).json({ message: 'Acces deniend' });
-        }
-   }
-}
-
+app.post('/upload', upload.single('file'), (req, res) => {
+ res.json({ file: req.file }); });
 // ===== Routes تطبيقية =====
 app.use('/sessions', requireLogin, sessionsRouter);
 app.use('/users', requireLogin, usersRouter);
@@ -94,7 +79,7 @@ app.get('*', (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html')
 const PORT = process.env.PORT || 5008;
 const server = http.createServer(app);
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Error handler لتشخيص المشاكل
 app.use((err, req, res, next) => {
@@ -115,6 +100,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
