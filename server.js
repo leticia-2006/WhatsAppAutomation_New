@@ -1,4 +1,4 @@
- const express = require('express');
+const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const path = require('path');
@@ -7,18 +7,18 @@ const pgSession = require('connect-pg-simple')(session);
 const pool = require('./db.js');
 const bcrypt = require('bcrypt'); // لتشفير الباسورد
 const messagesRouter = require('./routes/messages')
-const db = require('./db.js');
 const sessionsRouter = require('./routes/sessions');
-const app = express();
 const usersRouter = require('./routes/users');
 const waNumbersRouter = require('./routes/waNumbers');                            
 const { connectWA } = require('./waClient')
 const { requireLogin, checkRole } = require('./middleware/auth.js');
 const multer = require('multer');
+const app = express();
 const upload = multer({ dest: 
  path.join(__dirname, 'uploads') });
 
 console.log("Server file started running...");
+
 // Middleware
 app.use(cors({
   origin: "https://whatsappautomation-new-4fec.onrender.com",
@@ -42,8 +42,8 @@ app.use(session({
           } // 2 ساعات
 }));
 
+// Content Security Policy
 app.use((req, res, next) => {
-// FIXED: سياسة أمان أوضح
 res.setHeader(
   "Content-Security-Policy",
   "default-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
@@ -52,18 +52,20 @@ res.setHeader(
   "img-src 'self' data: https://*; " +
   "font-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;"
 );
-
- console.log("Cookies from client:", req.headers.cookie);
+console.log("Cookies from client:", req.headers.cookie);
     next();
 });
 
+// Debug incoming requests
 app.use((req, res, next) => {
  console.log(`Incoming request: ${req.method} ${req.url}`);
  next();
 });
 
+//Upload route
 app.post('/upload', upload.single('file'), (req, res) => {
  res.json({ file: req.file }); });
+
 // ===== Routes تطبيقية =====
 app.use('/sessions', requireLogin, sessionsRouter);
 app.use('/users', requireLogin, usersRouter);
@@ -76,18 +78,17 @@ app.use(express.static(FRONTEND_PATH));
 app.get('/dashboard.html', requireLogin, (req, res) => { res.sendFile(path.join(FRONTEND_PATH,'dashboard.html')); });
 app.get('*', (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html'));});
 
-const PORT = process.env.PORT || 5008;
-const server = http.createServer(app);
-
 
 
 // Error handler لتشخيص المشاكل
 app.use((err, req, res, next) => {
   console.error("Error caught:", err);
-  res.status(500).send("Internal Server Error: " + err.message);
+  res.status(500).send("Internal Server Error");
 });
 
-
+// ====== Server =====
+const PORT = process.env.PORT || 5008;
+const server = http.createServer(app);
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
@@ -95,11 +96,11 @@ server.listen(PORT, '0.0.0.0', () => {
 process.on("uncaughtException", (err) => {
  console.error("Uncaught Exception:", err);
 });
-
 process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
