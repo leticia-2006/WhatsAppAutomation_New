@@ -220,7 +220,32 @@
     document.getElementById("users-section").style.display = "block";
   } else if (user.role === "admin") {
     document.getElementById("numbers-section").style.display = "block";
+  } else if (user.role === "supervisor") {
+    // مؤقتاً مثل super_admin
+    document.getElementById("numbers-section").style.display = "block";
+    document.getElementById("users-section").style.display = "block";
+  } else if (user.role === "agent") {
+    // Agent يشوف محادثاته فقط
+    loadAgentSessions(user.id);
   }
+  // Agent  ✅ إضافة دالة لتحميل محادثات Agent
+  async function loadAgentSessions(agentId) {
+    try {
+      const res = await axios.get(`/sessions/agent/${agentId}`, { withCredentials: true });
+      const sessions = res.data;
+      const list = document.getElementById("sessions-body");
+      list.innerHTML = "";
+      sessions.forEach(s => {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
+        li.innerText = s.client_name || s.number;
+        list.appendChild(li);
+      });
+    } catch (err) {
+      console.error("Error loading agent sessions", err);
+    }
+  }
+
       </script>
   </div>
   <!-- /.content-wrapper -->
