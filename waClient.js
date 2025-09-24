@@ -71,7 +71,7 @@ if (msg.message.conversation) {
   contentType = "image";
   const buffer = await downloadMediaMessage(msg, "buffer", {});
   const fileName = `${numberId}_${Date.now()}.jpg`;
-  const filePath = path.join(__dirname, "uploads", fileName);
+  const filePath = path.join(__dirname, "..", "uploads", fileName);
   fs.writeFileSync(filePath, buffer);
   mediaUrl = `/uploads/${fileName}`;
   text = "[📷 صورة]";
