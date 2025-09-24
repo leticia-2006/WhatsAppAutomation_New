@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const { requireLogin, checkRole } = require('../middleware/auth')
+const sessions = require('../db'); // أو import ملف الجلسات حسب مشروعك
 
 
 router.get('/me', requireLogin, (req, res) => {
@@ -94,6 +95,7 @@ router.put('/:id', requireLogin, checkRole(['super_admin']), async (req, res) =>
   }
 });
 
+
 // حذف مستخدم
 router.delete('/:id', requireLogin, checkRole(['super_admin']), async (req, res) => {
   try {
@@ -105,14 +107,23 @@ router.delete('/:id', requireLogin, checkRole(['super_admin']), async (req, res)
 });
 
 // مثال: راوت يعيد الجلسات الخاصة بـ agent
-const sessions = require('../db'); // أو import ملف الجلسات حسب مشروعك
-
-router.get('/sessions/agent/:id', requireLogin, checkRole(['agent']), async (req, res) => {
+router.get('/sessions/agent/:id', requireLogin, checkRole(['agent', 'admin', 'super_admin', 'supervisor']), async (req, res) => {
   try {
     const result = await db.query(
       "SELECT * FROM sessions WHERE assigned_agent_id = $1 ORDER BY updated_at DESC",
       [req.params.id]
     );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// عرض جميع الجلسات (لـ admin, supervisor, super_admin)
+router.get('/sessions', requireLogin, checkRole(['admin','super_admin','supervisor']), async (req, res) => {
+  try {
+    const result = await db.query("SELECT * FROM sessions ORDER BY updated_at DESC");
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -157,6 +168,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
