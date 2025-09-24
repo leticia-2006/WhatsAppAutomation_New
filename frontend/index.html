@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,19 +28,22 @@
         const res = await axios.post('/users/login', { name, password },
                                      {withCredentials: true });
         console.log(res.data);
-        if(res.data.user) {
-          localStorage.setItem('user', JSON.stringify(res.data.user));
-            window.location.href = 'dashboard.html';
-        } else {
-          document.getElementById('login-error').innerText = 'Login failed';
-         }
-      } catch (err) {
-        document.getElementById('login-error').innerText = err.response?.data?.message || 'Login failed';
-      }
+        if (res.data.user) {
+  localStorage.setItem('user', JSON.stringify(res.data.user));
+  // ✅ تأكيد أن المستخدم له صلاحية
+  if (["agent","admin","supervisor","super_admin"].includes(res.data.user.role)) {
+    window.location.href = 'dashboard.html';
+  } else {
+    document.getElementById('login-error').innerText = 'Role not authorized';
+  }
+  }  else {
+    document.getElementById('login-error').innerText = 'Login failed';
+        }
     });
   </script>
 </body>
 </html>
+
 
 
 
