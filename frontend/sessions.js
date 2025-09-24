@@ -308,3 +308,50 @@ function saveNote() {
     })
     .catch((err) => console.error("Error saving note:", err));
 }
+
+let selectedSession = null;
+
+function showContextMenu(e, session) {
+  selectedSession = session;
+  const menu = document.getElementById("contextMenu");
+  menu.style.display = "block";
+  menu.style.left = e.pageX + "px";
+  menu.style.top = e.pageY + "px";
+}
+
+// إخفاء القائمة عند أي كليك
+document.addEventListener("click", () => {
+  document.getElementById("contextMenu").style.display = "none";
+});
+
+// أمثلة على العمليات
+function transferSession() {
+  alert("Transfer session: " + selectedSession?.name);
+}
+function setupGroups() {
+  alert("Setup groups for: " + selectedSession?.name);
+}
+function setLabel() {
+  alert("Set label for: " + selectedSession?.name);
+}
+function deleteTag() {
+  alert("Delete tag from: " + selectedSession?.name);
+}
+function blockMessaging() {
+  alert("Blocked messaging for: " + selectedSession?.name);
+}
+function unpinSession() {
+  alert("Unpinned: " + selectedSession?.name);
+}
+function doNotDisturb() {
+  alert("DND mode enabled for: " + selectedSession?.name);
+}
+function refreshAvatar() {
+  alert("Refreshing avatar...");
+}
+function syncMessages() {
+  alert("Syncing messages...");
+}
+function batchOperation() {
+  alert("Batch operation...");
+}
