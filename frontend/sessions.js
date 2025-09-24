@@ -360,16 +360,14 @@ function syncMessages() {
 function batchOperation() {
   alert("Batch operation...");
 }
-function applyTagFilter() {
-  const selectedTag = document.getElementById("tagFilter").value;
-  const rows = document.querySelectorAll("#sessionsTable tbody tr");
+function applyTagFilter(tag) {
+  const items = document.querySelectorAll("#sessionsListli, #sessionsTable tbody tr");
 
-  rows.forEach(row => {
-    const tags = row.cells[3].innerText.split(",").map(t => t.trim());
-    if (selectedTag === "all" || tags.includes(selectedTag)) {
-      row.style.display = "";
+  items.forEach(item => {
+    if (tag === "all" || item.classList.contains(tag)) {
+      item.style.display = "";
     } else {
-      row.style.display = "none";
+      item.style.display = "none";
     }
   });
 }
