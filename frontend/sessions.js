@@ -360,3 +360,34 @@ function syncMessages() {
 function batchOperation() {
   alert("Batch operation...");
 }
+function applyTagFilter() {
+  const selectedTag = document.getElementById("tagFilter").value;
+  const rows = document.querySelectorAll("#sessionsTable tbody tr");
+
+  rows.forEach(row => {
+    const tags = row.cells[3].innerText.split(",").map(t => t.trim());
+    if (selectedTag === "all" || tags.includes(selectedTag)) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+}
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
+
+  // حفظ الخيار في localStorage
+  if (document.body.classList.contains("dark-mode")) {
+    localStorage.setItem("theme", "dark");
+  } else {
+    localStorage.setItem("theme", "light");
+  }
+}
+
+// عند التحميل استرجاع الإعداد
+window.onload = () => {
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+    document.getElementById("darkModeToggle").checked = true;
+  }
+};
