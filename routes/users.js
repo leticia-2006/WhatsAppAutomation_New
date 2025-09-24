@@ -104,6 +104,22 @@ router.delete('/:id', requireLogin, checkRole(['super_admin']), async (req, res)
   }
 });
 
+// مثال: راوت يعيد الجلسات الخاصة بـ agent
+const sessions = require('../db'); // أو import ملف الجلسات حسب مشروعك
+
+router.get('/sessions/agent/:id', requireLogin, checkRole(['agent']), async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT * FROM sessions WHERE assigned_agent_id = $1 ORDER BY updated_at DESC",
+      [req.params.id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 //login
 router.post('/login', async (req, res) => {
   console.log("==Login route hit==");
@@ -141,6 +157,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
