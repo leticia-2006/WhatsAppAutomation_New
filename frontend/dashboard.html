@@ -93,6 +93,24 @@
     <!-- Layout -->
     <div class="row">
       <!-- Clients / Sessions List -->
+      <div class="filter-bar">
+       <label>Filter by Tag:</label>
+       <select id="tagFilter" onchange="applyTagFilter()">
+        <option value="all">All</option>
+        <option value="VIP">VIP</option>
+        <option value="Old">Old</option>
+        <option value="Deal">Deal</option>
+        <option value="Repeat">Repeat</option>
+        <option value="Blacklist">Blacklist</option>
+       </select>
+      </div>
+      <div class="theme-toggle">
+        <label class="switch">
+        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+        <span class="slider"></span>
+        </label>
+        <span>Dark Mode</span>
+      </div>
       <div class="col-md-4">
         <div class="card card-outline card-primary">
           <div class="card-header"><h3 class="card-title">Clients</h3></div>
