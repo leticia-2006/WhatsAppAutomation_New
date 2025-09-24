@@ -155,6 +155,17 @@ router.post('/login', async (req, res) => {
             console.log("Password did not match for user:", user.name);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
+        // supervisor نحضر صلاحيات المشرف إذا كان الدور
+        let permissions = {};
+        if (user.role === "supervisor") {
+      const permResult = await db.query(
+        "SELECT can_manage_users, can_manage_numbers FROM supervisor_permissions WHERE supervisor_id = $1",
+        [user.id]
+       );
+         if (permResult.rows.length > 0) {
+          permissions = permResult.rows[0];
+       }
+     }
         req.session.user = { id: user.id, name: user.name, role: user.role };
          console.log("Login successful for:", user.name);
         console.log("Session after login:", req.session);
@@ -168,6 +179,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
