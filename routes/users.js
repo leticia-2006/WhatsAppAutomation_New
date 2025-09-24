@@ -166,10 +166,10 @@ router.post('/login', async (req, res) => {
           permissions = permResult.rows[0];
        }
      }
-        req.session.user = { id: user.id, name: user.name, role: user.role };
+        req.session.user = { id: user.id, name: user.name, role: user.role, permissions };
          console.log("Login successful for:", user.name);
         console.log("Session after login:", req.session);
-    res.json({message: 'Login successful', user: { id:user.id, name: user.name, role: user.role }});
+    res.json({message: 'Login successful', user: { id:user.id, name: user.name, role: user.role, permissions }});
     
     } catch (err) {
         console.error(err);
@@ -179,6 +179,7 @@ router.post('/login', async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
