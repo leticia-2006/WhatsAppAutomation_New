@@ -224,8 +224,11 @@
     loadSessionsByRole("admin", user.id);
   } else if (user.role === "supervisor") {
     // مؤقتاً مثل super_admin
+   if (user.permissions?.can_manage_numbers) {
     document.getElementById("numbers-section").style.display = "block";
-    document.getElementById("users-section").style.display = "block";
+  }
+  if (user.permissions?.can_manage_users) {
+   document.getElementById("users-section").style.display = "block";
     loadSessionsByRole("supervisor", user.id);
   } else if (user.role === "agent") {
     // Agent يشوف محادثاته فقط
