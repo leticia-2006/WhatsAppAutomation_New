@@ -43,6 +43,7 @@ async function initClient(numberId) {
   initClient(numberId), 5000);
     }
 }
+  });
 
  sock.ev.on("creds.update", saveCreds);
 
