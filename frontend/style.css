@@ -71,6 +71,28 @@
 .message audio {
   width: 100%;
 }
+/* الرسائل المحذوفة */
+.message.deleted .bubble {
+  background: #f8d7da !important; /* أحمر فاتح */
+  border: 1px dashed #dc3545;
+  opacity: 0.9;
+}
+
+.deleted-msg {
+  font-size: 13px;
+  color: #721c24;
+}
+
+.deleted-label {
+  font-weight: bold;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.deleted-content {
+  font-style: italic;
+  color: #333;
+}
 /* Translation */
 .message .translation {
   margin-top: 4px;
@@ -354,6 +376,7 @@ body.dark-mode .context-menu {
 body.dark-mode .context-menu li:hover {
   background: #444;
 }
+
 
 
 
