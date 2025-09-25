@@ -92,14 +92,16 @@ const server = http.createServer(app);
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
-
-process.on("uncaughtException", (err) => {
+reconnectAllActive().then(() => {
+  console.log("✅ تم إعادة تشغيل جميع الأرقام النشطة");
+});process.on("uncaughtException", (err) => {
  console.error("Uncaught Exception:", err);
 });
 process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
