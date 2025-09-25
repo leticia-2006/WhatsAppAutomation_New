@@ -27,13 +27,14 @@ async function loadSessions() {
   try {
     let url = `/sessions/${currentTab}`;
     if (currentTab === "group") {
-      const groupId = document.getElementById (groupSelect).value; url= `/sessions/group/${groupId}`; // FIXED: placeholder groupId
+      const groupId = document.getElementById ("groupSelect").value; url= `/sessions/group/${groupId}`; // FIXED: placeholder groupId
     }
 
     const res = await axios.get(url, { withCredentials: true });
     
 
     // FIXED: دعم صلاحية الوكيل (Agent)
+    sessions = res.data;
     let filtered = sessions;
     if (window.user && user.role === "agent") {
       filtered = sessions.filter((s) => s.agent_id === user.id);
