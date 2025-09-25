@@ -3,7 +3,7 @@ const router = express.Router();
 const { sendMessageToNumber } = require("../waClient");
 const translate = require("@vitalets/google-translate-api");
 const db = require("../db");
-
+const { requireLogin } = require("../middleware/auth");
 
 // جلب الرسائل لجلسة
 router.get("/:sessionId", async (req, res) => {
