@@ -10,7 +10,7 @@ const messagesRouter = require('./routes/messages')
 const sessionsRouter = require('./routes/sessions');
 const usersRouter = require('./routes/users');
 const waNumbersRouter = require('./routes/waNumbers');                            
-const { connectWA } = require('./waClient')
+const { reconnectAllActive } = require('./waClient')
 const { requireLogin, checkRole } = require('./middleware/auth.js');
 const multer = require('multer');
 const app = express();
@@ -100,6 +100,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
