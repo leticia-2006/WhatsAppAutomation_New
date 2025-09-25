@@ -1,5 +1,4 @@
 // sessions.js
-
 let sessions = [];
 let currentTab = "all";
 let currentSession = null;
@@ -32,7 +31,7 @@ async function loadSessions() {
     }
 
     const res = await axios.get(url, { withCredentials: true });
-    renderSessions(res.data)
+    
 
     // FIXED: دعم صلاحية الوكيل (Agent)
     let filtered = sessions;
@@ -222,8 +221,9 @@ async function loadMessages(sessionId) {
 
 // ====== إرسال رسالة ======
 async function sendMessage(sessionId) {
+  const input = document.getElementById("msgInput");
   const fileInput = document.getElementById("mediaInput");
-  const text = document.getElementById( msgInput).value;
+  const text = document.getElementById("msgInput").value;
 let payload = { text };
   if (fileInput.files.length > 0) {
     const file = fileInput.files[0];
@@ -233,7 +233,7 @@ let payload = { text };
     await axios.post(
       `/messages/${sessionId}/send`, payload,  
    { withCredentials: true });
-  LoadMessages(sessionId);
+  loadMessages(sessionId);
     
 
     // FIXED: عرض الرسالة مباشرة بدون إعادة تحميل
