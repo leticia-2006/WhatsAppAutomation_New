@@ -23,13 +23,27 @@ router.get("/:sessionId", async (req, res) => {
 });
 
 // إرسال رسالة
-router.post("/:sessionId/send", async (req, res) => {
-  const { text, waNumberId, jid } = req.body;
+// حفظ الرسالة بعد الإرسال
+router.post("/:sessionId/send", requireLogin, async (req, res) => {
+  const { text, mediaUrl, mediaType } = req.body;
   try {
-    const message = await sendMessageToNumber(waNumberId, jid, text);
+    // إرسال للواتساب
+    if (text) {
+      await sendMessageToNumber(req.session.user.phone, text);
+    } else if (mediaUrl) {
+      await sendMessageToNumber(req.session.user.phone, { url: mediaUrl, type: mediaType });
+    }
+
+    // حفظ في DB
+    await db.query(
+      "INSERT INTO messages (session_id, sender_type, content, content_type, created_at) VALUES ($1, $2, $3, $4, NOW())",
+      [req.params.sessionId, "agent", text || mediaUrl, mediaType || "text"]
+    );
+
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error sending message", err);
+    res.status(500).json({ error: "Failed to send message" });
   }
 });
 
