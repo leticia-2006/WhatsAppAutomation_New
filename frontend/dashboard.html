@@ -393,8 +393,8 @@ async function loadSessionsByRole(role, userId) {
   `;
   document.getElementById("usersTableBody").appendChild(tr);
 });
-  </script>
-  <script>async function loadUsers() {
+  
+  async function loadUsers() {
   try {
     const res = await axios.get("/users", { withCredentials: true });
     const users = res.data;
@@ -426,6 +426,38 @@ async function loadSessionsByRole(role, userId) {
     loadUsers(); // ⬅️ هنا يتم استدعاؤها مباشرة عند فتح الصفحة
   });
   </script>  
+  <script>let currentUserId = null;
+
+async function editUser(userId) {
+  currentUserId = userId;
+  try {
+    const res = await axios.get(`/users/${userId}`, { withCredentials: true });
+    const u = res.data;
+    document.getElementById("editName").value = u.name;
+    document.getElementById("editPhone").value = u.phone;
+    document.getElementById("editRole").value = u.role;
+    new bootstrap.Modal(document.getElementById("editUserModal")).show();
+  } catch (err) {
+    console.error("Error fetching user", err);
+  }
+}
+
+async function saveUserEdits() {
+  try {
+    await axios.put(`/users/${currentUserId}`, {
+      name: document.getElementById("editName").value,
+      phone: document.getElementById("editPhone").value,
+      role: document.getElementById("editRole").value,
+    }, { withCredentials: true });
+
+    alert("User updated!");
+    bootstrap.Modal.getInstance(document.getElementById("editUserModal")).hide();
+    loadUsers();
+  } catch (err) {
+    console.error("Error updating user", err);
+    alert("Failed to update user");
+  }
+}</script>
 
 </body>
 </html>
