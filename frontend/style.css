@@ -166,6 +166,80 @@
   border-radius: 5px;
 }
 
+/* ===== Clients List Items ===== */
+#sessions-body li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+#sessions-body li:hover {
+  background: #f5f5f5;
+}
+
+#sessions-body li.active {
+  background: #e6f7ff;
+  border-left: 4px solid #007bff;
+}
+
+/* Avatar */
+.client-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Client Info */
+.client-info {
+  flex: 1;
+  min-width: 0;
+}
+.client-info .top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+}
+.client-info .last-msg {
+  font-size: 12px;
+  color: #777;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tags row */
+.client-tags {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+.client-tags .tag {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #fff;
+}
+.tag-old { background: #6c757d; }
+.tag-deal { background: #007bff; }
+.tag-ban { background: #dc3545; }
+.tag-online { background: #28a745; }
+.tag-repeat { background: #ffc107; color: #111; }
+
+/* Note button */
+.note-btn {
+  font-size: 14px;
+  color: #007bff;
+  cursor: pointer;
+}
+.note-btn:hover {
+  color: #0056b3;
+}
 /* ===== Chat View Enhancements ===== */
 /* NEW: تحسين الترجمة */
 .message .translation {
@@ -280,6 +354,7 @@ body.dark-mode .context-menu {
 body.dark-mode .context-menu li:hover {
   background: #444;
 }
+
 
 
 
