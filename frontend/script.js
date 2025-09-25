@@ -22,7 +22,7 @@ async function fetchUser() {
     try {
       const res = await axios.get('/users/me', { withCredentials: true });
     window.currrentUser= res.data;
-    console.log("Current user:", user);
+    console.log("currentUser:", user);
 
     // سوبر أدمن → إظهار زر ربط واتساب
     if (user.role === 'super_admin') {
@@ -45,7 +45,7 @@ async function fetchUser() {
    }
 }
 function applyFilters() {
-  const search = document.getElementById("searchInput").value.toLowerCase();
+  const search = document.getElementById("search-input").value.toLowerCase();
   const rows = document.querySelectorAll("#sessions-body tr");
   rows.forEach(r => {
     const text = r.textContent.toLowerCase();
@@ -55,6 +55,7 @@ function applyFilters() {
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
