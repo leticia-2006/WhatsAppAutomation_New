@@ -45,3 +45,33 @@ async function editUser(userId) {
     console.error("Error fetching user", err);
   }
 }
+
+// 🔹 كود صلاحيات Supervisor
+  let currentSupervisorId = null;
+
+  function openPermModal(supervisorId) {
+    currentSupervisorId = supervisorId;
+    axios.get(`/users/${supervisorId}`, { withCredentials: true })
+      .then(res => {
+        const perms = res.data.permissions || {};
+        document.getElementById("permUsers").checked = perms.can_manage_users;
+        document.getElementById("permNumbers").checked = perms.can_manage_numbers;
+        new bootstrap.Modal(document.getElementById("permModal")).show();
+      });
+  }
+
+  function savePermissions() {
+    if (!currentSupervisorId) return;
+    axios.put(`/users/permissions/${currentSupervisorId}`, {
+      can_manage_users: document.getElementById("permUsers").checked,
+      can_manage_numbers: document.getElementById("permNumbers").checked
+    }, { withCredentials: true })
+      .then(() => {
+        alert("Permissions updated!");
+        bootstrap.Modal.getInstance(document.getElementById("permModal")).hide();
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error updating permissions");
+      });
+  }
