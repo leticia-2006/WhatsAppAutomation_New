@@ -26,12 +26,8 @@ async function loadUsers() {
     console.error("Error loading users", err);
   }
 }
-    document.addEventListener("DOMContentLoaded", () => {
-    loadUsers(); // ⬅️ هنا يتم استدعاؤها مباشرة عند فتح الصفحة
-  });
-  
-  let currentUserId = null;
 
+let currentUserId = null;
 async function editUser(userId) {
   currentUserId = userId;
   try {
@@ -45,6 +41,7 @@ async function editUser(userId) {
     console.error("Error fetching user", err);
   }
 }
+
 async function saveUserEdits() {
   try {
     await axios.put(`/users/${currentUserId}`, {
@@ -61,6 +58,7 @@ async function saveUserEdits() {
     alert("Failed to update user");
   }
 }
+
 async function createUser() {
   try {
     await axios.post("/users", {
@@ -77,6 +75,7 @@ async function createUser() {
     alert("Failed to create user");
   }
 }
+
 async function deleteUser(userId) {
   if (!confirm("Are you sure you want to delete this user?")) return;
   try {
@@ -88,10 +87,10 @@ async function deleteUser(userId) {
     alert("Failed to delete user");
   }
 }
-// 🔹 كود صلاحيات Supervisor
-  let currentSupervisorId = null;
 
-  function openPermModal(supervisorId) {
+// 🔹 كود صلاحيات Supervisor
+let currentSupervisorId = null;
+function openPermModal(supervisorId) {
     currentSupervisorId = supervisorId;
     axios.get(`/users/${supervisorId}`, { withCredentials: true })
       .then(res => {
@@ -102,7 +101,7 @@ async function deleteUser(userId) {
       });
   }
 
-  function savePermissions() {
+function savePermissions() {
     if (!currentSupervisorId) return;
     axios.put(`/users/permissions/${currentSupervisorId}`, {
       can_manage_users: document.getElementById("permUsers").checked,
@@ -117,6 +116,10 @@ async function deleteUser(userId) {
         alert("Error updating permissions");
       });
   }
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadUsers(); 
+  });
 document.getElementById("addUserBtn").addEventListener("click", () => {
   new bootstrap.Modal(document.getElementById("addUserModal")).show();
 });
