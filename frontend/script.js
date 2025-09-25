@@ -19,9 +19,9 @@ function closeQRModal() {
 
 // جلب بيانات المستخدم عند تحميل الصفحة
 async function fetchUser() {
-  try {
-    const res = await axios.get('/users/me', { withCredentials: true });
-    user = res.data;
+    try {
+      const res = await axios.get('/users/me', { withCredentials: true });
+    window.currrentUser= res.data;
     console.log("Current user:", user);
 
     // سوبر أدمن → إظهار زر ربط واتساب
@@ -45,28 +45,17 @@ async function fetchUser() {
    }
 }
 function applyFilters() {
-  const searchValue = document.getElementById("search-input").value.toLowerCase();
-  const tagValue = document.getElementById("tag-filter").value;
-
-  const sessions = document.querySelectorAll("#sessions-body .session-item");
-
-  sessions.forEach(session => {
-    const name = session.querySelector(".session-name")?.textContent.toLowerCase() || "";
-    const tag = session.getAttribute("data-tag") || "";
-
-    const matchesSearch = name.includes(searchValue);
-    const matchesTag = tagValue === "" || tag === tagValue;
-
-    if (matchesSearch && matchesTag) {
-      session.style.display = "block";
-    } else {
-      session.style.display = "none";
-    }
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const rows = document.querySelectorAll("#sessions-body tr");
+  rows.forEach(r => {
+    const text = r.textContent.toLowerCase();
+    r.style.display = text.includes(search) ? "" : "none";
   });
 }
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
