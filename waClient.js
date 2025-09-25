@@ -42,7 +42,7 @@ async function initClient(numberId) {
     setTimeout(() =>
   initClient(numberId);
     }
-});
+}
 
  sock.ev.on("creds.update", saveCreds);
 
@@ -108,7 +108,7 @@ let sessionRes = await db.query(
 let sessionId;
 if (sessionRes.rowCount === 0) {
   const newSession = await db.query(
-    "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, jid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
+    "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, finalJid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
     [clientId, numberId, sender]
   );
   sessionId = newSession.rows[0].id;
