@@ -45,7 +45,49 @@ async function editUser(userId) {
     console.error("Error fetching user", err);
   }
 }
+async function saveUserEdits() {
+  try {
+    await axios.put(`/users/${currentUserId}`, {
+      name: document.getElementById("editName").value,
+      phone: document.getElementById("editPhone").value,
+      role: document.getElementById("editRole").value,
+    }, { withCredentials: true });
 
+    alert("User updated!");
+    bootstrap.Modal.getInstance(document.getElementById("editUserModal")).hide();
+    loadUsers();
+  } catch (err) {
+    console.error("Error updating user", err);
+    alert("Failed to update user");
+  }
+}
+async function createUser() {
+  try {
+    await axios.post("/users", {
+      name: document.getElementById("newName").value,
+      phone: document.getElementById("newPhone").value,
+      role: document.getElementById("newRole").value,
+    }, { withCredentials: true });
+
+    alert("User created!");
+    bootstrap.Modal.getInstance(document.getElementById("addUserModal")).hide();
+    loadUsers();
+  } catch (err) {
+    console.error("Error creating user", err);
+    alert("Failed to create user");
+  }
+}
+async function deleteUser(userId) {
+  if (!confirm("Are you sure you want to delete this user?")) return;
+  try {
+    await axios.delete(`/users/${userId}`, { withCredentials: true });
+    alert("User deleted!");
+    loadUsers();
+  } catch (err) {
+    console.error("Error deleting user", err);
+    alert("Failed to delete user");
+  }
+}
 // 🔹 كود صلاحيات Supervisor
   let currentSupervisorId = null;
 
