@@ -38,6 +38,8 @@ async function initClient(numberId) {
   fs.rmSync(path.join(__dirname, "..", "auth_info", `${numberId}`), { recursive: true, force: true });
   await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["LoggedOut", numberId]);
 } else {
+  console.log(`🔄 إعادة محاولة الاتصال بالرقم ${numberId} بعد 5 ثواني...`);
+    setTimeout(() =>
   initClient(numberId);
     }
 });
