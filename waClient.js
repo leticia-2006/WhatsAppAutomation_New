@@ -79,7 +79,7 @@ if (msg.message.conversation) {
   contentType = "video";
   const buffer = await downloadMediaMessage(msg, "buffer", {});
   const fileName = `${numberId}_${Date.now()}.mp4`;
-  const filePath = path.join(__dirname, "uploads", fileName);
+  const filePath = path.join(__dirname, "..", "uploads", fileName);
   fs.writeFileSync(filePath, buffer);
   mediaUrl = `/uploads/${fileName}`;
   text = "[🎥 فيديو]";
@@ -120,6 +120,7 @@ if (sessionRes.rowCount === 0) {
 }
 
 // 1. خزّن الرسالة مرتبطة بالجلسة
+const finalJid = sender.includes("@s.whatsapp.net") ? sender : sender + "@s.whatsapp.net";
 const insertRes = await db.query(
   "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,NOW(),$8) RETURNING id",
   [sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, finalJid]
@@ -134,7 +135,7 @@ let msgCount = 0;
        "SELECT COUNT(*) FROM messages WHERE jid = $1 AND sender_type='client'",
        [sender]
      );
-     const msgCount = 
+     msgCount = 
 parseInt(countRes.rows[0].count);
    }     
     if (msgCount === 3) {
