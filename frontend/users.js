@@ -117,3 +117,6 @@ async function deleteUser(userId) {
         alert("Error updating permissions");
       });
   }
+document.getElementById("addUserBtn").addEventListener("click", () => {
+  new bootstrap.Modal(document.getElementById("addUserModal")).show();
+});
