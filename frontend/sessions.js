@@ -235,6 +235,12 @@ let payload = { text };
       `/messages/${sessionId}/send`, payload,  
    { withCredentials: true });
   loadMessages(sessionId);
+} catch (err) {
+    console.error("Error sending message", err);
+    alert("Failed to send message");
+  }
+}
+
     
 
     // FIXED: عرض الرسالة مباشرة بدون إعادة تحميل
