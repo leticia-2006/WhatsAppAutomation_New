@@ -225,4 +225,17 @@ function getClientStatus(numberId) {
   return clients[numberId] ? "connected" : "disconnected";
 }
 
-module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus };
+// Auto reconnect for all active numbers
+async function reconnectAllActive() {
+  try {
+    const res = await db.query("SELECT id FROM wa_numbers WHERE status IN ('Active','Disconnected')");
+    for (const row of res.rows) {
+      console.log(`🔄 إعادة الاتصال بالرقم ${row.id}...`);
+      await initClient(row.id);
+    }
+  } catch (err) {
+    console.error("⚠️ خطأ أثناء إعادة الاتصال بالأرقام:", err);
+  }
+}
+
+module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive };
