@@ -406,3 +406,11 @@ window.onload = () => {
     document.getElementById("darkModeToggle").checked = true;
   }
 };
+function selectClient(sessionId, name, phone, tags) {
+  document.getElementById("detailName").innerText = name;
+  document.getElementById("detailPhone").innerText = phone;
+  document.getElementById("detailTags").innerText = tags || "-";
+
+  // Load messages of this session
+  loadMessages(sessionId);
+}
