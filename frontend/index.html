@@ -39,10 +39,17 @@
   }  else {
     document.getElementById('login-error').innerText = 'Login failed';
         }
-    });
+    } catch (err) {
+      console.error("Login error:", err);
+      document.getElementById('login-error').innerText = 'Login failed - server error';
+    }
+  });
+
+
   </script>
 </body>
 </html>
+
 
 
 
