@@ -44,7 +44,7 @@ async function editUser(userId) {
 
 async function saveUserEdits() {
   try {
-    await axios.put(`/users/${currentUserId}`, {
+    await axios.post(`/users/${currentUserId}`, {
       name: document.getElementById("editName").value,
       phone: document.getElementById("editPhone").value,
       role: document.getElementById("editRole").value,
