@@ -202,24 +202,7 @@
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody id="usersTableBody">users.forEach(u => {
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td>${u.id}</td>
-    <td>${u.name}</td>
-    <td>${u.phone}</td>
-    <td>${u.role}</td>
-    <td>
-      <button class="btn btn-sm btn-warning" onclick="editUser(${u.id})">Edit</button>
-      <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
-      ${u.role === "supervisor" 
-        ? `<button class="btn btn-sm btn-info" onclick="openPermModal(${u.id})">Manage Permissions</button>` 
-        : ""}
-    </td>
-  `;
-  document.getElementById("usersTableBody").appendChild(tr);
-});
-      </tbody>
+      <tbody id="usersTableBody"></tbody>
     </table>
   </div>
 </div>
@@ -338,6 +321,11 @@ async function loadSessionsByRole(role, userId) {
   <li onclick="syncMessages()">Sync phone message</li>
   <li onclick="batchOperation()">Batch operation</li>
 </ul>
+
+  
+
+// استدعاء الدالة عند فتح الصفحة
+
   
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -388,6 +376,57 @@ async function loadSessionsByRole(role, userId) {
       });
   }
 </script>
+  <script>users.forEach(u => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${u.id}</td>
+    <td>${u.name}</td>
+    <td>${u.phone}</td>
+    <td>${u.role}</td>
+    <td>
+      <button class="btn btn-sm btn-warning" onclick="editUser(${u.id})">Edit</button>
+      <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
+      ${u.role === "supervisor" 
+        ? `<button class="btn btn-sm btn-info" onclick="openPermModal(${u.id})">Manage Permissions</button>` 
+        : ""}
+    </td>
+  `;
+  document.getElementById("usersTableBody").appendChild(tr);
+});
+  </script>
+  <script>async function loadUsers() {
+  try {
+    const res = await axios.get("/users", { withCredentials: true });
+    const users = res.data;
+    const tbody = document.getElementById("usersTableBody");
+    tbody.innerHTML = "";
+
+    users.forEach(u => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${u.id}</td>
+        <td>${u.name}</td>
+        <td>${u.phone}</td>
+        <td>${u.role}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="editUser(${u.id})">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
+          ${u.role === "supervisor"
+            ? `<button class="btn btn-sm btn-info" onclick="openPermModal(${u.id})">Manage Permissions</button>`
+            : ""}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error("Error loading users", err);
+  }
+}
+    document.addEventListener("DOMContentLoaded", () => {
+    loadUsers(); // ⬅️ هنا يتم استدعاؤها مباشرة عند فتح الصفحة
+  });
+  </script>  
+
 </body>
 </html>
 
