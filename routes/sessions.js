@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const { getQRForNumber } = require('../waClient'); // استدعاء العميل الذي أنشأناه
-
+const { requireLogin } = require("../middleware/auth");
 
 router.get("/", async (req, res) => {
  if (!req.session.user) {
@@ -170,7 +170,7 @@ router.post("/add-note", async (req, res) => {
 router.get("/:id/notes", requireLogin, async (req, res) => {
   try {
     const result = await db.query(
-      "SELECT * FROM notes WHERE session_id = $1 ORDER BY created_at DESC",
+      "SELECT * FROM notes WHERE client_id = $1 ORDER BY created_at DESC",
       [req.params.id]
     );
     res.json(result.rows);
@@ -182,6 +182,7 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
