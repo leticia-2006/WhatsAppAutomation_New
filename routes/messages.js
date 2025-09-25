@@ -27,17 +27,22 @@ router.get("/:sessionId", async (req, res) => {
 router.post("/:sessionId/send", requireLogin, async (req, res) => {
   const { text, mediaUrl, mediaType } = req.body;
   try {
-    // إرسال للواتساب
+   const sessionRes = await db.query("SELECT c.phone FROM sessions s JOIN clients c ON c.id = s.client_id WHERE s.id=$1", [req.params.sessionId]);
+if (sessionRes.rowCount === 0) return res.status(404).json({ error: "Session not found" });
+
+const clientPhone = sessionRes.rows[0].phone;
+
+// إرسال للواتساب
     if (text) {
-      await sendMessageToNumber(req.session.user.phone, text);
+      await sendMessageToNumber(clientPhone, text);
     } else if (mediaUrl) {
-      await sendMessageToNumber(req.session.user.phone, { url: mediaUrl, type: mediaType });
+      await sendMessageToNumbr(clientPhone, { url: mediaUrl, type: mediaType });
     }
 
     // حفظ في DB
     await db.query(
-      "INSERT INTO messages (session_id, sender_type, content, content_type, created_at) VALUES ($1, $2, $3, $4, NOW())",
-      [req.params.sessionId, "agent", text || mediaUrl, mediaType || "text"]
+      "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, created_at) VALUES ($1, $2, $3, $4, $5,NOW())",
+      [req.params.sessionId, "agent", text || null, mediaType || "text", mediaUrl || null]
     );
 
     res.json({ success: true });
