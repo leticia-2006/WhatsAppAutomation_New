@@ -46,7 +46,6 @@ async function loadSessions() {
   }
 }
 
-// ====== عرض الجلسات في جدول ======
 function renderSessions(list = [], filterType = "all") {
   const container = document.getElementById("sessions-body");
   if (!container) return;
@@ -62,9 +61,7 @@ function renderSessions(list = [], filterType = "all") {
     renderSessions(
       list.filter(
         (s) =>
-          (s.name || "")
-            .toLowerCase()
-            .includes(searchBar.value.toLowerCase()) ||
+          (s.name || "").toLowerCase().includes(searchBar.value.toLowerCase()) ||
           (s.phone || "").includes(searchBar.value)
       ),
       filterType
@@ -72,82 +69,72 @@ function renderSessions(list = [], filterType = "all") {
   };
   container.appendChild(searchBar);
 
-  // 🔹 Table
-  const table = document.createElement("table");
-  table.className = "table table-hover table-sm";
-  table.innerHTML = `
-    <thead class="table-light">
-      <tr>
-        <th>Name</th>
-        <th>Phone</th>
-        <th>Status</th>
-        <th>Tags</th>
-        <th>Notes</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  `;
-  const tbody = table.querySelector("tbody");
+  // 🔹 Sessions list
+  const ul = document.createElement("ul");
+  ul.className = "list-unstyled m-0";
 
   list.forEach((session) => {
-    // FIXED: فلترة حسب الحالة
     if (filterType === "unread" && session.status !== "unread") return;
     if (filterType === "unreplied" && session.status !== "unreplied") return;
     if (filterType === "group" && !session.group_id) return;
 
-    const tags = Array.isArray(session.tags) ? session.tags : [];
+    const li = document.createElement("li");
 
-    const tr = document.createElement("tr");
+    // avatar
+    const avatar = document.createElement("img");
+    avatar.src = session.avatar_url || "/default-avatar.png";
+    avatar.className = "client-avatar";
 
-    let name = session.name || "Unknown";
-    if (session.repeat) {
-      name += ` <span class="badge bg-warning text-dark">Repeat</span>`;
-    }
-
-    tr.innerHTML = `
-      <td>
-        <img src="${session.avatar_url || "/default-avatar.png"}"
-             alt="avatar"
-             style="width:32px; height:32px; border-radius:50%; margin-right:6px;">
-        ${name}
-      </td>
-      <td>${session.phone}</td>
-      <td>
-        <span class="badge ${
-          session.status === "unread" ? "bg-danger" : "bg-success"
-        }">
-          ${session.status}
-        </span>
-      </td>
-      <td>${tags
-        .map((t) => `<span class="badge bg-info text-dark me-1">${t}</span>`)
-        .join("")}</td>
-      <td>
-        <button class="btn btn-sm btn-outline-primary" onclick="openNoteModal('${
-          session.id
-        }')">
-          <i class="fas fa-sticky-note"></i>
-        </button>
-      </td>
+    // info
+    const info = document.createElement("div");
+    info.className = "client-info";
+    info.innerHTML = `
+      <div class="top">
+        <span>${session.name || session.phone}</span>
+        <small>${session.last_time || ""}</small>
+      </div>
+      <div class="last-msg">${session.last_message || ""}</div>
+      <div class="client-tags">
+        ${session.repeat ? '<span class="tag tag-repeat">Repeat</span>' : ""}
+        ${Array.isArray(session.tags)
+          ? session.tags
+              .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
+              .join("")
+          : ""}
+      </div>
     `;
 
-    // فتح محادثة عند الضغط
-    tr.style.cursor = "pointer";
-    tr.onclick = () => openChat(session);
+    // note button
+    const noteBtn = document.createElement("span");
+    noteBtn.className = "note-btn";
+    noteBtn.innerHTML = "📝";
+    noteBtn.onclick = (e) => {
+      e.stopPropagation();
+      openNoteModal(session.id);
+    };
 
-    tr.oncontextmenu = (e) => {
+    li.appendChild(avatar);
+    li.appendChild(info);
+    li.appendChild(noteBtn);
+
+    // click = open chat
+    li.style.cursor = "pointer";
+    li.onclick = () => openChat(session);
+
+    // right-click = context menu
+    li.oncontextmenu = (e) => {
       e.preventDefault();
       showContextMenu(e, session);
     };
-    
-    tbody.appendChild(tr);
+
+    ul.appendChild(li);
   });
 
-  container.appendChild(table);
+  container.appendChild(ul);
 
   document.getElementById("session-count").innerText = `${list.length} sessions found`;
 }
-
+      
 // ====== فتح المحادثة ======
 function openChat(session) {
   currentSession = session;
