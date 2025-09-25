@@ -393,9 +393,6 @@ async function loadSessionsByRole(role, userId) {
 </ul>
 
   
-
-// استدعاء الدالة عند فتح الصفحة
-
   
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -411,12 +408,6 @@ async function loadSessionsByRole(role, userId) {
     setLanguage(e.target.value);
   });
   setLanguage("en");
-</script>
-  <script>
-  // 🔹 كودك الحالي لعرض الجلسات وغيره
-  // ...
-
-  
 </script>
   <script>users.forEach(u => {
   const tr = document.createElement("tr");
@@ -435,12 +426,8 @@ async function loadSessionsByRole(role, userId) {
   `;
   document.getElementById("usersTableBody").appendChild(tr);
 });
-  
-  
+</script>
 
-
-  </script>
-<script></script>
 
 </body>
 </html>
