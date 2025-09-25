@@ -320,7 +320,7 @@ async function loadNotes(sessionId) {
   notesDiv.innerHTML = "";
   res.data.forEach(n => {
     const li = document.createElement("li");
-    li.textContent = n.content;
+    li.textContent = n.note;
     notesDiv.appendChild(li);
   });
 }
