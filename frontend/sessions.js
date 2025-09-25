@@ -28,11 +28,11 @@ async function loadSessions() {
   try {
     let url = `/sessions/${currentTab}`;
     if (currentTab === "group") {
-      url = "/sessions/group/2"; // FIXED: placeholder groupId
+      const groupId = document.getElementById (groupSelect).value; url= `/sessions/group/${groupId}`; // FIXED: placeholder groupId
     }
 
     const res = await axios.get(url, { withCredentials: true });
-    sessions = Array.isArray(res.data) ? res.data : [];
+    renderSessions(res.data)
 
     // FIXED: دعم صلاحية الوكيل (Agent)
     let filtered = sessions;
@@ -221,21 +221,20 @@ async function loadMessages(sessionId) {
 }
 
 // ====== إرسال رسالة ======
-async function sendMessage() {
-  const input = document.getElementById("msgInput");
-  const text = input.value.trim();
-  if (!text || !currentSession) return;
-
-  try {
+async function sendMessage(sessionId) {
+  const fileInput = document.getElementById("mediaInput");
+  const text = document.getElementById( msgInput).value;
+let payload = { text };
+  if (fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    const mediaUrl = URL.createObjectURL(file); // (ممكن ترفع للسيرفر)
+    payload = { mediaUrl, mediaType: file.type.split("/")[0] };
+  }
     await axios.post(
-      `/messages/${currentSession.id}/send`,
-      {
-        text,
-        waNumberId: currentSession.wa_number_id,
-        jid: currentSession.jid,
-      },
-      { withCredentials: true }
-    );
+      `/messages/${sessionId}/send`, payload,  
+   { withCredentials: true });
+  LoadMessages(sessionId);
+    
 
     // FIXED: عرض الرسالة مباشرة بدون إعادة تحميل
     const chatBox = document.getElementById("chatMessages");
@@ -312,6 +311,17 @@ function saveNote() {
       loadSessions(); // FIXED: تحديث الجدول بعد حفظ الملاحظة
     })
     .catch((err) => console.error("Error saving note:", err));
+}
+
+async function loadNotes(sessionId) {
+  const res = await axios.get(`/sessions/${sessionId}/notes`, { withCredentials: true });
+  const notesDiv = document.getElementById("notesList");
+  notesDiv.innerHTML = "";
+  res.data.forEach(n => {
+    const li = document.createElement("li");
+    li.textContent = n.content;
+    notesDiv.appendChild(li);
+  });
 }
 
 let selectedSession = null;
