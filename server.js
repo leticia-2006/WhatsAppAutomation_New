@@ -44,14 +44,16 @@ app.use(session({
 
 // Content Security Policy
 app.use((req, res, next) => {
-res.setHeader(
-  "Content-Security-Policy",
-  "default-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-  "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-  "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-  "img-src 'self' data: https://*; " +
-  "font-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;"
-);
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "font-src 'self' https://fonts.gstatic.com; " +
+    "img-src 'self' data: blob: https:; " +
+    "connect-src 'self' https://your-backend-domain.com wss:; " +
+    "frame-src 'self';"
+  );
 console.log("Cookies from client:", req.headers.cookie);
     next();
 });
@@ -101,6 +103,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
