@@ -8,8 +8,13 @@ const pool = new Pool({
     port: process.env.DB_PORT,
     ssl: { rejectUnauthorized: false }
 });
+pool.on("error", (err) => {
+  console.error("Unexpected DB error:", err);
+  process.exit(-1);
+});
 
 module.exports = pool;
+
 
 
 
