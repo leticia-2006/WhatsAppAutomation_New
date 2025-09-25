@@ -40,7 +40,7 @@ async function initClient(numberId) {
 } else {
   console.log(`🔄 إعادة محاولة الاتصال بالرقم ${numberId} بعد 5 ثواني...`);
     setTimeout(() =>
-  initClient(numberId);
+  initClient(numberId), 5000);
     }
 }
 
