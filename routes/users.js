@@ -83,6 +83,23 @@ router.get('/', requireLogin, checkRole(['super_admin']), async (req, res) => {
   }
 });
 
+// ✅ راوت للحصول على بيانات مستخدم محدد (فقط super_admin)
+router.get('/:id', requireLogin, checkRole(['super_admin']), async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const result = await db.query('SELECT id, username, role, created_at FROM users WHERE id = $1', [userId]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("❌ Error fetching user by ID:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // تعديل مستخدم
 router.put('/:id', requireLogin, checkRole(['super_admin']), async (req, res) => {
   try {
@@ -210,6 +227,7 @@ router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (
 });
 
 module.exports = router;
+
 
 
 
