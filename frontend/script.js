@@ -21,7 +21,7 @@ function closeQRModal() {
 async function fetchUser() {
     try {
       const res = await axios.get('/users/me', { withCredentials: true });
-    window.currrentUser= res.data;
+    window.currrentUser= res.data; user = res.data;
     console.log("currentUser:", user);
 
     // سوبر أدمن → إظهار زر ربط واتساب
@@ -55,6 +55,7 @@ function applyFilters() {
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
