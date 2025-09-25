@@ -157,10 +157,19 @@ async function loadMessages(sessionId) {
     chatBox.innerHTML = "";
 
     messages.forEach((msg) => {
-      let content = msg.is_deleted ? "<i>Message deleted</i>" : msg.content;
+      let content = msg.content
+     
+    if (msg.is_deleted) {
+    content = `
+      <div class="deleted-msg">
+        <div class="deleted-label">🗑 Deleted Message</div>
+        <div class="deleted-content">${msg.content}</div>
+      </div>
+    `;
+  }
 
-      // FIXED: دعم أنواع الميديا
-      if (msg.content_type === "image" && msg.media_url) {
+// FIXED: دعم أنواع الميديا
+   if (msg.content_type === "image" && msg.media_url) {
         content = `<img src="${msg.media_url}" style="max-width:200px; border-radius:8px;">`;
       }
       if (msg.content_type === "video" && msg.media_url) {
@@ -180,8 +189,8 @@ async function loadMessages(sessionId) {
       });
 
       const div = `
-        <div class="message ${msg.sender_type === "client" ? "client" : "agent"}" data-id="${msg.id}">
-          <img src="${msg.sender_avatar || "/default-avatar.png"}"
+        <div class="message ${msg.sender_type === "client" ? "client" : "agent"}" ${msg.is_deleted ? "deleted" : ""}" data-id="${msg.id}">
+         <img src="${msg.sender_avatar || "/default-avatar.png"}"
                style="width:28px; height:28px; border-radius:50%; vertical-align:middle;">
           <div class="bubble">
             ${content}
