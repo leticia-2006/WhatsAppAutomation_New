@@ -167,9 +167,22 @@ router.post("/add-note", async (req, res) => {
     res.status(500).json({ error: "Failed to save note" });
   }
 });
+router.get("/:id/notes", requireLogin, async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT * FROM notes WHERE session_id = $1 ORDER BY created_at DESC",
+      [req.params.id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch notes" });
+  }
+});
+
 
 
 module.exports = router;
+
 
 
 
