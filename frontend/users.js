@@ -61,18 +61,73 @@ async function saveUserEdits() {
 
 async function createUser() {
   try {
-    await axios.post("/users", {
-      name: document.getElementById("newName").value,
-      phone: document.getElementById("newPhone").value,
-      role: document.getElementById("newRole").value,
-    }, { withCredentials: true });
+    const role = document.getElementById("newRole").value;
+    const name = document.getElementById("newName").value;
+    const phone = document.getElementById("newPhone").value;
 
-    alert("User created!");
+    // 🔹 نحدد الراوت المناسب حسب الدور
+    let endpoint = "";
+    switch (role) {
+      case "agent":
+        endpoint = "/users/add-agent";
+        break;
+      case "supervisor":
+        endpoint = "/users/add-supervisor";
+        break;
+      case "admin":
+        endpoint = "/users/add-admin";
+        break;
+      case "super_admin":
+        endpoint = "/users/add-super-admin";
+        break;
+      default:
+        throw new Error("دور غير معروف");
+    }
+
+    await axios.post(endpoint, { name, phone, role }, { withCredentials: true });
+
+    alert("✅ User created!");
     bootstrap.Modal.getInstance(document.getElementById("addUserModal")).hide();
     loadUsers();
   } catch (err) {
     console.error("Error creating user", err);
-    alert("Failed to create user");
+    alert("❌ Failed to create user");
+  }
+}
+
+async function saveUserEdits() {
+  try {
+    const role = document.getElementById("editRole").value;
+    const name = document.getElementById("editName").value;
+    const phone = document.getElementById("editPhone").value;
+
+    // 🔹 نحدد الراوت المناسب حسب الدور للتحديث
+    let endpoint = "";
+    switch (role) {
+      case "agent":
+        endpoint = `/users/update-agent/${currentUserId}`;
+        break;
+      case "supervisor":
+        endpoint = `/users/update-supervisor/${currentUserId}`;
+        break;
+      case "admin":
+        endpoint = `/users/update-admin/${currentUserId}`;
+        break;
+      case "super_admin":
+        endpoint = `/users/update-super-admin/${currentUserId}`;
+        break;
+      default:
+        throw new Error("دور غير معروف");
+    }
+
+    await axios.put(endpoint, { name, phone, role }, { withCredentials: true });
+
+    alert("✅ User updated!");
+    bootstrap.Modal.getInstance(document.getElementById("editUserModal")).hide();
+    loadUsers();
+  } catch (err) {
+    console.error("Error updating user", err);
+    alert("❌ Failed to update user");
   }
 }
 
