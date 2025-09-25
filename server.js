@@ -70,7 +70,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 // ===== Routes تطبيقية =====
 app.use('/sessions', requireLogin, sessionsRouter);
-app.use('/users', requireLogin, usersRouter);
+app.use('/users', usersRouter);
 app.use('/messages', requireLogin, messagesRouter);
 app.use('/wa-numbers', requireLogin,waNumbersRouter);
 
@@ -103,6 +103,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
