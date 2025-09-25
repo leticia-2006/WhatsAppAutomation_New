@@ -411,25 +411,7 @@ async function loadSessionsByRole(role, userId) {
   });
   setLanguage("en");
 </script>
-  <script>users.forEach(u => {
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td>${u.id}</td>
-    <td>${u.name}</td>
-    <td>${u.phone}</td>
-    <td>${u.role}</td>
-    <td>
-      <button class="btn btn-sm btn-warning" onclick="editUser(${u.id})">Edit</button>
-      <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
-      ${u.role === "supervisor" 
-        ? `<button class="btn btn-sm btn-info" onclick="openPermModal(${u.id})">Manage Permissions</button>` 
-        : ""}
-    </td>
-  `;
-  document.getElementById("usersTableBody").appendChild(tr);
-});
-</script>
-
+  
 
 </body>
 </html>
