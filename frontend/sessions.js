@@ -330,13 +330,35 @@ async function loadNotes(sessionId) {
 let selectedSession = null;
 
 function showContextMenu(e, session) {
+  e.preventDefault();
   selectedSession = session;
-  const menu = document.getElementById("contextMenu");
-  menu.style.display = "block";
-  menu.style.left = e.pageX + "px";
-  menu.style.top = e.pageY + "px";
-}
 
+  // إزالة التحديد السابق
+  document.querySelectorAll("#sessions-body li")
+    .forEach(li => li.classList.remove("context-selected"));
+
+  // إضافة تحديد للجلسة الحالية
+  e.currentTarget.classList.add("context-selected");
+
+  const menu = document.getElementById("contextMenu");
+  const { innerWidth, innerHeight } = window;
+
+  let x = e.pageX;
+  let y = e.pageY;
+
+  // لو القائمة قربت من اليمين
+  if (x + menu.offsetWidth > innerWidth) {
+    x = innerWidth - menu.offsetWidth - 10;
+  }
+  // لو القائمة قربت من الأسفل
+  if (y + menu.offsetHeight > innerHeight) {
+    y = innerHeight - menu.offsetHeight - 10;
+  }
+
+  menu.style.left = x + "px";
+  menu.style.top = y + "px";
+  menu.style.display = "block";
+}
 // إخفاء القائمة عند أي كليك
 document.addEventListener("click", () => {
   document.getElementById("contextMenu").style.display = "none";
