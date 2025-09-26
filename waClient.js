@@ -69,6 +69,9 @@ if (msg.message.conversation) {
 );
   const fileName = `${numberId}_${Date.now()}.jpg`;
   const filePath = path.join(__dirname, "..", "uploads", fileName);
+  if (!fs.existsSync("./uploads")) {
+    fs.mkdirSync("./uploads");
+  }
   fs.writeFileSync(filePath, buffer);
   mediaUrl = `/uploads/${fileName}`;
   text = "[📷 صورة]";
@@ -120,7 +123,7 @@ if (sessionRes.rowCount === 0) {
 const finalJid = sender.includes("@s.whatsapp.net") ? sender : sender + "@s.whatsapp.net";
 const insertRes = await db.query(
   "INSERT INTO messages (wa_message_id, session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),$9) RETURNING id",
-  [msg.key.id, sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, jid]
+  [msg.key.id, sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, finalJid]
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
     
