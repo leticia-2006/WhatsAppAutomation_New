@@ -38,21 +38,20 @@
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
-  <!-- Main Sidebar -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Logo -->
-    <a href="#" class="brand-link">
-      <span class="brand-text font-weight-light">WA Auto</span>
-    </a>
+<!-- Header -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <span class="navbar-brand">WA Auto</span>
+  </nav>
 
-
-      <!-- Content Wrapper -->
+<! -- Layout -->
   <div class="content-wrapper p-3">
+    <div class="row">
     
-    
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <nav class="mt-2">
+  <!-- Main Sidebar -->
+ <div class="col-md-2"> 
+   <aside class="main-sidebar sidebar-dark-primary elevation-4">
+     <div class="sidebar">
+       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
           <!-- FIXED: إضافة tabs للفلاتر -->
           <li class="nav-item"><a href="#" class="nav-link tab-link active" data-tab="all"><i class="fas fa-list"></i> <p>All</p></a></li>
@@ -61,78 +60,65 @@
           <li class="nav-item"><a href="#" class="nav-link tab-link" data-tab="unreplied"><i class="fas fa-reply"></i> <p>Unreplied</p></a></li>
           <li class="nav-item"><a href="#" id="qr-link" style="display:none;" class="nav-link"><i class="fas fa-qrcode"></i> <p>Link WhatsApp</p></a></li>
         </ul>
-      </nav>
-
-      <!-- FIXED: إضافة اختيار اللغة في السايدبار -->
-      <div class="p-3">
+       </nav>
+       
+       <!-- FIXED: إضافة اختيار اللغة في السايدبار -->
+       <div class="p-3">
         <select id="langSelect" class="form-control form-control-sm">
           <option value="en">English</option>
           <option value="ar">العربية</option>
           <option value="es">Español</option>
         </select>
       </div>
-    </div>
-    <!-- /.sidebar -->
-  </aside>
-      <!-- Clients / Sessions List -->
-      <div class="filter-bar">
-       <label>Filter by Tag:</label>
-       <select id="tagFilter" onchange="applyTagFilter()">
-        <option value="all">All</option>
-        <option value="VIP">VIP</option>
-        <option value="Old">Old</option>
-        <option value="Deal">Deal</option>
-        <option value="Repeat">Repeat</option>
-        <option value="Blacklist">Blacklist</option>
-       </select>
-      </div>
-      
-      <div class="theme-toggle">
-        <label class="switch">
-        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
-        <span class="slider"></span>
-        </label>
-        <span>Dark Mode</span>
-      </div>
-   
-      <div class="col-3">
-      <!-- 🔹 Clients List -->
-      <div class="card card-outline card-primary">
-        <div class="card-header">
-         <h3 class="card-title">Clients</h3>
+     </div>
+   </aside>
+ </div>
+  
+<!-- Clients / Sessions List -->
+      <div class="col-md-3">
+        <div class="card card-outline card-primary h-100">
+          <div class="card-header">
+            <h3 class="card-title">Clients</h3>
+          </div>
+          <div class="card-body p-0">
+          <input type="text" id="search-input" class="form-control mb-2" placeholder="Search clients..." oninput="applyFilters()">
+          <select id="tagFilter" class="form-control mb-2" onchange="applyTagFilter()">
+          <option value="all">All</option>
+          <option value="VIP">VIP</option>
+          <option value="Old">Old</option>
+          <option value="Deal">Deal</option>
+          <option value="Repeat">Repeat</option>
+          <option value="Blacklist">Blacklist</option>
+          </select>
+          <ul class="list-group list-group-flush" id="sessions-body"></ul>
+         </div>
         </div>
-      <div class="card-body p-0">
-      <ul class="list-group list-group-flush" id="sessions-body"></ul>
-      </div>
-      </div>
-  </div>
-     <!-- Chat View -->
-      <div class="col-md-8">
-        <div class="card card-outline card-success">
-          <div class="card-header"><h3 class="card-title">Conversation</h3></div>
-          <div class="card-body">
-            <div id="chat-view" class="chat">
-     <div class="col-6">  
-              <!-- Header -->
-              <div class="chat-header d-flex justify-content-between align-items-center px-3" id="chatHeader">
-                <div>
-                  <strong id="chatClient">Select a conversation...</strong><br>
-                  <small id="chatStatus">Offline</small>
-                </div>
-                <div>
-                  <i class="fas fa-search mx-2"></i>
-                  <i class="fas fa-phone mx-2"></i>
-                  <i class="fas fa-ellipsis-v mx-2"></i>
-                </div>
-              </div>
-
-              <!-- Messages -->
-              <div id="chatMessages" class="messages"></div>
-
-              <!-- Footer -->
-              <div class="chat-footer">
-              <i class="far fa-smile me-2"></i>
-              <input type="file" id="mediaInput" class="d-none" onchange="previewMedia(event)">
+       </div>  
+          
+       
+<!-- Chat View -->
+<div class="col-md-7">
+<div class="card card-outline card-success">
+<div class="card-header"><h3 class="card-title">Conversation</h3></div>
+<div class="card-body">
+<!-- Header -->
+<div class="chat-header d-flex justify-content-between align-items-center px-3" id="chatHeader">
+<div>
+<strong id="chatClient">Select a conversation...</strong><br>
+<small id="chatStatus">Offline</small>
+</div>
+<div>
+<i class="fas fa-search mx-2"></i>
+<i class="fas fa-phone mx-2"></i>
+<i class="fas fa-ellipsis-v mx-2"></i>
+</div>
+</div>
+<!-- Messages -->
+<div id="chatMessages" class="messages"></div>
+<!-- Footer -->
+<div class="chat-footer">
+<i class="far fa-smile me-2"></i>
+<input type="file" id="mediaInput" class="d-none" onchange="previewMedia(event)">
               <label for="mediaInput" class="btn btn-sm btn-outline-secondary me-2">
               <i class="fas fa-paperclip"></i>
               </label>
@@ -141,11 +127,12 @@
               <i class="fas fa-paper-plane"></i>
               </button>
               </div> 
-     </div>
-              <!-- 🔹 Client Details -->
-              <div class="card card-outline card-info mt-3">
-              <div class="card-header">
-               <h3 class="card-title">Client Details</h3>
+           </div>
+         </div>
+         <!-- 🔹 Client Details -->
+         <div class="card card-outline card-info ">
+         <div class="card-header">
+              <h3 class="card-title">Client Details</h3>
               </div>
               <div class="card-body">
                <p><b>Name:</b> <span id="detailName"></span></p>
@@ -155,11 +142,18 @@
                 <textarea id="detailNote" class="form-control mb-2"></textarea>
                 <button class="btn btn-primary btn-sm" onclick="saveNote()">Save Note</button>
                 </div>
-               </div>  
-      </div> class="col-3">
+               <div class="theme-toggle">
+        <label class="switch">
+        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+        <span class="slider"></span>
+        </label>
+        <span>Dark Mode</span>
+      </div> 
+         </div>
+              </div>
           </div>
         </div>
-            
+</div>
 
     <!-- Controls -->
     <div class="row mb-3">
@@ -178,13 +172,7 @@
       </div>
     </div>
 
-    <!-- Layout -->
-    <div class="row">
-       </ul>
-          </div>
-        </div>
-      </div>
-
+    
       
 
     
