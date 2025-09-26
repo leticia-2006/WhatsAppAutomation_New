@@ -47,4 +47,28 @@ const user = JSON.parse(localStorage.getItem("user"));
     // Agent يشوف محادثاته فقط
     loadSessionsByRole("agent", user.id);
   }
-  
+ <!-- Modal لإدارة صلاحيات المشرف -->
+<div class="modal fade" id="permModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Supervisor Permissions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="permUsers">
+          <label class="form-check-label">Can Manage Users</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="permNumbers">
+          <label class="form-check-label">Can Manage Numbers</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" onclick="savePermissions()">Save</button>
+      </div>
+    </div>
+  </div>
+</div> 
