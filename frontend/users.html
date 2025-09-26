@@ -1,1 +1,50 @@
+<!-- Users Management -->
+<div class="card mt-4" id="users-section" style="display:none;">
+  <div class="card-header d-flex justify-content-between">
+    <h3 class="card-title">Users Management</h3>
+    <button id="addUserBtn" class="btn btn-primary">+ Add User</button>
+  </div>
+  <div class="card-body">
+    <table class="table" id="usersTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="usersTableBody"></tbody>
+    </table>
+  </div>
+</div>
 
+<script>
+  // تحميل بيانات المستخدم من localStorage
+const user = JSON.parse(localStorage.getItem("user")); 
+  if (!user) {
+    window.location.href = "index.html"; // رجوع للـ login لو ما في جلسة
+  }
+
+  // صلاحيات عرض الأقسام
+  if (user.role === "super_admin") {
+    document.getElementById("numbers-section").style.display = "block";
+    document.getElementById("users-section").style.display = "block";
+    loadSessionsByRole("super_admin", user.id);
+  } else if (user.role === "admin") {
+    document.getElementById("numbers-section").style.display = "block";
+    loadSessionsByRole("admin", user.id);
+  } else if (user.role === "supervisor") {
+    // مؤقتاً مثل super_admin
+   if (user.permissions?.can_manage_numbers) {
+    document.getElementById("numbers-section").style.display = "block";
+  }
+  if (user.permissions?.can_manage_users) {
+   document.getElementById("users-section").style.display = "block";
+  } loadSessionsByRole("supervisor", user.id);
+  } else if (user.role === "agent") {
+    // Agent يشوف محادثاته فقط
+    loadSessionsByRole("agent", user.id);
+  }
+  
