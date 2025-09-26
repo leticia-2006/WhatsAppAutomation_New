@@ -277,7 +277,19 @@ async function loadSessionsByRole(role, userId) {
     sessions.forEach(s => {
       const li = document.createElement("li");
       li.className = "list-group-item";
-      li.innerText = s.client_name || s.number;
+      li.innerHTML = `
+  <img src="${s.avatar || 'default.png'}" class="client-avatar">
+  <div class="client-info">
+    <div class="top">
+      <span>${s.client_name || s.number}</span>
+      <small>${s.last_seen || ''}</small>
+    </div>
+    <div class="last-msg">${s.last_message || ''}</div>
+    <div class="client-tags">
+      ${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}
+    </div>
+  </div>
+`;
       list.appendChild(li);
     });
   } catch (err) {
