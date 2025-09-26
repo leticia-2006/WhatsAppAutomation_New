@@ -81,6 +81,16 @@ app.get('/dashboard.html', requireLogin, (req, res) => { res.sendFile(path.join(
 app.get(/^\/(?!api|wa-numbers).*/, (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html'));});
 
 
+// 
+app.get("/wa-numbers/:numberId/qr", (req, res) => {
+  const { numberId } = req.params;
+  if (qrCodes[numberId]) {
+    res.json({ qr: qrCodes[numberId] });
+  } else {
+    res.status(404).json({ error: "QR not found or already scanned" });
+  }
+});
+
 
 // Error handler لتشخيص المشاكل
 app.use((err, req, res, next) => {
@@ -103,6 +113,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
