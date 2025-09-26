@@ -141,4 +141,20 @@ const user = JSON.parse(localStorage.getItem("user"));
     </div>
   </div>
 </div>
-  
+ <!-- Controls -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="text" id="search-users" class="form-control form-control-lg" placeholder="🔍 Search clients..." oninput="applyFilters()">
+      </div>
+      <div class="col-md-3">
+        <select id="tagFilterUsers" class="form-control form-control-lg" onchange="applyFilters()">
+          <option value="">All tags</option>
+          <option value="VIP">VIP</option>
+          <option value="New">New</option>
+        </select>
+      </div>
+      <div class="col-md-3 text-right">
+        <button id="logout-btn" class="btn btn-danger btn-lg"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </div>
+ 
