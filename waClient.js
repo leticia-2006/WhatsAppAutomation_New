@@ -81,6 +81,9 @@ if (msg.message.conversation) {
   const buffer = await downloadMediaMessage(msg, "buffer", {}, { logger: console, reuploadRequest: sock });
   const fileName = `${numberId}_${Date.now()}.mp4`;
   const filePath = path.join(__dirname, "..", "uploads", fileName);
+  if (!fs.existsSync("./uploads")) {
+    fs.mkdirSync("./uploads");
+  }
   fs.writeFileSync(filePath, buffer);
   mediaUrl = `/uploads/${fileName}`;
   text = "[🎥 فيديو]";
