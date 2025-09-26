@@ -80,14 +80,27 @@ function setLanguage(lang) {
   document.querySelector("#chatHeader strong").textContent = t.conversation;
 
   // Inputs & buttons
-  document.querySelector("#search-clients").placeholder = t.searchClients;
-  document.querySelector("#tagFilter option[value='']").textContent = t.allTags;
-  document.querySelector("#tag-filter option[value='VIP']").textContent = t.vip;
-  document.querySelector("#tag-filter option[value='New']").textContent = t.new;
-  
+  if (document.querySelector("#search-clients")) {
+    document.querySelector("#search-clients").placeholder = t.searchClients;
+  }
+  if (document.querySelector("#tagFilterClients option[value='all']")) {
+    document.querySelector("#tagFilterClients option[value='all']").textContent = t.allTags;
+  }
+  if (document.querySelector("#tagFilterClients option[value='VIP']")) {
+    document.querySelector("#tagFilterClients option[value='VIP']").textContent = t.vip;
+  }
+  if (document.querySelector("#tagFilterClients option[value='New']")) {
+    document.querySelector("#tagFilterClients option[value='New']").textContent = t.new;
+  }
 
-  // Numbers section
-  if ( document.querySelector("#numbers-section. card-title")) { document.querySelector("#numbers-section .card-title").textContent = t.numbers;}
-  document.querySelector("#addNumberBtn").textContent = t.addNumber;
-  document.querySelector("#search").placeholder = t.searchNumbers;
-}
+  // Numbers section (لو عندك صفحة numbers.html)
+  if (document.querySelector("#numbers-section .card-title")) {
+    document.querySelector("#numbers-section .card-title").textContent = t.numbers;
+  }
+  if (document.querySelector("#addNumberBtn")) {
+    document.querySelector("#addNumberBtn").textContent = t.addNumber;
+  }
+  if (document.querySelector("#search-numbers")) {
+    document.querySelector("#search-numbers").placeholder = t.searchNumbers;
+  }
+    }
