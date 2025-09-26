@@ -78,7 +78,7 @@ router.post(
 );
 
 // 📌 نقل الرقم لوكيل آخر
-router.post("/:id/transfer", requireLogin, async (req, res) => {
+router.post("/:id/transfer", requireLogin, checkRole(["admin", "super_admin"]), async (req, res) => {
   const { id } = req.params;
   const { agentId } = req.body;
 
@@ -133,21 +133,13 @@ router.get("/:id/qr", requireLogin, async (req, res) => {
 });
 
 // 📌 تأكيد / إعادة تفعيل الرقم
-router.post(
-  "/:id/confirm",
-  requireLogin,
-  checkRole(["super_admin"]),
+router.post("/:id/confirm", requireLogin, checkRole(["super_admin"]),
   async (req, res) => {
     try {
       const { id } = req.params;
-
-      // إعادة تشغيل جلسة Baileys
-      initClient(id);
-
+     
       await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", [
-        "Disconnected",
-        id,
-      ]);
+        "Disconnected", id,]);
       initClient(id);
       res.json({
         success: true,
