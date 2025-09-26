@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
             FROM sessions s
             JOIN clients c ON c.id = s.client_id
             JOIN wa_numbers wn ON wn.id = s.wa_number_id 
-            WHERE wn.assigned_agent_id = $1
+            WHERE assigned_agent_id = $1
             ORDER BY s.updated_at DESC `, [userId]
      );
     } else {
@@ -99,7 +99,7 @@ router.get("/all", requireLogin, async (req, res) => {
       ORDER BY s.updated_at DESC
     `, [id]);
  } else {
-  return res.status(403)json({ error: "Not allowed" });
+  return res.status(403).json({ error: "Not allowed" });
  }
  res.json(result.rows);
   } catch (err) {
@@ -225,6 +225,7 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
