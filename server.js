@@ -78,7 +78,7 @@ app.use('/wa-numbers', requireLogin,waNumbersRouter);
 const FRONTEND_PATH = path.join(__dirname,'frontend');
 app.use(express.static(FRONTEND_PATH));
 app.get('/dashboard.html', requireLogin, (req, res) => { res.sendFile(path.join(FRONTEND_PATH,'dashboard.html')); });
-app.get('*', (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html'));});
+app.get(/^\/(?!api|wa-numbers).*/, (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html'));});
 
 
 
@@ -103,6 +103,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
