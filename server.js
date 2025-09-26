@@ -45,15 +45,15 @@ app.use(session({
 // Content Security Policy
 app.use((req, res, next) => {
   res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; https://cdn.jsdelivr.net; https://cdn.js.cloudflare.com; +
-    "font-src 'self' https://fonts.gstatic.com; https://cdn.jsdelivr.net; https://cdnjs.cloudflare.com; " +
-    "img-src 'self' data: blob: https:; " +
-    "connect-src 'self' https://whatsappautomation-new-4fec.onrender.com wss:; " +
-    "frame-src 'self';"
-  );
+  "Content-Security-Policy",
+  "default-src 'self'; " +
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+  "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+  "img-src 'self' data: blob: https:; " +
+  "connect-src 'self' https://whatsappautomation-new-4fec.onrender.com wss:; " +
+  "frame-src 'self';"
+);
 console.log("Cookies from client:", req.headers.cookie);
     next();
 });
@@ -128,6 +128,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
