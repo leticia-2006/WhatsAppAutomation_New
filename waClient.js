@@ -117,7 +117,7 @@ if (sessionRes.rowCount === 0) {
 }
 
 // 1. خزّن الرسالة مرتبطة بالجلسة
-const finalJid = jid.includes("@s.whatsapp.net") ? jid : jid + "@s.whatsapp.net";
+const finalJid = sender.includes("@s.whatsapp.net") ? sender : sender + "@s.whatsapp.net";
 const insertRes = await db.query(
   "INSERT INTO messages (wa_message_id, session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),$9) RETURNING id",
   [msg.key.id, sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, finalJid]
