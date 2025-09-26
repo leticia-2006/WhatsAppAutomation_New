@@ -10,7 +10,7 @@ const messagesRouter = require('./routes/messages')
 const sessionsRouter = require('./routes/sessions');
 const usersRouter = require('./routes/users');
 const waNumbersRouter = require('./routes/waNumbers');                            
-const { reconnectAllActive } = require('./waClient')
+const { reconnectAllActive, getQRForNumber } = require('./waClient')
 const { requireLogin, checkRole } = require('./middleware/auth.js');
 const multer = require('multer');
 const app = express();
@@ -81,11 +81,12 @@ app.get('/dashboard.html', requireLogin, (req, res) => { res.sendFile(path.join(
 app.get(/^\/(?!api|wa-numbers).*/, (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html'));});
 
 
-// 
+// QR
 app.get("/wa-numbers/:numberId/qr", (req, res) => {
   const { numberId } = req.params;
-  if (qrCodes[numberId]) {
-    res.json({ qr: qrCodes[numberId] });
+  const qr = getQRForNumber(numberId);
+  if (qr) {
+    res.json({ qr });
   } else {
     res.status(404).json({ error: "QR not found or already scanned" });
   }
@@ -113,6 +114,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
