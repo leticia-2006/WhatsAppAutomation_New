@@ -18,3 +18,6 @@ exports.checkRole = (roles) => {
     next();
   };
 };
+
+const result = await db.query("SELECT * FROM users WHERE id=$1", [req.session.userId]);
+req.user = result.rows[0];
