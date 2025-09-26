@@ -153,9 +153,10 @@
   display: flex;
   flex-direction: row;
   gap: 15px;
- .col-3 { width: 25% }
- .col-6 { width: 50% }
 }
+.col-3 { width: 25% }
+.col-6 { width: 50% }
+
 
 /* NEW: العمود الخاص بالجلسات (يسار) */
 #sessions-body {
@@ -376,6 +377,7 @@ body.dark-mode .context-menu {
 body.dark-mode .context-menu li:hover {
   background: #444;
 }
+
 
 
 
