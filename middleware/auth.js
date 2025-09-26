@@ -19,5 +19,15 @@ exports.checkRole = (roles) => {
   };
 };
 
-const result = await db.query("SELECT * FROM users WHERE id=$1", [req.session.userId]);
-req.user = result.rows[0];
+// لو تحب تضيف user كامل بدل بس req.session.user
+exports.attachUser = async (req, res, next) => {
+  if (req.session.userId) {
+    try {
+      const result = await db.query("SELECT * FROM users WHERE id=$1", [req.session.userId]);
+      req.user = result.rows[0];
+    } catch (err) {
+      console.error("❌ DB error while attaching user:", err);
+    }
+  }
+  next();
+};
