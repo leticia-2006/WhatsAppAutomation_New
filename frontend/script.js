@@ -52,9 +52,45 @@ function applyFilters() {
     r.style.display = text.includes(search) ? "" : "none";
   });
 }
+async function loadSessionsByRole(role, userId) {
+  try {
+    let res;
+    if (role === "agent") {
+      res = await axios.get(`/users/sessions/agent/${userId}`, { withCredentials: true });
+    } else if (role === "admin" || role === "super_admin" || role === "supervisor") {
+      res = await axios.get(`/users/sessions`, { withCredentials: true });
+    }
+
+    const sessions = res.data;
+    const list = document.getElementById("sessions-body");
+    list.innerHTML = "";
+    sessions.forEach(s => {
+      const li = document.createElement("li");
+      li.className = "list-group-item";
+      li.innerHTML = `
+  <img src="${s.avatar || 'default.png'}" class="client-avatar">
+  <div class="client-info">
+    <div class="top">
+      <span>${s.client_name || s.number}</span>
+      <small>${s.last_seen || ''}</small>
+    </div>
+    <div class="last-msg">${s.last_message || ''}</div>
+    <div class="client-tags">
+      ${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}
+    </div>
+  </div>
+`;
+      list.appendChild(li);
+    });
+  } catch (err) {
+    console.error("Error loading sessions", err);
+  }
+}
+
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
