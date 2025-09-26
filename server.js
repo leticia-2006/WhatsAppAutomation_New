@@ -21,7 +21,7 @@ console.log("Server file started running...");
 
 // Middleware
 app.use(cors({
-  origin: "https://whatsappautomation-new-4fec.onrender.com", "http://localhost : 3000
+  origin: [ "https://whatsappautomation-new-4fec.onrender.com", "http://localhost : 3000" ],
   credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,8 +37,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: { maxAge: 2 * 60 * 60 * 1000, 
            httpOnly: true,
-           secure: process.env.NODE_ENV === "production"
-          sameSite: "none"
+           secure: process.env.NODE_ENV === "production",
+           sameSite: "none"
           } // 2 ساعات
 }));
 
@@ -114,6 +114,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
