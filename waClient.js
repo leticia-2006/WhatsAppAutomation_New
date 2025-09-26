@@ -29,12 +29,13 @@ async function initClient(numberId) {
 
     if (shouldReconnect) {
       console.log("🔄 Reconnecting...");
-      if (clients[numberId]) {
-        try { clients[numberId].end(); } catch (e) {}
-        delete clients[numberId];
+      if (clients[numberId]?.ws) {
+        clients[numberId].ws.close();
+    }
+      delete clients[numberId];
       }
       setTimeout(() => initClient(numberId), 5000);
-    }
+    
   }
 });
 
