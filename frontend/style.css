@@ -15,12 +15,9 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-}
-.messages {
-  flex: 1;
   overflow-y: auto;
-  padding: 20px;
-  background: url("https://static.whatsapp.net/rsrc.php/v4/yq/r/MHVytaGe3gh.png") repeat;
+  padding: 10px;
+  background: #f8f9fa url("https://static.whatsapp.net/rsrc.php/v4/yq/r/MHVytaGe3gh.png") repeat;
 }
 
 /* Message bubble */
@@ -72,7 +69,7 @@
   width: 100%;
 }
 /* الرسائل المحذوفة */
-.message.deleted .bubble {
+.message.deleted {
   background: #f8d7da !important; /* أحمر فاتح */
   border: 1px dashed #dc3545;
   opacity: 0.9;
@@ -393,13 +390,8 @@ max-height: 500px;
 overflow-y: auto;
 }
 /* FIXED: إضافة ارتفاع للمحادثات */
-#chatMessages {
-height: 400px;
-overflow-y: auto;
-padding: 10px;
-background: #f8f9fa;
-}
-</style>
+
+
 
 
 
