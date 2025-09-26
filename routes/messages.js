@@ -37,7 +37,7 @@ const clientPhone = sessionRes.rows[0].phone;
     if (text) {
       await sendMessageToNumber(waNumberId, clientPhone, text);
     } else if (mediaUrl) {
-      await sendMessageToNumber(clientPhone, { url: mediaUrl, type: mediaType });
+      await sendMessageToNumber(waNumberId, clientPhone, { url: mediaUrl, type: mediaType });
     }
 
     // حفظ في DB
