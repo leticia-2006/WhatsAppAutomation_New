@@ -5,18 +5,57 @@ const { requireLogin } = require('../middleware/auth');
 
 router.use(requireLogin);
 // كل العملاء  
-router.get('/', async (req, res) => {
+router.get('/', requireLogin, async (req, res) => {
+  const { role, id, permissions } = req.session.user;
+
   try {
-    const result = await db.query(`
-      SELECT 
-        c.*,
-        (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-        (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
-        (SELECT COUNT(*) FROM clients cc WHERE cc.phone = c.phone) > 1 AS is_repeat,
-        (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count
-      FROM clients c
-      ORDER BY c.id DESC;
-    `);
+    let result;
+
+    if (role === "super_admin") {
+      result = await db.query(`
+        SELECT c.*, 
+          (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
+        FROM clients c
+        ORDER BY c.id DESC
+      `);
+    } else if (role === "supervisor") {
+      if (permissions.can_manage_users) {
+        result = await db.query(`
+          SELECT c.*, 
+            (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
+          FROM clients c
+          ORDER BY c.id DESC
+        `);
+      } else {
+        result = await db.query(`
+          SELECT c.*, 
+            (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
+          FROM clients c
+          WHERE c.supervisor_id = $1
+          ORDER BY c.id DESC
+        `, [id]);
+      }
+    } else if (role === "admin") {
+      result = await db.query(`
+        SELECT c.*, 
+          (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
+        FROM clients c
+        WHERE c.admin_id = $1
+        ORDER BY c.id DESC
+      `, [id]);
+    } else if (role === "agent") {
+      result = await db.query(`
+        SELECT c.*, 
+          (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
+        FROM clients c
+        JOIN sessions s ON s.client_id = c.id
+        WHERE s.assigned_agent_id = $1
+        ORDER BY c.id DESC
+      `, [id]);
+    } else {
+      return res.status(403).json({ error: "Not allowed" });
+    }
+
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -68,6 +107,7 @@ router.post('/:client_id/notes', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
