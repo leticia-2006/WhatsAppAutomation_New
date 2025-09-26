@@ -37,7 +37,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: { maxAge: 2 * 60 * 60 * 1000, 
            httpOnly: true,
-           secure: true,
+           secure: process.env.NODE_ENV === "production"
           sameSite: "none"
           } // 2 ساعات
 }));
@@ -114,6 +114,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
