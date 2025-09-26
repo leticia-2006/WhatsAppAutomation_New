@@ -80,14 +80,14 @@ function setLanguage(lang) {
   document.querySelector("#chatHeader strong").textContent = t.conversation;
 
   // Inputs & buttons
-  document.querySelector("#search-input").placeholder = t.searchClients;
-  document.querySelector("#tag-filter option[value='']").textContent = t.allTags;
+  document.querySelector("#search-clients").placeholder = t.searchClients;
+  document.querySelector("#tagFilter option[value='']").textContent = t.allTags;
   document.querySelector("#tag-filter option[value='VIP']").textContent = t.vip;
   document.querySelector("#tag-filter option[value='New']").textContent = t.new;
-  document.querySelector("#logout-btn").innerHTML = `<i class="fas fa-sign-out-alt"></i> ${t.logout}`;
+  
 
   // Numbers section
-  document.querySelector("#numbers-section .card-title").textContent = t.numbers;
+  if ( document.querySelector("#numbers-section. card-title")) { document.querySelector("#numbers-section .card-title").textContent = t.numbers;}
   document.querySelector("#addNumberBtn").textContent = t.addNumber;
   document.querySelector("#search").placeholder = t.searchNumbers;
 }
