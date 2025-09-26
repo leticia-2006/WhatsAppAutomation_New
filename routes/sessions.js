@@ -49,16 +49,59 @@ router.get("/all", requireLogin, async (req, res) => {
  const { role, id, permissions} = req.session.user;
  try {
     let result;
-     if(role === "super_admin)
+     if (role === "super_admin") {
        result = await db.query(`
-      SELECT s.id, s.client_id, c.name AS name, c.phone AS phone,
+      SELECT s.*, c.name, c.phone,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
              s.status, s.created_at, s.updated_at
       FROM sessions s
       JOIN clients c ON c.id = s.client_id
       ORDER BY s.updated_at DESC
     `);
-    res.json(result.rows);
+ } else if(role === "supervisor") {
+   if (permissions.can_manage_numbers)
+   { result = await db.query(`
+      SELECT s.*, c.name, c.phone,
+             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+             s.status, s.created_at, s.updated_at
+      FROM sessions s
+      JOIN clients c ON c.id = s.client_id
+      ORDER BY s.updated_at DESC
+    `);
+   } else { 
+     result = await db.query(`
+      SELECT s.*, c.name, c.phone,
+             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+             s.status, s.created_at, s.updated_at
+      FROM sessions s
+      JOIN clients c ON c.id = s.client_id
+      WHERE s.supervisor_id = $1
+      ORDER BY s.updated_at DESC
+    `, [id]);}
+ } else if (role === "admin") {
+   result = await db.query(`
+      SELECT s.*, c.name, c.phone,
+             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+             s.status, s.created_at, s.updated_at
+      FROM sessions s
+      JOIN clients c ON c.id = s.client_id
+      WHERE s.admin_id = $1
+      ORDER BY s.updated_at DESC
+    `, [id]);
+ } else if (role === "agent") {
+   result = await db.query(`
+      SELECT s.*,  c.name, c.phone,
+             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+             s.status, s.created_at, s.updated_at
+      FROM sessions s
+      JOIN clients c ON c.id = s.client_id
+      WHERE assigned_agent_id = $1
+      ORDER BY s.updated_at DESC
+    `, [id]);
+ } else {
+  return res.status(403)json({ error: "Not allowed" });
+ }
+ res.json(result.rows);
   } catch (err) {
     console.error("Error fetching all sessions:", err);
     res.status(500).json({ message: "Server error" });
@@ -182,6 +225,7 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
