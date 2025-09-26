@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    connnectionString: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 pool.on("error", (err) => {
@@ -10,6 +10,7 @@ pool.on("error", (err) => {
 });
 
 module.exports = pool;
+
 
 
 
