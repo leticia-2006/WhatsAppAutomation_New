@@ -16,34 +16,22 @@ async function initClient(numberId) {
 
   const sock = makeWASocket({ version, auth: state });
 
-  sock.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {
-    if (qr) {
-      qrCodes[numberId] = qr;
-    console.log("✅ QR STORED for numberId:", numberId, qr.substring(0, 20));
+  sock.ev.on("connection.update", async (update) => {
+  const { connection, lastDisconnect } = update;
+
+  if (connection === "close") {
+    const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
+
+    if (shouldReconnect) {
+      console.log("🔄 Reconnecting...");
+      if (clients[numberId]) {
+        try { clients[numberId].end(); } catch (e) {}
+        delete clients[numberId];
+      }
+      setTimeout(() => initClient(numberId), 5000);
     }
-    console.log("Connection update:", connection, numberId);
-    if (connection === "open") {
-    console.log(`✅ WhatsApp connected: ${numberId}`);
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);
-    setTimeout(() => delete qrCodes[numberId], 60000);
-    }
-    
-    if (connection === 'close') {
-    console.log(`❌ WhatsApp disconnected: ${numberId}`);
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
-    const reason = lastDisconnect?.error?.output?.statusCode;
-    if (reason === DisconnectReason.loggedOut) {
-  console.log(`⚠️ رقم ${numberId} تم تسجيل الخروج بالكامل`);
-  // امسح بيانات الاعتماد من السيرفر
-  fs.rmSync(path.join(__dirname, "..", "auth_info", `${numberId}`), { recursive: true, force: true });
-  await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["LoggedOut", numberId]);
-} else {
-  console.log(`🔄 إعادة محاولة الاتصال بالرقم ${numberId} بعد 5 ثواني...`);
-    setTimeout(() =>
-  initClient(numberId), 5000);
-    }
-}
-  });
+  }
+});
 
  sock.ev.on("creds.update", saveCreds);
 
@@ -72,7 +60,8 @@ if (msg.message.conversation) {
   text = msg.message.extendedTextMessage.text;
 } else if (msg.message.imageMessage) {
   contentType = "image";
-  const buffer = await downloadMediaMessage(msg, "buffer", {});
+  const buffer = await downloadMediaMessage(msg, "buffer", {}, { logger: console, reuploadRequest: sock }
+);
   const fileName = `${numberId}_${Date.now()}.jpg`;
   const filePath = path.join(__dirname, "..", "uploads", fileName);
   fs.writeFileSync(filePath, buffer);
@@ -125,8 +114,8 @@ if (sessionRes.rowCount === 0) {
 // 1. خزّن الرسالة مرتبطة بالجلسة
 const finalJid = sender.includes("@s.whatsapp.net") ? sender : sender + "@s.whatsapp.net";
 const insertRes = await db.query(
-  "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,NOW(),$8) RETURNING id",
-  [sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, finalJid]
+  "INSERT INTO messages (wa_message_id, session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),$9) RETURNING id",
+  [msg.key.id, sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, finalJid]
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
     
@@ -158,7 +147,7 @@ parseInt(countRes.rows[0].count);
 sock.ev.on("messages.update", async (updates) => {
     for (let { key, update } of updates) {
       if (update.messageStubType === 1) {
-        await db.query("UPDATE messages SET is_deleted=true WHERE id=$1", [key.id]);
+         await db.query("UPDATE messages SET is_deleted=true WHERE wa_message_id=$1", [key.id]);
       }
     }
   });
