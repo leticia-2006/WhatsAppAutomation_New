@@ -51,7 +51,7 @@ app.use((req, res, next) => {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
     "font-src 'self' https://fonts.gstatic.com; " +
     "img-src 'self' data: blob: https:; " +
-    "connect-src 'self' https://your-backend-domain.com wss:; " +
+    "connect-src 'self' https://whatsappautomation-new-4fec.onrender.com wss:; " +
     "frame-src 'self';"
   );
 console.log("Cookies from client:", req.headers.cookie);
@@ -103,6 +103,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
