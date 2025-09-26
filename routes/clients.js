@@ -31,6 +31,7 @@ router.get('/', requireLogin, async (req, res) => {
           SELECT c.*, 
             (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
           FROM clients c
+          JOIN sessions s ON s.client_id = c.id
           WHERE c.supervisor_id = $1
           ORDER BY c.id DESC
         `, [id]);
@@ -40,6 +41,7 @@ router.get('/', requireLogin, async (req, res) => {
         SELECT c.*, 
           (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
         FROM clients c
+        JOIN sessions s ON s.client_id = c.id 
         WHERE c.admin_id = $1
         ORDER BY c.id DESC
       `, [id]);
@@ -107,6 +109,7 @@ router.post('/:client_id/notes', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
