@@ -17,7 +17,12 @@ async function initClient(numberId) {
   const sock = makeWASocket({ version, auth: state });
 
   sock.ev.on("connection.update", async (update) => {
-  const { connection, lastDisconnect } = update;
+  const { qr } = update;
+  if (qr) {
+    qrCodes[numberId] = qr; // خزّن QR
+    console.log(`📌 QR ready for number ${numberId}`);
+  }
+   const { connection, lastDisconnect } = update;
 
   if (connection === "close") {
     const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
@@ -69,7 +74,7 @@ if (msg.message.conversation) {
   text = "[📷 صورة]";
 } else if (msg.message.videoMessage) {
   contentType = "video";
-  const buffer = await downloadMediaMessage(msg, "buffer", {});
+  const buffer = await downloadMediaMessage(msg, "buffer", {}, { logger: console, reuploadRequest: sock });
   const fileName = `${numberId}_${Date.now()}.mp4`;
   const filePath = path.join(__dirname, "..", "uploads", fileName);
   fs.writeFileSync(filePath, buffer);
@@ -112,7 +117,7 @@ if (sessionRes.rowCount === 0) {
 }
 
 // 1. خزّن الرسالة مرتبطة بالجلسة
-const finalJid = sender.includes("@s.whatsapp.net") ? sender : sender + "@s.whatsapp.net";
+const finalJid = jid.includes("@s.whatsapp.net") ? jid : jid + "@s.whatsapp.net";
 const insertRes = await db.query(
   "INSERT INTO messages (wa_message_id, session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),$9) RETURNING id",
   [msg.key.id, sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, finalJid]
@@ -190,7 +195,7 @@ async function sendMessageToNumber(numberId, jid, text) {
   if (sessionRes.rowCount === 0) {
     const newSession = await db.query(
       "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, jid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
-      [clientId, numberId, jid]
+      [clientId, numberId, finalJid]
     );
     sessionId = newSession.rows[0].id;
   } else {
