@@ -103,7 +103,7 @@ let sessionRes = await db.query(
 let sessionId;
 if (sessionRes.rowCount === 0) {
   const newSession = await db.query(
-    "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, finalJid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
+    "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, jid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
     [clientId, numberId, sender]
   );
   sessionId = newSession.rows[0].id;
@@ -120,7 +120,7 @@ if (sessionRes.rowCount === 0) {
 const finalJid = sender.includes("@s.whatsapp.net") ? sender : sender + "@s.whatsapp.net";
 const insertRes = await db.query(
   "INSERT INTO messages (wa_message_id, session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),$9) RETURNING id",
-  [msg.key.id, sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, finalJid]
+  [msg.key.id, sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, jid]
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
     
@@ -195,7 +195,7 @@ async function sendMessageToNumber(numberId, jid, text) {
   if (sessionRes.rowCount === 0) {
     const newSession = await db.query(
       "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, jid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
-      [clientId, numberId, finalJid]
+      [clientId, numberId, jid]
     );
     sessionId = newSession.rows[0].id;
   } else {
@@ -208,7 +208,7 @@ async function sendMessageToNumber(numberId, jid, text) {
   // 5️⃣ خزّن الرسالة في DB
   const insertRes = await db.query(
     "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,NOW(),$8) RETURNING *",
-    [sessionId, "agent", text, "text", null, numberId, false, jid]
+    [sessionId, "agent", text, "text", null, numberId, false, finalJid]
   );
 
   console.log("✅ رسالة أُرسلت وخُزنت:", insertRes.rows[0]);
