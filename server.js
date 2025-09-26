@@ -11,7 +11,7 @@ const sessionsRouter = require('./routes/sessions');
 const usersRouter = require('./routes/users');
 const waNumbersRouter = require('./routes/waNumbers');                            
 const { reconnectAllActive, getQRForNumber } = require('./waClient')
-const { requireLogin, checkRole } = require('./middleware/auth.js');
+const { requireLogin, checkRole, attachUser } = require('./middleware/auth.js');
 const multer = require('multer');
 const app = express();
 const upload = multer({ dest: 
@@ -21,7 +21,7 @@ console.log("Server file started running...");
 
 // Middleware
 app.use(cors({
-  origin: "https://whatsappautomation-new-4fec.onrender.com",
+  origin: "https://whatsappautomation-new-4fec.onrender.com", "http://localhost : 3000
   credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -114,6 +114,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
