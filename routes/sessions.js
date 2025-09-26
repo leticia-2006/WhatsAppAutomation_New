@@ -45,12 +45,12 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-router.get("/all", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-  try {
-    const result = await db.query(`
+router.get("/all", requireLogin, async (req, res) => {
+ const { role, id, permissions} = req.session.user;
+ try {
+    let result;
+     if(role === "super_admin)
+       result = await db.query(`
       SELECT s.id, s.client_id, c.name AS name, c.phone AS phone,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
              s.status, s.created_at, s.updated_at
@@ -182,6 +182,7 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
