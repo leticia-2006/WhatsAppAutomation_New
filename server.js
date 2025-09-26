@@ -58,6 +58,21 @@ console.log("Cookies from client:", req.headers.cookie);
     next();
 });
 
+app.use((req, res, next) => {
+  if (req.session.userId && !req.session.user) {
+    pool.query("SELECT id, name, role FROM users WHERE id = $1", [req.session.userId])
+      .then(result => {
+        if (result.rows.length > 0) {
+          req.session.user = result.rows[0];
+        }
+        next();
+      })
+      .catch(() => next());
+  } else {
+    next();
+  }
+});
+
 // Debug incoming requests
 app.use((req, res, next) => {
  console.log(`Incoming request: ${req.method} ${req.url}`);
@@ -88,11 +103,7 @@ app.get("/wa-numbers/:numberId/qr", (req, res) => {
   if (qr) {
     res.json({ qr });
   } else {
-    res.status(404).json({ error: "QR not found or already scanned" });
-  if (!qr) {
-  console.log(`❌ QR not found for number ${numberId}`);
-  return res.status(404).json({ error: "QR not found or already scanned" });
-  }
+    res.status(404).json({ error: "QR not found or already scanned" });}
   });
 
 
@@ -117,6 +128,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
