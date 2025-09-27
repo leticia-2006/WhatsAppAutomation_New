@@ -397,21 +397,10 @@ body.dark-mode .context-menu li:hover {
   background: #444;
 }
 
-/* تخصيصات إضافية */
-.chat-footer {
-display: flex;
-border-top: 1px solid #ddd;
-padding: 8px;
-}
-.chat-footer input {
-flex: 1;
-margin-right: 8px;
-}
 #sessions-body li.context-selected {
   background: #ffe6e6;
   border-left: 4px solid #ff0000;
 }
-
 
 /* Chat List */
 .chat-list {
@@ -481,6 +470,7 @@ margin-right: 8px;
   height: 60px;
   border-radius: 50%;
 }
+
 
 
 
