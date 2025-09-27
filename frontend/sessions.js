@@ -53,11 +53,9 @@ function renderSessions(list = [], filterType = "all") {
   container.innerHTML = "";
 
   // 🔹 Search bar
-  const searchBar = document.createElement("input");
-  searchBar.type = "text";
-  searchBar.className = "form-control mb-2";
-  searchBar.placeholder = "Search clients...";
-  searchBar.oninput = () => {
+  const searchBar = document.getElementById("search-clients");
+  if (searchBar) {
+    searchBar.addEventListener("input", () => {
     renderSessions(
       list.filter(
         (s) =>
@@ -66,8 +64,8 @@ function renderSessions(list = [], filterType = "all") {
       ),
       filterType
     );
-  };
-  container.appendChild(searchBar);
+  });
+}
 
   // 🔹 Sessions list
   const ul = document.createElement("ul");
