@@ -42,13 +42,30 @@
   align-self: flex-start;
   flex-direction: row;
 }
-
+.message.client::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 10px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent #ffffff transparent transparent;
+}
 /* Agent right */
 .message.agent {
   background: #dcf8c6;
   border-radius: 8px 0 8px 8px;
   align-self: flex-end;
   flex-direction: row-reverse;
+}
+.message.agent::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  top: 10px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #dcf8c6;
 }
 
 /* Time inside bubble */
@@ -393,6 +410,7 @@ overflow-y: auto;
   background: #ffe6e6;
   border-left: 4px solid #ff0000;
 }
+
 
 
 
