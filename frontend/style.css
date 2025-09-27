@@ -166,6 +166,8 @@
 .content-wrapper {
   padding: 15px;
   margin-left: 220px;
+  min-height: 100vh;
+  display: flex;
 }
 .col-3 { width: 25% }
 
@@ -411,6 +413,7 @@ margin-right: 8px;
   background: #ffe6e6;
   border-left: 4px solid #ff0000;
 }
+
 
 
 
