@@ -169,7 +169,14 @@
   min-height: 100vh;
   display: flex;
 }
-.col-3 { width: 25% }
+.col-3, .col-7 { 
+  height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+}
+.card {
+  height: 100%;
+}
 
 
 
@@ -413,6 +420,7 @@ margin-right: 8px;
   background: #ffe6e6;
   border-left: 4px solid #ff0000;
 }
+
 
 
 
