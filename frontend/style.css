@@ -15,7 +15,6 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   padding: 10px;
   background: #f8f9fa url("https://static.whatsapp.net/rsrc.php/v4/yq/r/MHVytaGe3gh.png") repeat;
   flex: 1;
@@ -470,6 +469,7 @@ body.dark-mode .context-menu li:hover {
   height: 60px;
   border-radius: 50%;
 }
+
 
 
 
