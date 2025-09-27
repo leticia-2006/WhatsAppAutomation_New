@@ -231,11 +231,11 @@ let payload = { text };
       `/messages/${sessionId}/send`, payload,  
    { withCredentials: true });
   loadMessages(sessionId);
-} catch (err) {
+ catch (err) {
     console.error("Error sending message", err);
-    alert("Failed to send message");
-  }
-}
+    alert("Failed to send message"); }
+  
+
 
     
 
