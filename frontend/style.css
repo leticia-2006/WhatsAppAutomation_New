@@ -183,15 +183,14 @@
 /* ====== Dashboard Grid ====== */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 280px 1fr 280px;
+  grid-template-columns: 220px 280px 1fr 280px;
   height: calc(100vh - 60px);
-  gap: 10px;
-  margin-left: 220px;
-}
+  gap: 0px;
+ }
 /* ===== Sidebar (Main Menu) ===== */
 .main-sidebar {
+  grid-column: 1;
   background: #1e1e2d;
-  position: fixed;
   top: 0;
   left: 0;
   height: 100%;
@@ -403,6 +402,7 @@ body.dark-mode .context-menu li:hover {
 
 /* Chat List */
 .chat-list {
+  grid-column: 2;
   background: #fff;
   border-right: 1px solid #eee;
   display: flex;
@@ -436,6 +436,7 @@ body.dark-mode .context-menu li:hover {
 
 /* Chat Window */
 .chat-window {
+  grid-column: 3;
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -460,6 +461,7 @@ body.dark-mode .context-menu li:hover {
   }
 /* Client Details */
 .client-details {
+  grid-column: 4;
   background: #fff;
   padding: 15px;
   border-left: 1px solid #eee;
