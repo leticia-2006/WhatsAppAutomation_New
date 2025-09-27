@@ -216,23 +216,46 @@ async function loadMessages(sessionId) {
 
 // ====== إرسال رسالة ======
 async function sendMessage(sessionId) {
-  const input = document.getElementById("msgInput");
+  const textInput = document.getElementById("msgInput");
   const fileInput = document.getElementById("mediaInput");
-  const text = document.getElementById("msgInput").value;
-let payload = { text };
-  if (fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    const mediaUrl = URL.createObjectURL(file); // (ممكن ترفع للسيرفر)
-    payload = { mediaUrl, mediaType: file.type.split("/")[0] };
-  }
-    await axios.post(
-      `/messages/${sessionId}/send`, payload,  
-   { withCredentials: true });
-  loadMessages(sessionId);
- catch (err) {
+
+  let payload = {};
+
+  try {
+    // لو في ملف مرفق
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+
+      // استخدام FormData عشان ترفع ميديا حقيقي للسيرفر
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("mediaType", file.type.split("/")[0]);
+
+      await axios.post(`/messages/${sessionId}/sendMedia`, formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    } else {
+      // إرسال رسالة نصية فقط
+      const text = textInput.value.trim();
+      if (!text) return; // ما ترسلش فاضي
+
+      payload = { text };
+
+      await axios.post(`/messages/${sessionId}/send`, payload, {
+        withCredentials: true,
+      });
+
+      textInput.value = ""; // مسح البوكس بعد الإرسال
+    }
+
+    // تحديث المحادثة بعد الإرسال
+    loadMessages(sessionId);
+  } catch (err) {
     console.error("Error sending message", err);
-    alert("Failed to send message"); }
-  
+    alert("Failed to send message");
+  }
+}
 
 
     
