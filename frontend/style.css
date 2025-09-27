@@ -167,7 +167,9 @@
   padding: 15px;
   margin-left: 220px;
   min-height: 100vh;
-  display: flex;
+  display: grid;
+  grid-template-columns: 300px 1fr 280px;
+  gap: 15px;
 }
 .col-3, .col-7 { 
   height: calc(100vh - 60px);
@@ -420,6 +422,7 @@ margin-right: 8px;
   background: #ffe6e6;
   border-left: 4px solid #ff0000;
 }
+
 
 
 
