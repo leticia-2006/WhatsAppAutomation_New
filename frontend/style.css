@@ -166,7 +166,6 @@
 .content-wrapper {
   padding: 15px;
   min-height: 100vh;
-  display: grid;
   gap: 15px;
 }
 .col-3, .col-7 { 
@@ -485,6 +484,7 @@ margin-right: 8px;
   height: 60px;
   border-radius: 50%;
 }
+
 
 
 
