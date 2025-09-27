@@ -164,9 +164,7 @@
 /* ===== Dashboard Layout ===== */
 /* NEW: تقسيم الصفحة الرئيسية */
 .content-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
+  padding: 15px;
 }
 .col-3 { width: 25% }
 .col-6 { width: 50% }
@@ -410,6 +408,7 @@ overflow-y: auto;
   background: #ffe6e6;
   border-left: 4px solid #ff0000;
 }
+
 
 
 
