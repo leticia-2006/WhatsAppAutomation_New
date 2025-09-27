@@ -42,23 +42,6 @@ async function editUser(userId) {
   }
 }
 
-async function saveUserEdits() {
-  try {
-    await axios.post(`/users/${currentUserId}`, {
-      name: document.getElementById("editName").value,
-      phone: document.getElementById("editPhone").value,
-      role: document.getElementById("editRole").value,
-    }, { withCredentials: true });
-
-    alert("User updated!");
-    bootstrap.Modal.getInstance(document.getElementById("editUserModal")).hide();
-    loadUsers();
-  } catch (err) {
-    console.error("Error updating user", err);
-    alert("Failed to update user");
-  }
-}
-
 async function createUser() {
   try {
     const role = document.getElementById("newRole").value;
@@ -174,7 +157,7 @@ function savePermissions() {
 
 document.addEventListener("DOMContentLoaded", () => {
     loadUsers(); 
-  });
-document.getElementById("addUserBtn").addEventListener("click", () => {
+  const addUserBtn = document.getElementById("addUserBtn");
+  if (addUserBtn) {addUserBtn.addEventListener("click", () => {
   new bootstrap.Modal(document.getElementById("addUserModal")).show();
 });
