@@ -167,7 +167,7 @@
   padding: 15px;
 }
 .col-3 { width: 25% }
-.col-6 { width: 50% }
+
 
 
 /* NEW: العمود الخاص بالجلسات (يسار) */
@@ -400,14 +400,11 @@ padding: 8px;
 flex: 1;
 margin-right: 8px;
 }
-#sessions-body {
-max-height: 500px;
-overflow-y: auto;
-}
 #sessions-body li.context-selected {
   background: #ffe6e6;
   border-left: 4px solid #ff0000;
 }
+
 
 
 
