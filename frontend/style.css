@@ -203,7 +203,7 @@
 /* ====== Dashboard Grid ====== */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 70px 280px 1fr 280px;
+  grid-template-columns: 220px 280px 1fr 280px;
   height: calc(100vh - 60px);
   gap: 10px;
 }
@@ -506,6 +506,7 @@ margin-right: 8px;
   height: 60px;
   border-radius: 50%;
 }
+
 
 
 
