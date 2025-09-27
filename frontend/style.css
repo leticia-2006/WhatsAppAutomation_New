@@ -169,11 +169,6 @@
   min-height: 100vh;
   gap: 15px;
 }
-.col-3, .col-7 { 
-  height: calc(100vh - 60px);
-  display: flex;
-  flex-direction: column;
-}
 .card {
   height: 100%;
 }
@@ -486,6 +481,7 @@ margin-right: 8px;
   height: 60px;
   border-radius: 50%;
 }
+
 
 
 
