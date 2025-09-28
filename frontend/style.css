@@ -26,13 +26,9 @@
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-main);
             color: var(--text-dark);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            position: relative;
-        }
+            }
         
         .background-shapes {
             position: absolute;
@@ -52,7 +48,7 @@
             border-radius: 50%;
             top: -150px;
             right: -150px;
-            filter: blur(50px);
+           filter: blur(50px);
         }
 
         .shape-2 {
@@ -239,7 +235,7 @@
             border-radius: 2px;
         }
         
-      #sessions-body li .{
+      #sessions-body li {
             display: flex;
             align-items: center;
             padding: 0.75rem;
@@ -249,11 +245,11 @@
             margin-bottom: 0.5rem;
         }
         
-        #sessions-body:hover {
+        #sessions-body li:hover {
             background-color: var(--bg-chat-active);
         }
         
-        #sessions-body.active {
+        #sessions-body li.active {
             background-color: var(--bg-chat-active);
         }
         
@@ -805,3 +801,4 @@
     font-size: 0.9rem;
     color: var(--text-medium);
 }
+
