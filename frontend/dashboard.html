@@ -50,170 +50,39 @@
                     <img src="https://randomuser.me/api/portraits/women/6.jpg" alt="User Avatar" class="avatar">
                     <div class="scroll-arrow"><i class="fas fa-chevron-right fa-xs"></i></div>
                 </div>
-            </section>
-
-            <section class="chat-list-section">
-                <div class="section-header">
-                    <h2>My Chat List</h2>
-                </div>
-                <div class="chat-list">
-                    <div class="chat-item">
-                        <div class="chat-item-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Anastasia's avatar" class="avatar">
-                        </div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-info-top">
-                                <span class="chat-item-name">Anastasia</span>
-                                <span class="chat-item-time">30 Min</span>
-                            </div>
-                            <div class="chat-item-preview">
-                                <span>How are you Abbas ?</span>
-                                <span class="unread-badge">1</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat-item">
-                        <div class="chat-item-avatar">
-                            <div class="avatar avatar-initial avatar-b">B</div>
-                        </div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-info-top">
-                                <span class="chat-item-name">Belinda</span>
-                                <span class="chat-item-time">1 Hour</span>
-                            </div>
-                            <p class="chat-item-preview">Ok Abdulla will see</p>
-                        </div>
-                    </div>
-                    <div class="chat-item">
-                        <div class="chat-item-avatar">
-                            <div class="avatar avatar-initial avatar-c">C</div>
-                        </div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-info-top">
-                                <span class="chat-item-name">Catherine</span>
-                                <span class="chat-item-time">1:30 Min</span>
-                            </div>
-                            <p class="chat-item-preview">When we will meet</p>
-                        </div>
-                    </div>
-                    <div class="chat-item active">
-                        <div class="chat-item-avatar">
-                            <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
-                        </div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-info-top">
-                                <span class="chat-item-name">John Doe</span>
-                                <span class="chat-item-time">Yesterday</span>
-                            </div>
-                            <p class="chat-item-preview">I will meet abdulla</p>
-                        </div>
-                    </div>
-                    <div class="chat-item">
-                        <div class="chat-item-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Jennifer's avatar" class="avatar">
-                        </div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-info-top">
-                                <span class="chat-item-name">Jennifer</span>
-                                <span class="chat-item-time">2:30 Min</span>
-                            </div>
-                            <p class="chat-item-preview">How are you Abbas ?</p>
-                        </div>
-                    </div>
-                    <div class="chat-item">
-                        <div class="chat-item-avatar">
-                            <div class="avatar avatar-initial avatar-l">L</div>
-                        </div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-info-top">
-                                <span class="chat-item-name">Lucinda</span>
-                                <span class="chat-item-time">Yesterday</span>
-                            </div>
-                            <p class="chat-item-preview">Sample text here</p>
-                        </div>
-                    </div>
-                    <div class="chat-item">
-                        <div class="chat-item-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="Madeline's avatar" class="avatar">
-                        </div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-info-top">
-                                <span class="chat-item-name">Madeline</span>
-                                <span class="chat-item-time">26 Dec</span>
-                            </div>
-                            <p class="chat-item-preview">I will meet abdulla</p>
-                        </div>
-                    </div>
-                    <div class="chat-item">
-                        <div class="chat-item-avatar">
-                            <div class="avatar avatar-initial avatar-r">R</div>
-                        </div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-info-top">
-                                <span class="chat-item-name">Reagan</span>
-                                <span class="chat-item-time">Yesterday</span>
-                            </div>
-                            <p class="chat-item-preview">Sample text here</p>
-                        </div>
-                    </div>
-                     <div class="chat-item">
-                        <div class="chat-item-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/4.jpg" alt="Priscilla's avatar" class="avatar">
-                        </div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-info-top">
-                                <span class="chat-item-name">Priscilla</span>
-                                <span class="chat-item-time">26 Dec</span>
-                            </div>
-                            <p class="chat-item-preview">I will meet abdulla</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            
+<section class="chat-list-section">
+  <div class="section-header">
+    <h2>Clients</h2>
+  </div>
+  <div class="search-bar">
+    <i class="fas fa-search"></i>
+    <input type="text" id="search-clients" placeholder="Search clients..." oninput="applyFilters()">
+  </div>
+  <select id="tagFilterClients" onchange="applyTagFilter()">
+    <option value="all">All</option>
+    <option value="VIP">VIP</option>
+    <option value="Old">Old</option>
+    <option value="Deal">Deal</option>
+    <option value="Repeat">Repeat</option>
+    <option value="Blacklist">Blacklist</option>
+  </select>
+  <ul id="sessions-body" class="chat-list"></ul>
+</section>
         </aside>
 
         <!-- Chat Window -->
         <main class="chat-window">
-            <header class="chat-header">
-                <div class="chat-header-user">
-                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
-                    <div class="chat-header-user-info">
-                        <h3>John Doe</h3>
-                        <p><span class="online-dot"></span> Active</p>
-                    </div>
-                </div>
-                <div class="chat-header-actions">
-                    <button><i class="fas fa-ellipsis-h"></i></button>
-                </div>
+            <header id="chatHeader" class="chat-header">
+  <div class="chat-header-user">
+    <img id="chatAvatar" src="default-avatar.png" class="avatar">
+    <div class="chat-header-user-info">
+      <h3 id="chatClient">Select a conversation...</h3>
+      <p id="chatStatus"><span class="online-dot"></span> Offline</p>
+    </div>
+  </div>
             </header>
-            <div class="chat-messages">
-                <div class="message-group incoming">
-                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
-                    <div class="message-content">
-                        <div class="message-info">
-                            <span class="message-sender">John Doe</span>
-                            <span class="message-time">30 min</span>
-                        </div>
-                        <div class="message-bubble">
-                            <p>Hi Beasley, I see the your designed screens it looks good.</p>
-                            <div class="message-options"><i class="fas fa-ellipsis-h fa-xs"></i></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="message-group outgoing">
-                    <div class="avatar avatar-initial avatar-b">B</div>
-                    <div class="message-content">
-                        <div class="message-info">
-                            <span class="message-sender">Beasley</span>
-                            <span class="message-time">20 min</span>
-                        </div>
-                        <div class="message-bubble">
-                            <p>Thank you John Doe</p>
-                            <div class="message-options"><i class="fas fa-ellipsis-h fa-xs"></i></div>
-                        </div>
-                    </div>
-                </div>
+            <div id="chatMessages" class="chat-messages"></div>
                 
                 <div class="message-separator">Today</div>
                 
@@ -293,12 +162,15 @@
                 
             </div>
             <footer class="chat-input">
-                <div class="chat-input-field">
-                    <i class="fas fa-face-smile"></i>
-                    <input type="text" placeholder="Type a message">
-                    <i class="fas fa-paperclip"></i>
-                </div>
-                <button class="send-button"><i class="fas fa-paper-plane"></i></button>
+  <input type="file" id="mediaInput" class="d-none" onchange="previewMedia(event)">
+  <div class="chat-input-field">
+    <i class="fas fa-face-smile"></i>
+    <input type="text" id="msgInput" placeholder="Type a message...">
+    <label for="mediaInput"><i class="fas fa-paperclip"></i></label>
+  </div>
+  <button class="send-button" onclick="if(currentSession) sendMessage(currentSession.id)">
+    <i class="fas fa-paper-plane"></i>
+  </button>
             </footer>
         </main>
 
@@ -314,31 +186,18 @@
                     <span>Beasley</span>
                 </div>
             </header>
-            <div class="profile-details">
-                <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
-                <h3>John Doe</h3>
-                <p>John.Doe@gmail.com</p>
-                <div class="profile-actions">
-                    <button><i class="fas fa-phone"></i></button>
-                    <button><i class="fas fa-video"></i></button>
-                    <button><i class="fas fa-envelope"></i></button>
-                </div>
-                <div class="profile-links">
-                    <div class="profile-link-item">
-                        <i class="fab fa-facebook-f"></i>
-                        <span>John Doe UI Designer in Flyin</span>
-                    </div>
-                    <div class="profile-link-item">
-                        <i class="fab fa-twitter"></i>
-                        <span>John Doe UI Designer in Flyin</span>
-                    </div>
-                    <div class="profile-link-item">
-                        <i class="fab fa-linkedin-in"></i>
-                        <span>John Doe UI Designer in Flyin</span>
-                    </div>
-                </div>
-            </div>
-            <div class="shared-content">
+            
+  <div class="profile-details">
+    <h3>Client Details <span id="session-count" class="badge"></span></h3>
+    <p><b>Name:</b> <span id="detailName"></span></p>
+    <p><b>Phone:</b> <span id="detailPhone"></span></p>
+    <p><b>Tags:</b> <span id="detailTags"></span></p>
+
+    <h6>Notes</h6>
+    <textarea id="detailNote"></textarea>
+    <button onclick="saveNote()">Save Note</button>
+  </div>
+           <div class="shared-content">
                 <nav class="shared-tabs">
                     <button class="tab-button active">Shared Files</button>
                     <button class="tab-button">Images</button>
