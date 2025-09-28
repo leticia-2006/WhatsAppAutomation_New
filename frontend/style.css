@@ -66,7 +66,7 @@
             display: flex;
             width: 100%;
             max-width: 1440px;
-            height: 90vh;
+            height: 100vh;
             max-height: 900px;
             background-color: var(--bg-panel);
             border-radius: 1.5rem;
@@ -801,4 +801,5 @@
     font-size: 0.9rem;
     color: var(--text-medium);
 }
+
 
