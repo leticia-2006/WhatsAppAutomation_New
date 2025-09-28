@@ -239,7 +239,7 @@
             border-radius: 2px;
         }
         
-        .chat-item {
+      #sessions-body li .{
             display: flex;
             align-items: center;
             padding: 0.75rem;
@@ -249,11 +249,11 @@
             margin-bottom: 0.5rem;
         }
         
-        .chat-item:hover {
+        #sessions-body:hover {
             background-color: var(--bg-chat-active);
         }
         
-        .chat-item.active {
+        #sessions-body.active {
             background-color: var(--bg-chat-active);
         }
         
@@ -373,13 +373,13 @@
             border-radius: 3px;
         }
 
-        .message-group {
+       #chatMessages .messages {
             display: flex;
             margin-bottom: 1.5rem;
             gap: 0.75rem;
         }
         
-        .message-group.outgoing {
+        #chatMessages .messages.outgoing {
             flex-direction: row-reverse;
         }
         
@@ -413,7 +413,7 @@
             color: var(--text-light);
         }
 
-        .message-bubble {
+        #chatMessages .messages .message-bubble {
             padding: 0.75rem 1rem;
             border-radius: 1rem;
             position: relative;
@@ -424,13 +424,13 @@
             font-size: 0.9rem;
         }
         
-        .incoming .message-bubble {
+        #chatMessages .messages.incoming .message-bubble {
             background-color: var(--bg-msg-incoming);
             color: white;
             border-bottom-left-radius: 0.25rem;
         }
         
-        .outgoing .message-bubble {
+        #chatMessages .messages.outgoing .message-bubble {
             background-color: var(--bg-msg-outgoing);
             color: var(--text-dark);
             border-bottom-right-radius: 0.25rem;
@@ -788,3 +788,4 @@
             cursor: pointer;
             margin-top: auto;
         }
+
