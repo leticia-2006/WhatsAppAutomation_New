@@ -466,7 +466,7 @@
             left: -18px;
         }
         
-        .message-separator {
+        #chatMessages .separator {
             text-align: center;
             margin: 1.5rem 0;
             font-size: 0.8rem;
@@ -788,4 +788,5 @@
             cursor: pointer;
             margin-top: auto;
         }
+
 
