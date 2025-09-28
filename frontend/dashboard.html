@@ -1,184 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WA Automation Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flyin Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+   
+<body>
+    <div class="background-shapes">
+        <div class="shape-1"></div>
+        <div class="shape-2"></div>
+    </div>
 
-  <!-- Bootstrap & AdminLTE -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-logo">Flyin</div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item"><a href="#"><i class="fas fa-compass"></i></a></li>
+                <li class="sidebar-nav-item active"><a href="#"><i class="fas fa-comment-dots"></i></a></li>
+                <li class="sidebar-nav-item"><a href="#"><i class="fas fa-envelope"></i></a></li>
+                <li class="sidebar-nav-item"><a href="#"><i class="fas fa-file-alt"></i></a></li>
+                <li class="sidebar-nav-item"><a href="#"><i class="fas fa-heart"></i></a></li>
+                <li class="sidebar-nav-item"><a href="#"><i class="fas fa-cog"></i></a></li>
+            </ul>
+        </nav>
 
-  
-</head>
-<body class="hold-transition sidebar-mini">
-<div class="wrapper">
+        <!-- Chat List Panel -->
+        <aside class="chat-list-panel">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search here">
+            </div>
 
-<!-- Header -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <span class="navbar-brand">WA Auto</span>
-  </nav>
-
-<!-- Layout -->
-  <div class="content-wrapper p-3">
-    <div class="dashboard-grid">
-    
-  <!-- Main Sidebar -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-     <div class="sidebar">
-        <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
-          <!-- FIXED: إضافة tabs للفلاتر -->
-          <li class="nav-item"><a href="#" class="nav-link tab-link active" data-tab="all"><i class="fas fa-list"></i> <p>All</p></a></li>
-          <li class="nav-item"><a href="#" class="nav-link tab-link " data-tab="group"><i class="fas fa-users"></i> <p>Group</p></a></li>
-          <li class="nav-item"><a href="#" class="nav-link tab-link" data-tab="unread"><i class="fas fa-envelope"></i> <p>Unread</p></a></li>
-          <li class="nav-item"><a href="#" class="nav-link tab-link" data-tab="unreplied"><i class="fas fa-reply"></i> <p>Unreplied</p></a></li>
-          <li class="nav-item"><a href="#" id="qr-link" style="display:none;" class="nav-link"><i class="fas fa-qrcode"></i> <p>Link WhatsApp</p></a></li>
-          <li class="nav-item"><a href="users.html" class="nav-link"><i class="fas fa-user-cog"></i> <p>Users</p></a></li>
-          <li class="nav-item"><a href="numbers.html" class="nav-link"><i class="fas fa-hashtag"></i> <p>Numbers</p></a></li>
-          <li class="nav-item"><a href="reports.html" class="nav-link"><i class="fas fa-chart-bar"></i> <p>Reports</p></a></li>
-          <li class="nav-item"><a href="settings.html" class="nav-link"><i class="fas fa-cogs"></i> <p>Settings</p></a></li>
-         </ul>
-      
-       
-       <!-- FIXED: إضافة اختيار اللغة في السايدبار -->
-       <div class="p-3">
-        <select id="langSelect" class="form-control form-control-sm">
-          <option value="en">English</option>
-          <option value="ar">العربية</option>
-          <option value="es">Español</option>
-        </select>
-      </div>
-     </div>
-   </aside>
- 
-  
-<!-- Clients / Sessions List -->
-      <div class="chat-list">
-        <div class="card card-outline card-primary h-100">
-          <div class="card-header">
-            <h3 class="card-title">Clients</h3>
-          </div>
-          <div class="card-body p-0">
-          <input type="text" id="search-clients" class="form-control mb-2" placeholder="Search clients..." oninput="applyFilters()">
-          <select id="tagFilterClients" class="form-control mb-2" onchange="applyTagFilter()">
-          <option value="all">All</option>
-          <option value="VIP">VIP</option>
-          <option value="Old">Old</option>
-          <option value="Deal">Deal</option>
-          <option value="Repeat">Repeat</option>
-          <option value="Blacklist">Blacklist</option>
-          </select>
-          <ul class="list-group list-group-flush" id="sessions-body"></ul>
-         </div>
-        </div>
-       </div>  
-          
-       
-<!-- Chat View -->
-<div class="chat-window">
-<div class="card card-outline card-success">
-<div class="card-header"><h3 class="card-title">Conversation</h3></div>
-<div class="card-body">
-<!-- Header -->
-<div class="chat-header d-flex justify-content-between align-items-center px-3" id="chatHeader">
-<div class="d-flex align-items-center">
-    <img id="chatAvatar" src="default-avatar.png" class="client-avatar mr-2">
-    <div>
-<strong id="chatClient">Select a conversation...</strong><br>
-<small id="chatStatus">Offline</small>
-</div>
-</div>
-  <div>
-<i class="fas fa-search mx-2"></i>
-<i class="fas fa-phone mx-2"></i>
-<i class="fas fa-ellipsis-v mx-2"></i>
-</div>
-</div>
-<!-- Messages -->
-<div id="chatMessages" class="messages"></div>
-<!-- Footer -->
-<div class="chat-footer">
-<i class="far fa-smile me-2"></i>
-<input type="file" id="mediaInput" class="d-none" onchange="previewMedia(event)">
-              <label for="mediaInput" class="btn btn-sm btn-outline-secondary me-2">
-              <i class="fas fa-paperclip"></i>
-              </label>
-              <input type="text" id="msgInput" placeholder="Type a message...">
-              <button onclick="if(currentSession) sendMessage(currentSession.id)">
-              <i class="fas fa-paper-plane"></i>
-              </button>
-              </div> 
-           </div>
-</div>
-</div>
-         <!-- 🔹 Client Details -->
-         <div class="client-details">  
-         <div class="card card-outline card-info ">
-         <div class="card-header">
-              <h3 class="card-title">Client Details</h3>
-              <span id="session-count" class="badge badge-primary"></span>
-          </div>
-              <div class="card-body">
-               <p><b>Name:</b> <span id="detailName"></span></p>
-               <p><b>Phone:</b> <span id="detailPhone"></span></p>
-               <p><b>Tags:</b> <span id="detailTags"></span></p>
-                <h6>Notes</h6>
-                <textarea id="detailNote" class="form-control mb-2"></textarea>
-                <button class="btn btn-primary btn-sm" onclick="saveNote()">Save Note</button>
+            <section class="favorites-section">
+                <div class="section-header">
+                    <h2>Favorites</h2>
                 </div>
-               <div class="theme-toggle">
-        <label class="switch">
-        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
-        <span class="slider"></span>
-        </label>
-        <span>Dark Mode</span>
-      </div> 
-         </div>
-              </div> 
-          </div>
-        </div>
-</div>
+                <div class="favorites-list">
+                    <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="User Avatar" class="avatar">
+                    <div class="avatar avatar-initial avatar-l">L</div>
+                    <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="User Avatar" class="avatar">
+                    <div class="avatar avatar-initial avatar-r">R</div>
+                    <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="User Avatar" class="avatar">
+                    <img src="https://randomuser.me/api/portraits/women/6.jpg" alt="User Avatar" class="avatar">
+                    <div class="scroll-arrow"><i class="fas fa-chevron-right fa-xs"></i></div>
+                </div>
+            </section>
 
+            <section class="chat-list-section">
+                <div class="section-header">
+                    <h2>My Chat List</h2>
+                </div>
+                <div class="chat-list">
+                    <div class="chat-item">
+                        <div class="chat-item-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Anastasia's avatar" class="avatar">
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-info-top">
+                                <span class="chat-item-name">Anastasia</span>
+                                <span class="chat-item-time">30 Min</span>
+                            </div>
+                            <div class="chat-item-preview">
+                                <span>How are you Abbas ?</span>
+                                <span class="unread-badge">1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-avatar">
+                            <div class="avatar avatar-initial avatar-b">B</div>
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-info-top">
+                                <span class="chat-item-name">Belinda</span>
+                                <span class="chat-item-time">1 Hour</span>
+                            </div>
+                            <p class="chat-item-preview">Ok Abdulla will see</p>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-avatar">
+                            <div class="avatar avatar-initial avatar-c">C</div>
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-info-top">
+                                <span class="chat-item-name">Catherine</span>
+                                <span class="chat-item-time">1:30 Min</span>
+                            </div>
+                            <p class="chat-item-preview">When we will meet</p>
+                        </div>
+                    </div>
+                    <div class="chat-item active">
+                        <div class="chat-item-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-info-top">
+                                <span class="chat-item-name">John Doe</span>
+                                <span class="chat-item-time">Yesterday</span>
+                            </div>
+                            <p class="chat-item-preview">I will meet abdulla</p>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Jennifer's avatar" class="avatar">
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-info-top">
+                                <span class="chat-item-name">Jennifer</span>
+                                <span class="chat-item-time">2:30 Min</span>
+                            </div>
+                            <p class="chat-item-preview">How are you Abbas ?</p>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-avatar">
+                            <div class="avatar avatar-initial avatar-l">L</div>
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-info-top">
+                                <span class="chat-item-name">Lucinda</span>
+                                <span class="chat-item-time">Yesterday</span>
+                            </div>
+                            <p class="chat-item-preview">Sample text here</p>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="Madeline's avatar" class="avatar">
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-info-top">
+                                <span class="chat-item-name">Madeline</span>
+                                <span class="chat-item-time">26 Dec</span>
+                            </div>
+                            <p class="chat-item-preview">I will meet abdulla</p>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-avatar">
+                            <div class="avatar avatar-initial avatar-r">R</div>
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-info-top">
+                                <span class="chat-item-name">Reagan</span>
+                                <span class="chat-item-time">Yesterday</span>
+                            </div>
+                            <p class="chat-item-preview">Sample text here</p>
+                        </div>
+                    </div>
+                     <div class="chat-item">
+                        <div class="chat-item-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/4.jpg" alt="Priscilla's avatar" class="avatar">
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-info-top">
+                                <span class="chat-item-name">Priscilla</span>
+                                <span class="chat-item-time">26 Dec</span>
+                            </div>
+                            <p class="chat-item-preview">I will meet abdulla</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </aside>
 
+        <!-- Chat Window -->
+        <main class="chat-window">
+            <header class="chat-header">
+                <div class="chat-header-user">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
+                    <div class="chat-header-user-info">
+                        <h3>John Doe</h3>
+                        <p><span class="online-dot"></span> Active</p>
+                    </div>
+                </div>
+                <div class="chat-header-actions">
+                    <button><i class="fas fa-ellipsis-h"></i></button>
+                </div>
+            </header>
+            <div class="chat-messages">
+                <div class="message-group incoming">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
+                    <div class="message-content">
+                        <div class="message-info">
+                            <span class="message-sender">John Doe</span>
+                            <span class="message-time">30 min</span>
+                        </div>
+                        <div class="message-bubble">
+                            <p>Hi Beasley, I see the your designed screens it looks good.</p>
+                            <div class="message-options"><i class="fas fa-ellipsis-h fa-xs"></i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-group outgoing">
+                    <div class="avatar avatar-initial avatar-b">B</div>
+                    <div class="message-content">
+                        <div class="message-info">
+                            <span class="message-sender">Beasley</span>
+                            <span class="message-time">20 min</span>
+                        </div>
+                        <div class="message-bubble">
+                            <p>Thank you John Doe</p>
+                            <div class="message-options"><i class="fas fa-ellipsis-h fa-xs"></i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-separator">Today</div>
+                
+                <div class="message-group incoming">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
+                    <div class="message-content">
+                        <div class="message-info">
+                            <span class="message-sender">John Doe</span>
+                            <span class="message-time">15 min</span>
+                        </div>
+                        <div class="message-bubble">
+                            <p>Can you send me remaining screens. If it is like we will buy</p>
+                            <div class="message-options"><i class="fas fa-ellipsis-h fa-xs"></i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-group outgoing">
+                    <div class="avatar avatar-initial avatar-b">B</div>
+                    <div class="message-content">
+                        <div class="message-info">
+                            <span class="message-sender">Beasley</span>
+                            <span class="message-time">12 min</span>
+                        </div>
+                        <div class="message-bubble">
+                            <p>Please look it. Hopefully you like it</p>
+                            <div class="message-attachments">
+                                <img src="https://placehold.co/120x120/E5E7EB/6B7280?text=UI" alt="UI screen design 1">
+                                <img src="https://placehold.co/120x120/E5E7EB/6B7280?text=UI" alt="UI screen design 2">
+                                <img src="https://placehold.co/120x120/E5E7EB/6B7280?text=UI" alt="UI screen design 3">
+                                <img src="https://placehold.co/120x120/E5E7EB/6B7280?text=UI" alt="UI screen design 4">
+                                <div class="attachment-more">5+</div>
+                            </div>
+                            <div class="message-options"><i class="fas fa-ellipsis-h fa-xs"></i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-group incoming">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
+                    <div class="message-content">
+                        <div class="message-info">
+                            <span class="message-sender">John Doe</span>
+                            <span class="message-time">15 min</span>
+                        </div>
+                        <div class="message-bubble">
+                            <p>ok Beasley I will check it update you</p>
+                            <div class="message-options"><i class="fas fa-ellipsis-h fa-xs"></i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-group outgoing">
+                    <div class="avatar avatar-initial avatar-b">B</div>
+                    <div class="message-content">
+                        <div class="message-info">
+                            <span class="message-sender">Beasley</span>
+                            <span class="message-time">12 min</span>
+                        </div>
+                        <div class="message-bubble">
+                            <p>ok John waiting for your update</p>
+                            <div class="message-options"><i class="fas fa-ellipsis-h fa-xs"></i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                 <div class="message-group incoming">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
+                    <div class="message-content">
+                         <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <footer class="chat-input">
+                <div class="chat-input-field">
+                    <i class="fas fa-face-smile"></i>
+                    <input type="text" placeholder="Type a message">
+                    <i class="fas fa-paperclip"></i>
+                </div>
+                <button class="send-button"><i class="fas fa-paper-plane"></i></button>
+            </footer>
+        </main>
 
-      
-  </div>
-  <!-- /.content-wrapper -->
-
-</div>
-
-<!-- Right Click Menu -->
-<ul id="contextMenu" class="context-menu">
-  <li onclick="transferSession()">Session transfer</li>
-  <li onclick="setupGroups()">Set up groups</li>
-  <li onclick="setLabel()">Set label</li>
-  <li onclick="deleteTag()">Delete tag</li>
-  <li onclick="blockMessaging()">Prohibit customer block messaging</li>
-  <li onclick="unpinSession()">Unpinned</li>
-  <li onclick="doNotDisturb()">Do not disturb</li>
-  <li onclick="refreshAvatar()">Refresh avatar</li>
-  <li onclick="syncMessages()">Sync phone message</li>
-  <li onclick="batchOperation()">Batch operation</li>
-</ul>
-
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-<script src="script.js"></script>
-
-
-<!-- FIXED: تصحيح مسار ملف اللغة -->
-<script src="lang.js"></script>
-<script>
-  // FIXED: تصحيح document.getElementById
-  document.getElementById("langSelect").addEventListener("change", (e) => {
-    setLanguage(e.target.value);
-  });
-  setLanguage("en");
-</script>
-  
+        <!-- Profile Panel -->
+        <aside class="profile-panel">
+            <header class="profile-header">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-dot"></div>
+                </div>
+                <div class="profile-user">
+                    <div class="avatar avatar-initial avatar-b">B</div>
+                    <span>Beasley</span>
+                </div>
+            </header>
+            <div class="profile-details">
+                <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John Doe's avatar" class="avatar">
+                <h3>John Doe</h3>
+                <p>John.Doe@gmail.com</p>
+                <div class="profile-actions">
+                    <button><i class="fas fa-phone"></i></button>
+                    <button><i class="fas fa-video"></i></button>
+                    <button><i class="fas fa-envelope"></i></button>
+                </div>
+                <div class="profile-links">
+                    <div class="profile-link-item">
+                        <i class="fab fa-facebook-f"></i>
+                        <span>John Doe UI Designer in Flyin</span>
+                    </div>
+                    <div class="profile-link-item">
+                        <i class="fab fa-twitter"></i>
+                        <span>John Doe UI Designer in Flyin</span>
+                    </div>
+                    <div class="profile-link-item">
+                        <i class="fab fa-linkedin-in"></i>
+                        <span>John Doe UI Designer in Flyin</span>
+                    </div>
+                </div>
+            </div>
+            <div class="shared-content">
+                <nav class="shared-tabs">
+                    <button class="tab-button active">Shared Files</button>
+                    <button class="tab-button">Images</button>
+                </nav>
+                <div class="file-list">
+                    <div class="file-item">
+                        <div class="file-icon icon-pdf"><i class="fas fa-file-pdf"></i></div>
+                        <div class="file-info"><p>Flyin Packages Documantation.pdf</p></div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon icon-doc"><i class="fas fa-file-word"></i></div>
+                        <div class="file-info"><p>Mobile App UI Documantation.docx</p></div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon icon-mov"><i class="fas fa-file-video"></i></div>
+                        <div class="file-info"><p>Mobile App UI Demo.mov</p></div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon icon-wav"><i class="fas fa-file-audio"></i></div>
+                        <div class="file-info"><p>Latest Sngs.Wav</p></div>
+                    </div>
+                </div>
+                <button class="view-all-btn">View All</button>
+            </div>
+        </aside>
+    </div>
 </body>
 </html>
-
