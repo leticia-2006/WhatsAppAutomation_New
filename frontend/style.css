@@ -141,10 +141,11 @@
 
         .search-bar i {
             position: absolute;
-            left: 1rem;
+            left: 0.75rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-light);
+            pointer_events: none;
         }
 
         .search-bar input {
@@ -535,6 +536,8 @@
         .chat-input-field {
             flex-grow: 1;
             position: relative;
+            display: flex;
+            align-items: center;
         }
         
         .chat-input-field i {
@@ -554,6 +557,7 @@
             border: 1px solid var(--border-color);
             background-color: var(--bg-main);
             font-size: 0.9rem;
+            flex-grow: 1;
         }
         
         .chat-input-field input::placeholder {
@@ -570,7 +574,8 @@
             font-size: 1.2rem;
             cursor: pointer;
             flex-shrink: 0;
-        }
+         }
+       .d_none: { display: none;}
 
         /* Profile Panel */
         .profile-panel {
@@ -801,6 +806,7 @@
     font-size: 0.9rem;
     color: var(--text-medium);
 }
+
 
 
 
