@@ -96,6 +96,9 @@ app.get('/dashboard.html', requireLogin, (req, res) => { res.sendFile(path.join(
 app.get(/^\/(?!api|wa-numbers).*/, (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html'));});
 
 
+// ===== Static uploads =====
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // QR
 app.get("/wa-numbers/:numberId/qr", (req, res) => {
   const { numberId } = req.params;
@@ -128,6 +131,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
