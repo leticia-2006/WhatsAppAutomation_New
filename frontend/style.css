@@ -48,21 +48,21 @@ main {
   padding: 20px 15px;
 }
 
-.sidebar header {
+.sidebar-header {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 25px;
 }
 
-.sidebar nav ul {
+.sidebar-menu ul {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.sidebar nav ul li {
+.sidebar-menu ul li a {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -73,14 +73,14 @@ main {
   transition: background-color 0.2s;
 }
 
-.sidebar nav ul li:hover,
-.sidebar nav ul li.active {
+.sidebar-menu ul li a:hover,
+.sidebar-menu ul li.active a {
   background-color: var(--light-green-bg);
   color: var(--primary-green);
   font-weight: 600;
 }
 
-.sidebar footer {
+.sidebar-footer {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -88,7 +88,7 @@ main {
   padding-top: 15px;
 }
 
-.sidebar footer button {
+.sidebar-footer button {
   padding: 10px 12px;
   border: none;
   border-radius: 8px;
@@ -100,19 +100,22 @@ main {
 }
 
 /* Clients List */
-.clients-panel {
+.clients-list {
   width: 300px;
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
 }
 
-.clients-panel header {
+.clients-header {
   padding: 15px;
   border-bottom: 1px solid var(--border-color);
+  display: flex;
+  gap: 10px;
 }
 
-.clients-panel header input {
+.clients-header input
+.clients-header select{
   width: 100%;
   padding: 10px 15px 10px 35px;
   border-radius: 8px;
@@ -121,13 +124,13 @@ main {
   font-size: 14px;
 }
 
-.clients-panel ul {
+.clients-list  ul {
   list-style: none;
   overflow-y: auto;
   flex-grow: 1;
 }
 
-.clients-panel ul li {
+.clients-list ul li {
   display: flex;
   align-items: center;
   padding: 12px 15px;
@@ -136,12 +139,12 @@ main {
   transition: background-color 0.2s;
 }
 
-.clients-panel ul li:hover {
+.clients-list ul li:hover {
   background-color: var(--light-green-bg);
 }
 
-.clients-panel ul li img,
-.clients-panel ul li .avatar {
+.clients-list ul li img,
+.clients-list ul li .avatar {
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -154,16 +157,16 @@ main {
   color: var(--primary-green);
 }
 
-.clients-panel ul li .info {
+.clients-list ul li .info {
   flex-grow: 1;
 }
 
-.clients-panel ul li .info .name {
+.clients-list ul li .info .name {
   font-weight: 600;
   font-size: 14px;
 }
 
-.clients-panel ul li .info .last-message {
+.clients-list ul li .info .last-message {
   font-size: 13px;
   color: var(--text-medium);
   white-space: nowrap;
@@ -179,7 +182,7 @@ main {
   background-color: #F8F9FA;
 }
 
-.chat-window header {
+.chat-header {
   padding: 15px 20px;
   border-bottom: 1px solid var(--border-color);
   background-color: var(--container-bg);
@@ -235,7 +238,7 @@ main {
   gap: 12px;
 }
 
-.chat-input input {
+.chat-input textarea {
   flex-grow: 1;
   border: none;
   background: transparent;
@@ -257,7 +260,7 @@ main {
 }
 
 /* Client Details */
-.details-panel {
+.client-details {
   width: 300px;
   background-color: #FCFCFC;
   border-left: 1px solid var(--border-color);
@@ -266,31 +269,32 @@ main {
   flex-direction: column;
 }
 
-.details-panel header {
+.client-details header {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.details-panel .client-info {
+.client-details .client-info {
   text-align: center;
   margin-bottom: 20px;
 }
 
-.details-panel .client-info img {
+.client-details .client-info img {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   margin-bottom: 10px;
 }
 
-.details-panel .client-info h3 {
+.client-details .client-info h3 {
   font-size: 16px;
   font-weight: 600;
 }
 
-.details-panel .client-info p {
+.client-details .client-info p {
   font-size: 13px;
   color: var(--text-medium);
 }
+
