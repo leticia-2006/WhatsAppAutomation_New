@@ -91,11 +91,7 @@ router.post("/:id/transfer", requireLogin, checkRole(["admin", "super_admin"]), 
 });
 
 // 📌 حذف رقم
-router.delete(
-  "/:id",
-  requireLogin,
-  checkRole(["super_admin"]),
-  async (req, res) => {
+router.delete("/:id", requireLogin, checkRole(["super_admin"]), async (req, res) => {
     const { id } = req.params;
     try {
       await db.query("DELETE FROM wa_numbers WHERE id=$1", [id]);
@@ -116,7 +112,7 @@ router.get("/:id/qr", requireLogin, async (req, res) => {
     }
 
     const qr = getQRForNumber(numberId);
-    console.log("API /qr called for:", id, "result:", qr ? "FOUND" : "NULL");
+    console.log("API /qr called for:", numberId, "result:", qr ? "FOUND" : "NULL");
 
     if (!qr) {
       return res.json({
