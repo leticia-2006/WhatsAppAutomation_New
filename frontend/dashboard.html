@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  
   <script defer src="lang.js"></script>
   <script defer src="sessions.js"></script>
   <script defer src="messages.js"></script>
@@ -45,7 +47,7 @@
           <option value="month">This Month</option>
         </select>
       </div>
-      <ul id="clients">
+      <ul id="sessions-body">
         <!-- Populated dynamically from sessions.js -->
       </ul>
     </section>
@@ -53,10 +55,10 @@
     <!-- Chat Section -->
     <section class="chat-window">
       <div class="chat-header">
-        <h3 id="chat-title">Select a conversation</h3>
-        <span id="chat-status">Offline</span>
+        <h3 id="chatClient">Select a conversation</h3>
+        <span id="chatStatus">Offline</span>
       </div>
-      <div class="chat-messages" id="chat-messages">
+      <div class="chat-messages" id="chatMessages">
         <!-- Messages loaded dynamically -->
         <!-- Example message -->
         <!-- 
@@ -68,7 +70,8 @@
         -->
       </div>
       <div class="chat-input">
-        <textarea id="message-input" placeholder="Type a message..."></textarea>
+        <textarea id="MsgInput" placeholder="Type a message..."></textarea>
+        <input type="file" id="mediaInput"  style="display:none" /> 
         <button id="send-btn">Send</button>
       </div>
     </section>
@@ -78,9 +81,9 @@
       <h3>Client Details</h3>
       <div class="details-content">
         <!-- Populated dynamically from clients.js -->
-        <p><strong>Name:</strong> <span id="detail-name">—</span></p>
-        <p><strong>Status:</strong> <span id="detail-status">—</span></p>
-        <p><strong>Tags:</strong> <span id="detail-tags">—</span></p>
+        <p><strong>Name:</strong> <span id="detailName">—</span></p>
+        <p><strong>Status:</strong> <span id="detailPhone">—</span></p>
+        <p><strong>Tags:</strong> <span id="detailTags">—</span></p>
         <p><strong>Notes:</strong></p>
         <textarea id="detail-notes"></textarea>
       </div>
