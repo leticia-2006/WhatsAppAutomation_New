@@ -298,5 +298,20 @@ main {
   font-size: 13px;
   color: var(--text-medium);
 }
+/*Translate */
+.translate-btn {
+  background-color: transparent;
+  border: none;
+  color: var(--primary-green);
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 5px;
+}
 
+.translated-text {
+  display: block;
+  font-size: 12px;
+  color: var(--text-medium);
+  margin-top: 3px;
+}
 
