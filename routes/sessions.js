@@ -113,7 +113,7 @@ router.patch('/:id/status', async (req, res) => {
 
   try {
     const result = await db.query(
-      `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2`,
+      `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2 RETURNING Id`,
       [status, id]
     );
    if (result.rowCount === 0) {
@@ -229,6 +229,7 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
