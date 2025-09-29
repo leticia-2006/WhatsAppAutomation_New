@@ -92,12 +92,10 @@ app.use('/wa-numbers', requireLogin,waNumbersRouter);
 // ===== Frontend =====
 const FRONTEND_PATH = path.join(__dirname,'frontend');
 app.use(express.static(FRONTEND_PATH));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/dashboard.html', requireLogin, (req, res) => { res.sendFile(path.join(FRONTEND_PATH,'dashboard.html')); });
 app.get(/^\/(?!api|wa-numbers).*/, (req, res) => { res.sendFile(path.join(FRONTEND_PATH, 'index.html'));});
 
-
-// ===== Static uploads =====
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // QR
 app.get("/wa-numbers/:numberId/qr", (req, res) => {
@@ -131,6 +129,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
