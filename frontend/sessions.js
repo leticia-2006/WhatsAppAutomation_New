@@ -259,24 +259,6 @@ async function sendMessage(sessionId) {
 
 
     
-
-    // FIXED: عرض الرسالة مباشرة بدون إعادة تحميل
-    const chatBox = document.getElementById("chatMessages");
-    const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    chatBox.innerHTML += `
-      <div class="message agent">
-        ${text}
-        <span class="time">${time}</span>
-      </div>
-    `;
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    input.value = "";
-  } catch (err) {
-    console.error("Error sending message:", err);
-  }
-}
-
 // ====== ترجمة رسالة ======
 async function translateMessage(messageId) {
   try {
