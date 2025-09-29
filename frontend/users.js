@@ -160,4 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const addUserBtn = document.getElementById("addUserBtn");
   if (addUserBtn) {addUserBtn.addEventListener("click", () => {
   new bootstrap.Modal(document.getElementById("addUserModal")).show();
+  });
+  }
 });
+  
