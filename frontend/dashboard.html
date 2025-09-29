@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   
   <script defer src="lang.js"></script>
@@ -24,13 +26,12 @@
         </div>
       </div>
       <nav class="sidebar-menu">
-        <ul>
-          <li><a href="#" data-section="groups">Groups</a></li>
-          <li><a href="#" data-section="unread">Unread</a></li>
-          <li><a href="numbers.html" data-section="numbers">Numbers</a></li>
-          <li><a href="users.html" data-section="users">Users</a></li>
-          <li id="qr-link" style="display:none"><a href="#">Link WhatsApp</a></li>
-        </ul>
+    <ul>
+    <li><a href="#" data-section="groups"><i class="fa-solid fa-users"></i> Groups</a></li>
+    <li><a href="#" data-section="unread"><i class="fa-solid fa-envelope-open-text"></i> Unread</a></li>
+    <li><a href="numbers.html" data-section="numbers"><i class="fa-solid fa-hashtag"></i> Numbers</a></li>
+    <li><a href="users.html" data-section="users"><i class="fa-solid fa-user"></i> Users</a></li>
+    </ul>
       </nav>
       <div class="sidebar-footer">
         <button id="lang-switch">🌐 Translate</button>
@@ -63,8 +64,8 @@
         <!-- Messages loaded dynamically -->
         <!-- Example message -->
         <!-- 
-        <div class="message incoming">
-          <p>Hello there!</p>
+        <div class="message other">
+          <div class="bubble">Hello there!</div>
           <button class="translate-btn">Translate</button>
           <em class="translated-text">Hola!</em>
         </div>
@@ -89,6 +90,6 @@
         <textarea id="detail-notes"></textarea>
       </div>
     </aside>
-  </div>
+  </main>
 </body>
 </html>
