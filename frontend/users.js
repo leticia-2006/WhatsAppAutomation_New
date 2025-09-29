@@ -163,4 +163,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   }
 });
-  
+
+function applyFilters() {
+  const search = document.getElementById("search-users").value.toLowerCase();
+  const tag = document.getElementById("tagFilterUsers").value;
+  const rows = document.querySelectorAll("#usersTableBody tr");
+
+  rows.forEach(row => {
+    const name = row.children[1].textContent.toLowerCase();
+    const role = row.children[3].textContent;
+    let match = true;
+
+    if (search && !name.includes(search)) match = false;
+    if (tag && role !== tag) match = false;
+
+    row.style.display = match ? "" : "none";
+  });
+}
+document.getElementById("logout-btn").addEventListener("click", () => {
+  localStorage.removeItem("user");
+  window.location.href = "index.html";
+});
