@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { requireLogin } = require('../middleware/auth');
+const { requireLogin, checkRole } = require('../middleware/auth');
 
 router.use(requireLogin);
 // كل العملاء  
@@ -112,7 +112,7 @@ router.post("/:client_id/notes", requireLogin, async (req, res) => {
 
     const newNote = await db.query(
       "INSERT INTO notes (client_id, user_id, note) VALUES ($1, $2, $3) RETURNING *",
-      [client_id, req.user.id, note]
+      [client_id, req.session.user.id, note]
     );
 
     res.json(newNote.rows[0]);
@@ -123,7 +123,7 @@ router.post("/:client_id/notes", requireLogin, async (req, res) => {
 });
 
 // ✅ تحديث بيانات العميل (فقط Admin أو SuperAdmin)
-router.put("/:client_id", requireLogin, checkRole(["admin", "superadmin"]), async (req, res) => {
+router.put("/:client_id", requireLogin, checkRole(["admin", "super_admin"]), async (req, res) => {
   try {
     const { client_id } = req.params;
     const { name, phone, tags } = req.body;
@@ -146,7 +146,7 @@ router.put("/:client_id", requireLogin, checkRole(["admin", "superadmin"]), asyn
 });
 
 // ✅ حذف عميل (فقط SuperAdmin)
-router.delete("/:client_id", requireLogin, checkRole(["superadmin"]), async (req, res) => {
+router.delete("/:client_id", requireLogin, checkRole(["super_admin"]), async (req, res) => {
   try {
     const { client_id } = req.params;
 
@@ -165,6 +165,7 @@ router.delete("/:client_id", requireLogin, checkRole(["superadmin"]), async (req
 
 
 module.exports = router;
+
 
 
 
