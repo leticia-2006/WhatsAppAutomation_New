@@ -54,7 +54,7 @@ const clientPhone = sessionRes.rows[0].phone;
 });
 
 // ترجمة رسالة
-router.post("/:messageId/translate", async (req, res) => {
+router.post("/:messageId/translate", requireLogin, async (req, res) => {
   const { lang } = req.body; // مثلاً "en", "fr", "ar"
   const msgRes = await db.query("SELECT * FROM messages WHERE id=$1", [req.params.messageId]);
   if (msgRes.rowCount === 0) return res.status(404).json({ error: "Message not found" });
