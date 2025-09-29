@@ -69,10 +69,12 @@ if (msg.message.conversation) {
   const buffer = await downloadMediaMessage(msg, "buffer", {}, { logger: console, reuploadRequest: sock }
 );
   const fileName = `${numberId}_${Date.now()}.jpg`;
-  const filePath = path.join(__dirname, "..", "uploads", fileName);
-  if (!fs.existsSync("./uploads")) {
-    fs.mkdirSync("./uploads");
-  }
+  const uploadsDir = path.join(__dirname, "..", "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
+const filePath = path.join(uploadsDir, fileName);
   fs.writeFileSync(filePath, buffer);
   mediaUrl = `/uploads/${fileName}`;
   text = "[📷 صورة]";
@@ -142,10 +144,10 @@ let msgCount = 0;
      msgCount = 
 parseInt(countRes.rows[0].count);
    }     
-    if (msgCount === 3) {
+    if (msgCount >= 3) {
       await db.query(
         "UPDATE sessions SET group_id = 2 WHERE client_id = $1",
-        [clientId]
+        [sessionId]
       );
       console.log(`🚀 المستخدم ${sender} تم نقله إلى الجروب 2 بعد ${msgCount} رسائل`);
     }
