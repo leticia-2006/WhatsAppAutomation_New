@@ -69,7 +69,7 @@ function setLanguage(lang) {
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
 
   // Sidebar
-  document.querySelector('[data-tab="all"] p').textContent = t.all;
+ if( document.querySelector('[data-tab="all"] p')) {document.querySelector('[data-tab="all"] p').textContent = t.all;}
   document.querySelector('[data-tab="group"] p').textContent = t.group;
   document.querySelector('[data-tab="unread"] p').textContent = t.unread;
   document.querySelector('[data-tab="unreplied"] p').textContent = t.unreplied;
