@@ -56,11 +56,7 @@ router.post("/", requireLogin, checkRole(["super_admin"]), async (req, res) => {
 });
 
 // 📌 ربط الرقم بوكيل
-router.post(
-  "/:id/assign",
-  requireLogin,
-  checkRole(["admin", "super_admin"]),
-  async (req, res) => {
+router.post("/:id/assign", requireLogin, checkRole(["admin", "super_admin"]), async (req, res) => {
     const { id } = req.params;
     const { agentId } = req.body;
 
@@ -114,9 +110,12 @@ router.delete(
 // 📌 استرجاع QR Code لرقم معين
 router.get("/:id/qr", requireLogin, async (req, res) => {
   try {
-    const { id } = req.params;
-    const qr = getQRForNumber(parseInt(id));
+    const numberId = parseInt(req.params.id, 10);
+    if (isNaN(numberId)) {
+      return res.status(400).json({ error: "Invalid number id" });
+    }
 
+    const qr = getQRForNumber(numberId);
     console.log("API /qr called for:", id, "result:", qr ? "FOUND" : "NULL");
 
     if (!qr) {
@@ -136,11 +135,13 @@ router.get("/:id/qr", requireLogin, async (req, res) => {
 router.post("/:id/confirm", requireLogin, checkRole(["super_admin"]),
   async (req, res) => {
     try {
-      const { id } = req.params;
-     
-      await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", [
-        "Disconnected", id,]);
-      initClient(id);
+      const numberId = parseInt(req.params.id, 10);
+      if (isNaN(numberId)) {
+        return res.status(400).json({ error: "Invalid number id" });
+      }
+      const result = await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2",
+      ["Disconnected", numberId]);
+      initClient(numberId);
       res.json({
         success: true,
         message: "Please scan QR again to confirm the number",
