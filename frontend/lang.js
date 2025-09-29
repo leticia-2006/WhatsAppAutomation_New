@@ -69,15 +69,28 @@ function setLanguage(lang) {
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
 
   // Sidebar
- if( document.querySelector('[data-tab="all"] p')) {document.querySelector('[data-tab="all"] p').textContent = t.all;}
-  document.querySelector('[data-tab="group"] p').textContent = t.group;
-  document.querySelector('[data-tab="unread"] p').textContent = t.unread;
-  document.querySelector('[data-tab="unreplied"] p').textContent = t.unreplied;
-  document.querySelector('#qr-link p').textContent = t.linkWhatsapp;
+const groupsLink = document.querySelector('[data-section="groups"]');
+if (groupsLink) groupsLink.textContent = t.group;
 
-  // Headers
-  document.querySelector(".card-title").textContent = t.clients;
-  document.querySelector("#chatHeader strong").textContent = t.conversation;
+const unreadLink = document.querySelector('[data-section="unread"]');
+if (unreadLink) unreadLink.textContent = t.unread;
+
+const numbersLink = document.querySelector('[data-section="numbers"]');
+if (numbersLink) numbersLink.textContent = t.numbers;
+
+const usersLink = document.querySelector('[data-section="users"]');
+if (usersLink) usersLink.textContent = t.clients;
+
+const qrLink = document.querySelector('#qr-link a');
+if (qrLink) qrLink.textContent = t.linkWhatsapp;
+
+// Chat Header
+const chatClient = document.getElementById("chatClient");
+if (chatClient) chatClient.textContent = t.conversation;
+
+// Search input
+const searchClients = document.getElementById("search-clients");
+if (searchClients) searchClients.placeholder = t.searchClients;
 
   // Inputs & buttons
   if (document.querySelector("#search-clients")) {
