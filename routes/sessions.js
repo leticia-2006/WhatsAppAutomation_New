@@ -112,11 +112,15 @@ router.patch('/:id/status', async (req, res) => {
   const { status } = req.body; // "unread" | "unreplied" | "human"
 
   try {
-    await db.query(
+    const result = await db.query(
       `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2`,
       [status, id]
     );
-    res.json({ success: true });
+   if (result.rowCount === 0) {
+   return res.status(404).json({ error: "Session not found" });
+}
+
+   res.json({ success: true });
   } catch (err) {
     console.error("Error updating session status:", err);
     res.status(500).json({ message: "Server error" });
@@ -161,7 +165,7 @@ router.get('/group/:group_id', async (req, res) => {
 });
 
 // --- 4️⃣ جلسات غير مقروءة ---
-router.get('/unread', async (req, res) => {
+router.get('/unread', requireLogin, async (req, res) => {
     try {
         const result = await db.query(`
          SELECT s.id, s.client_id, c.name as client_name,
@@ -180,7 +184,7 @@ router.get('/unread', async (req, res) => {
 });
 
 // --- 5️⃣ جلسات غير مضافة رد عليها ---
-router.get('/unreplied', async (req, res) => {
+router.get('/unreplied', requireLogin, async (req, res) => {
     try {
         const result = await db.query(`
             SELECT s.id, s.client_id, c.name as client_name,
@@ -225,6 +229,7 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
