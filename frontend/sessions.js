@@ -278,57 +278,43 @@ async function translateMessage(messageId) {
 }
 
 // ====== ملاحظات ======
-function openNoteModal(clientId) {
-  let modal = document.getElementById("note-modal");
-  if (!modal) {
-    modal = document.createElement("div");
-    modal.id = "note-modal";
-    modal.style =
-      "display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border:1px solid #ccc; z-index:1000; border-radius:8px;";
-    modal.innerHTML = `
-      <h3>Add Note</h3>
-      <textarea id="note-text" rows="4" cols="40" placeholder="Write your note..."></textarea>
-      <br><br>
-      <button onclick="saveNote()">Save</button>
-      <button onclick="closeNoteModal()">Cancel</button>
-    `;
-    document.body.appendChild(modal);
-  } else {
-    modal.style.display = "block";
-  }
-  document.getElementById("note-text").value = "";
-  modal.dataset.clientId = clientId;
-}
-
-function closeNoteModal() {
-  const modal = document.getElementById("note-modal");
-  if (modal) modal.style.display = "none";
-}
-
-function saveNote() {
-  const modal = document.getElementById("note-modal");
-  const clientId = modal.dataset.clientId;
-  const noteText = document.getElementById("note-text").value;
-
-  axios
-    .post("/sessions/add-note", { clientId, note: noteText })
-    .then(() => {
-      closeNoteModal();
-      loadSessions(); // FIXED: تحديث الجدول بعد حفظ الملاحظة
-    })
-    .catch((err) => console.error("Error saving note:", err));
-}
-
 async function loadNotes(sessionId) {
-  const res = await axios.get(`/sessions/${sessionId}/notes`, { withCredentials: true });
-  const notesDiv = document.getElementById("notesList");
-  notesDiv.innerHTML = "";
-  res.data.forEach(n => {
-    const li = document.createElement("li");
-    li.textContent = n.note;
-    notesDiv.appendChild(li);
-  });
+  try {
+    const res = await axios.get(`/sessions/${sessionId}/notes`, { withCredentials: true });
+    const textarea = document.getElementById("detail-notes");
+    if (textarea) {
+      // نفترض أن كل عميل له ملاحظة واحدة (آخر واحدة مثلاً)
+      textarea.value = res.data.length > 0 ? res.data[res.data.length - 1].note : "";
+      textarea.dataset.sessionId = sessionId; // نخزن ID لتحديثه لاحقًا
+    }
+  } catch (err) {
+    console.error("Error loading notes:", err);
+  }
 }
+
+async function saveNoteDirect() {
+  const textarea = document.getElementById("detail-notes");
+  if (!textarea) return;
+
+  const sessionId = textarea.dataset.sessionId;
+  const noteText = textarea.value;
+
+  try {
+    await axios.post("/sessions/add-note", { clientId: sessionId, note: noteText });
+    console.log("Note saved!");
+  } catch (err) {
+    console.error("Error saving note:", err);
+  }
+}
+
+// ربط الحفظ عند فقدان التركيز (blur)
+document.addEventListener("DOMContentLoaded", () => {
+  const textarea = document.getElementById("detail-notes");
+  if (textarea) {
+    textarea.addEventListener("blur", saveNoteDirect);
+  }
+});
+
 
 let selectedSession = null;
 
