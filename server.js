@@ -51,7 +51,7 @@ app.use((req, res, next) => {
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
   "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
   "img-src 'self' data: blob: https:; " +
-  "connect-src 'self' https://whatsappautomation-new-4fec.onrender.com wss: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://code.jquery.com; " +
+  "connect-src 'self' https://whatsappautomation-new-4fec.onrender.com ws: wss: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://code.jquery.com; " +
   "frame-src 'self';"
 );
 console.log("Cookies from client:", req.headers.cookie);
@@ -81,7 +81,15 @@ app.use((req, res, next) => {
 
 //Upload route
 app.post('/upload', upload.single('file'), (req, res) => {
- res.json({ file: req.file }); });
+ if (!req.file) {
+    return res.status(400).json({ error: "لم يتم رفع أي ملف" });
+  }
+  if (!['image/jpeg', 'image/png', 'video/mp4'].includes(req.file.mimetype)) {
+    return res.status(400).json({ error: "نوع الملف غير مسموح" });
+  }
+  res.json({ file: req.file });
+});
+ 
 
 // ===== Routes تطبيقية =====
 app.use('/sessions', requireLogin, sessionsRouter);
@@ -129,6 +137,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
