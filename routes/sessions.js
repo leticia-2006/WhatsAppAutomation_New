@@ -4,7 +4,7 @@ const db = require('../db');
 const { getQRForNumber } = require('../waClient'); // استدعاء العميل الذي أنشأناه
 const { requireLogin } = require("../middleware/auth");
 
-router.get("/", async (req, res) => {
+router.get("/", requireLogin, async (req, res) => {
  if (!req.session.user) {
    return res.status(401).json({ message: "Unauthorized" });
  }
@@ -113,7 +113,7 @@ router.patch('/:id/status', async (req, res) => {
 
   try {
     const result = await db.query(
-      `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2 RETURNING Id`,
+      `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2 RETURNING id`,
       [status, id]
     );
    if (result.rowCount === 0) {
@@ -229,6 +229,7 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
 
 
 module.exports = router;
+
 
 
 
