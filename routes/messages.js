@@ -6,7 +6,7 @@ const db = require("../db");
 const { requireLogin } = require("../middleware/auth");
 
 // جلب الرسائل لجلسة
-router.get("/:sessionId", async (req, res) => {
+router.get("/:sessionId", requireLogin, async (req, res) => {
   const result = await db.query(`
   SELECT m.*,
        CASE 
