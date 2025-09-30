@@ -290,12 +290,12 @@ main {
 
 /* Chat Input */
 .chat-input {
-  padding: 20px 30px;
+  padding: 12px 15px;
   border-top: 1px solid var(--border-color);
   background-color: var(--container-bg);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .chat-input i {
@@ -306,12 +306,14 @@ main {
 
 .chat-input textarea {
   flex-grow: 1;
-  border: none;
-  background: transparent;
+  border: 1px solid var(--border-color);
+  background: #fff;
   font-size: 14px;
   outline: none;
   resize: none;
-  padding: 10px 0px; 
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: insert 0 1px 2px rgba(0,0,0,0.08);
 }
 
 .chat-input button {
@@ -319,15 +321,15 @@ main {
   height: 40px;
   background-color: var(--primary-green);
   border: none;
-  border-radius: 10px;
+  border-radius: 50%;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
 }
-
+.chat-input button i { color: #fff;}
 /* Client Details */
   /* Client Details */
 .client-details {
@@ -359,7 +361,6 @@ main {
   font-size: 18px;
   font-weight: 600;
   color: var(--text-dark);
-  margin-bottom: 4px;
   line-height: 0.3;
 }
 .profile .phone {
@@ -504,8 +505,6 @@ main {
   color: var(--text-medium);
   margin-top: 3px;
 }
-
-
 
 
 
