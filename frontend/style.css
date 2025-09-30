@@ -209,7 +209,7 @@ main {
   justify-content: space-between;
   align-items: center;
 }
-chat-tabs {
+.chat-tabs {
   display: flex;
   gap: 8px;
 }
@@ -378,6 +378,7 @@ chat-tabs {
   color: var(--text-medium);
   margin-top: 3px;
 }
+
 
 
 
