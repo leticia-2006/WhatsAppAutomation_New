@@ -209,6 +209,26 @@ main {
   justify-content: space-between;
   align-items: center;
 }
+chat-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-tabs button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-medium);
+  transition: 0.2s;
+}
+
+.chat-tabs button.active {
+  background-color: var(--primary-green);
+  color: #fff;
+}
 
 .chat-messages {
   flex-grow: 1;
@@ -222,7 +242,25 @@ main {
 .message {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 12px;
+}
+
+.message .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.msg-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.msg-content .meta {
+  font-size: 12px;
+  color: var(--text-light);
 }
 
 .message .bubble {
@@ -231,11 +269,12 @@ main {
   max-width: 400px;
   font-size: 14px;
   line-height: 1.4;
+  background-color: var(--other-message-bg);
 }
 
 .message.other .bubble {
   background-color: var(--other-message-bg);
-  border-radius: 18px 18px 18px 4px;
+  border-radius: 16px 16px 16px 4px;
 }
 
 .message.me {
@@ -244,7 +283,7 @@ main {
 
 .message.me .bubble {
   background-color: var(--my-message-bg);
-  border-radius: 18px 18px 4px 18px;
+  border-radius: 16px 16px 4px 16px;
 }
 
 /* Chat Input */
@@ -255,6 +294,12 @@ main {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.chat-input i {
+  font-size: 18px;
+  color: var(--text-medium);
+  cursor: pointer;
 }
 
 .chat-input textarea {
@@ -333,5 +378,6 @@ main {
   color: var(--text-medium);
   margin-top: 3px;
 }
+
 
 
