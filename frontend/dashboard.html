@@ -93,25 +93,36 @@
     <h3 id="detailName">Client Name</h3>
   </div>
 
-  <!-- حالة -->
-  <div class="status-card">
-    <span class="status-label">Status</span>
-    <span id="detailStatus" class="status active">Online</span>
-  </div>
+  <!-- البطاقات -->
+  <div class="info-cards">
+    <div class="info-card">
+      <i class="fa-solid fa-signal"></i>
+      <div>
+        <span class="label">Status</span>
+        <span id="detailStatus" class="value active">Online</span>
+      </div>
+    </div>
 
-  <!-- Tags -->
-  <div class="tags-card">
-    <span class="tags-label">Tags</span>
-    <div id="detailTags" class="tags">
-      <span class="tag">VIP</span>
-      <span class="tag">New</span>
+    <div class="info-card">
+      <i class="fa-solid fa-tags"></i>
+      <div>
+        <span class="label">Tags</span>
+        <div id="detailTags" class="tags">
+          <span class="tag">VIP</span>
+          <span class="tag">New</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ملاحظات -->
+  <!-- قسم الملاحظات -->
   <div class="notes-section">
     <label for="detail-notes">Notes</label>
-    <textarea id="detail-notes" placeholder="Write notes..."></textarea>
+    <div id="notes-list">
+      <!-- الملاحظات القديمة تضاف هنا -->
+      <p class="note-item">Call client tomorrow</p>
+    </div>
+    <textarea id="detail-notes" placeholder="Write a note..."></textarea>
     <button id="save-notes">
       <i class="fa-regular fa-floppy-disk"></i> Save
     </button>
