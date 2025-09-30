@@ -329,6 +329,7 @@ main {
 }
 
 /* Client Details */
+  /* Client Details */
 .client-details {
   width: 300px;
   background: #fff;
@@ -339,7 +340,7 @@ main {
   gap: 20px;
 }
 
-/* صورة واسم */
+/* صورة + اسم */
 .profile {
   display: flex;
   flex-direction: column;
@@ -360,55 +361,52 @@ main {
   color: var(--text-dark);
 }
 
-/* بطاقة الحالة */
-.status-card {
-  background: #f1fdf4;
-  border: 1px solid #d6f5dd;
-  border-radius: 12px;
-  padding: 12px 16px;
+/* بطاقات */
+.info-cards {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.status-label {
-  font-size: 14px;
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f9fafb;
+  border: 1px solid var(--border-color);
+  padding: 12px 14px;
+  border-radius: 12px;
+}
+
+.info-card i {
+  font-size: 18px;
+  color: var(--primary-green);
+}
+
+.info-card .label {
+  font-size: 13px;
   color: var(--text-medium);
 }
 
-.status {
-  font-weight: 600;
+.info-card .value {
   font-size: 14px;
+  font-weight: 600;
+  display: block;
 }
 
-.status.active {
+.value.active {
   color: #22c55e; /* أخضر */
 }
-
-.status.offline {
+.value.offline {
   color: #ef4444; /* أحمر */
 }
 
 /* Tags */
-.tags-card {
-  background: #f8f9fa;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.tags-label {
-  font-size: 14px;
-  color: var(--text-medium);
-}
-
 .tags {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
 }
 
 .tag {
@@ -416,11 +414,12 @@ main {
   color: #0369a1;
   padding: 4px 10px;
   border-radius: 12px;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 /* Notes */
 .notes-section {
+  margin-top: auto; /* تخليها تنزل تحت */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -431,15 +430,31 @@ main {
   color: var(--text-medium);
 }
 
+#notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.note-item {
+  background: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
+}
+
 .notes-section textarea {
   width: 100%;
-  min-height: 100px;
+  min-height: 80px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 10px;
   font-size: 14px;
   resize: vertical;
   outline: none;
+  background: #f9fafb;
 }
 
 .notes-section button {
@@ -455,7 +470,7 @@ main {
   display: flex;
   align-items: center;
   gap: 6px;
-  }
+}
 /*Translate */
 .translate-btn {
   background-color: transparent;
@@ -472,6 +487,7 @@ main {
   color: var(--text-medium);
   margin-top: 3px;
 }
+
 
 
 
