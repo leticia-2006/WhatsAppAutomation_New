@@ -40,7 +40,7 @@ main {
 /* Sidebar */
 .sidebar {
   width: 260px;
-  background-color: var(--sidebar-bg);
+  background-color: var(--container-bg);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
@@ -59,25 +59,44 @@ main {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .sidebar-menu ul li a {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 15px;
-  border-radius: 8px;
+  padding: 12px 15px;
+  border-radius: 12px;
   cursor: pointer;
-  color: var(--text-medium);
-  transition: background-color 0.2s;
+  color: var(--text-dark);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.sidebar-menu ul li a .icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background-color: var(--light-green-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-green);
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar-menu ul li a:hover .icon,
+.sidebar-menu ul li.active a .icon {
+  background-color: var(--primary-green);
+  color: #fff;
 }
 
 .sidebar-menu ul li a:hover,
 .sidebar-menu ul li.active a {
   background-color: var(--light-green-bg);
   color: var(--primary-green);
-  font-weight: 600;
 }
 
 .sidebar-footer {
@@ -314,4 +333,5 @@ main {
   color: var(--text-medium);
   margin-top: 3px;
 }
+
 
