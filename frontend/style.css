@@ -360,6 +360,7 @@ main {
   font-weight: 600;
   color: var(--text-dark);
   margin-bottom: 4px;
+  line-height: 0.3;
 }
 .profile .phone {
   font-size: 14px;
@@ -503,6 +504,7 @@ main {
   color: var(--text-medium);
   margin-top: 3px;
 }
+
 
 
 
