@@ -127,22 +127,28 @@ main {
 }
 
 .clients-header {
-  padding: 15px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 6px;
+  border-bottom: 0px solid var(--border-color);
   display: flex;
   gap: 10px;
 }
 
-.clients-header input,
-.clients-header select{
+.clients-header input{
   width: 100%;
-  padding: 10px 15px 10px 35px;
-  border-radius: 8px;
+  padding: 10px 15px 10px 10px;
+  border-radius: 10px;
   border: 1px solid var(--border-color);
   background-color: #F8F9FA;
   font-size: 14px;
 }
-
+.clients-header select{
+  width: 32%;
+  padding: 10px px 10px 10px;
+  border-radius: 10px;
+  border: 2px solid var(--border-color);
+  background-color: #F8F9FA;
+  font-size: 14px;
+}
 .clients-list  ul {
   list-style: none;
   overflow-y: auto;
@@ -202,9 +208,9 @@ main {
 }
 
 .chat-header {
-  padding: 15px 20px;
+  padding: 10px 13px;
   border-bottom: 1px solid var(--border-color);
-  background-color: var(--container-bg);
+  background-color: transparent;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -264,17 +270,17 @@ main {
 }
 
 .message .bubble {
-  padding: 10px 15px;
+  padding: 8px 15px;
   border-radius: 18px;
   max-width: 400px;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.4;
   background-color: var(--other-message-bg);
 }
 
 .message.other .bubble {
   background-color: var(--other-message-bg);
-  border-radius: 18px 18px 18px 4px;
+  border-radius: 18px 18px 18px 2px;
 }
 
 .message.me {
@@ -293,6 +299,7 @@ main {
   padding: 12px 15px;
   border-top: none;
   background-color: transparent;
+  
   display: flex;
   align-items: center;
   gap: 8px;
@@ -505,7 +512,6 @@ main {
   color: var(--text-medium);
   margin-top: 3px;
 }
-
 
 
 
