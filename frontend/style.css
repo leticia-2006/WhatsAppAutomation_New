@@ -274,7 +274,7 @@ main {
 
 .message.other .bubble {
   background-color: var(--other-message-bg);
-  border-radius: 16px 16px 16px 4px;
+  border-radius: 18px 18px 18px 4px;
 }
 
 .message.me {
@@ -283,12 +283,14 @@ main {
 
 .message.me .bubble {
   background-color: var(--my-message-bg);
-  border-radius: 16px 16px 4px 16px;
+  border-radius: 18px 18px 4px 18px;
+  color: #495057;
+  max-width: 450px;
 }
 
 /* Chat Input */
 .chat-input {
-  padding: 15px 20px;
+  padding: 20px 30px;
   border-top: 1px solid var(--border-color);
   background-color: var(--container-bg);
   display: flex;
@@ -309,6 +311,7 @@ main {
   font-size: 14px;
   outline: none;
   resize: none;
+  padding: 10px 0px; 
 }
 
 .chat-input button {
@@ -322,6 +325,7 @@ main {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  font-size: 16px;
 }
 
 /* Client Details */
@@ -378,6 +382,7 @@ main {
   color: var(--text-medium);
   margin-top: 3px;
 }
+
 
 
 
