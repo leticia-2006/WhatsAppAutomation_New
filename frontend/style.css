@@ -359,8 +359,14 @@ main {
   font-size: 18px;
   font-weight: 600;
   color: var(--text-dark);
+  margin-bottom: 4px;
 }
-
+.profile .phone {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-medium); /* أفتح من الاسم */
+  margin-bottom: 15px; /* ترك فراغ قبل البطاقات */
+}
 /* بطاقات */
 .info-cards {
   display: flex;
@@ -497,6 +503,7 @@ main {
   color: var(--text-medium);
   margin-top: 3px;
 }
+
 
 
 
