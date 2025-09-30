@@ -87,16 +87,35 @@
 
     <!-- Client Details -->
     <aside class="client-details" id="client-details">
-      <h3>Client Details</h3>
-      <div class="details-content">
-        <!-- Populated dynamically from clients.js -->
-        <p><strong>Name:</strong> <span id="detailName">—</span></p>
-        <p><strong>Status:</strong> <span id="detailPhone">—</span></p>
-        <p><strong>Tags:</strong> <span id="detailTags">—</span></p>
-        <p><strong>Notes:</strong></p>
-        <textarea id="detail-notes" placeholder="Write notes..."></textarea>
-        <button id="save-notes">💾 Save</button>
-      </div>
+  <!-- صورة واسم -->
+  <div class="profile">
+    <img src="assets/avatar.png" alt="Client Avatar" class="avatar">
+    <h3 id="detailName">Client Name</h3>
+  </div>
+
+  <!-- حالة -->
+  <div class="status-card">
+    <span class="status-label">Status</span>
+    <span id="detailStatus" class="status active">Online</span>
+  </div>
+
+  <!-- Tags -->
+  <div class="tags-card">
+    <span class="tags-label">Tags</span>
+    <div id="detailTags" class="tags">
+      <span class="tag">VIP</span>
+      <span class="tag">New</span>
+    </div>
+  </div>
+
+  <!-- ملاحظات -->
+  <div class="notes-section">
+    <label for="detail-notes">Notes</label>
+    <textarea id="detail-notes" placeholder="Write notes..."></textarea>
+    <button id="save-notes">
+      <i class="fa-regular fa-floppy-disk"></i> Save
+    </button>
+  </div>
     </aside>
   </main>
 </body>
