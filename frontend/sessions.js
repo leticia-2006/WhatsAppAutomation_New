@@ -4,36 +4,29 @@ let currentTab = "all";
 let currentSession = null;
 
 // ====== تغيير التبويبات ======
-const tabLinks = document.querySelectorAll(".tab-link");
-tabLinks.forEach((link) => {
+const sidebarLinks = document.querySelectorAll(".sidebar-menu a");
+sidebarLinks.forEach((link) => {
   link.addEventListener("click", (e) => {
     e.preventDefault();
-    currentTab = link.dataset.tab;
-
-    tabLinks.forEach((l) => l.classList.remove("active"));
-    link.classList.add("active");
-
-    loadSessions();
+    currentTab = link.dataset.section;
+  loadSessions();
   });
 });
 
 // ====== تحميل الجلسات من API ======
 async function loadSessions() {
   try {
-    let url = `/sessions/${currentTab}`;
-    if (currentTab === "group") {
-      const groupId = document.getElementById ("groupSelect").value; url= `/sessions/group/${groupId}`; // FIXED: placeholder groupId
-    }
-      const res = await axios.get(url, { withCredentials: true });
+    let url = `/sessions/all`;
+    if (currentTab === "unread") { url = `/sessions/unread`;
+    } else if (currentTab === "group") { url= `/sessions/group`}; // FIXED: placeholder groupId
+    const res = await axios.get(url, { withCredentials: true });
     
-
     // FIXED: دعم صلاحية الوكيل (Agent)
     sessions = res.data;
     let filtered = sessions;
     if (window.currentUser && window.currentUser.role === "agent") {
-      filtered = sessions.filter((s) => s.agent_id === window.currentUser.id);
-    }
-    renderSessions(filtered);
+      filtered = sessions.filter((s) => s.agent_id === window.currentUser.id);}
+    renderSessions(filtered currentTab);
   } catch (err) {
     console.error("Error loading sessions:", err);
   }
