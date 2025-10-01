@@ -1,37 +1,55 @@
- <!-- Numbers Management (Super Admin only) -->
-    <div class="card mt-4" id="numbers-section" style="display:none;">
-      <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">WhatsApp Numbers</h3>
-        <button id="addNumberBtn" class="btn btn-primary">+ Add Number</button>
-      </div>
-      <div class="card-body">
-        <input type="text" id="search" class="form-control mb-2" placeholder="🔍 Search numbers...">
-       <div class="table-responsive">
-       <table class="table" id="numbersTable">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Number</th>
-              <th>Status</th>
-              <th>Agent</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+<!-- Numbers Management -->
+<div class="card mt-4" id="numbers-section" style="display:none;">
+  <div class="card-header d-flex justify-content-between">
+    <h3 class="card-title">WhatsApp Numbers</h3>
+    <button id="addNumberBtn" class="btn btn-primary">+ Add Number</button>
+  </div>
+  <div class="card-body">
+    <input type="text" id="search" class="form-control mb-2" placeholder="🔍 Search numbers...">
+    <div class="table-responsive">
+      <table class="table" id="numbersTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Number</th>
+            <th>Status</th>
+            <th>Agent</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
+  </div>
+</div>
+
 <!-- Add Number Modal -->
-<div class="modal fade" id="addNumberModal" tabindex="-1" aria-labelledby="addNumberModalLabel" aria-hidden="true">
+<div class="modal fade" id="addNumberModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addNumberModalLabel">Link WhatsApp Number</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Add WhatsApp Number</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body text-center">
-        <div id="qr-loading" class="mb-3">Generating QR...</div>
-        <canvas id="qr-canvas"></canvas>
+      <div class="modal-body">
+        <input type="text" id="newNumber" class="form-control mb-3" placeholder="Enter number...">
+        <button class="btn btn-success w-100" onclick="saveNewNumber()">Save & Generate QR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QR Modal -->
+<div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content text-center">
+      <div class="modal-header">
+        <h5 class="modal-title">Scan QR Code</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="qr-loading">Loading QR...</div>
+        <canvas id="qr-canvas" style="display:none;"></canvas>
       </div>
     </div>
   </div>
