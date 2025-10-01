@@ -299,6 +299,12 @@ document.addEventListener("DOMContentLoaded", () => {
     textarea.addEventListener("blur", saveNoteDirect);
   }
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const saveBtn = document.getElementById("save-notes");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", saveNoteDirect);
+  }
+});
 
 
 let selectedSession = null;
