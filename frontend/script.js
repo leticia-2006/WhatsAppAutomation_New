@@ -1,6 +1,34 @@
 axios.defaults.withCredentials = true;
 let user = null;
 
+document.addEventListener("DOMContentLoaded", () => {
+  // تحميل الصفحة الافتراضية
+  loadPage("home.html");
+
+  document.querySelectorAll(".sidebar-menu a").forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const section = link.getAttribute("data-section");
+
+      if (section === "numbers") {
+        loadPage("numbers.html");
+      } else if (section === "users") {
+        loadPage("users.html");
+      } else if (section === "groups" || section === "unread") {
+        loadPage("home.html"); // أو ممكن تعمل صفحات خاصة بهم
+      }
+    });
+  });
+});
+
+function loadPage(page) {
+  fetch(page)
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("main-content").innerHTML = html;
+    })
+    .catch(err => console.error("Error loading page:", err));
+}
 // Logout
 const logoutBtn = document.getElementById('logout-btn');
 if (logoutBtn) {
@@ -82,7 +110,9 @@ document.addEventListener("click", async (e) => {
     }
   }
 });
+
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
