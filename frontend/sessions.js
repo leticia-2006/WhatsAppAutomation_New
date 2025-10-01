@@ -450,7 +450,9 @@ window.addEventListener("load", () => {
 function selectClient(sessionId, name, phone, tags) {
   document.getElementById("detailName").innerText = name;
   document.getElementById("detailPhone").innerText = phone;
-  document.getElementById("detailTags").innerText = tags || "-";
+  document.getElementById("detailTags").innerHTML = (tags || [])
+  .map(t => `<span class="tag">${t}</span>`)
+  .join("");
 // Load messages of this session
   loadMessages(sessionId);
 }
