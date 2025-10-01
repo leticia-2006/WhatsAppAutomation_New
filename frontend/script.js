@@ -35,7 +35,8 @@ function loadPage(page) {
       if (page === "numbers.html" && typeof initNumbersPage === "function") {
         initNumbersPage();
       }
-    })
+      if (page === "home.html" && typeof loadSessions === "function") {
+        loadSessions(); }  })
     .catch(err => console.error("Error loading page:", err));
 }
 // Logout
@@ -122,6 +123,7 @@ document.addEventListener("click", async (e) => {
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
