@@ -454,12 +454,13 @@ async function blockCustomer() {
   hideContextMenu();
 }
 // عند التحميل استرجاع الإعداد
-window.onload = () => {
+window.addEventListener("load", () => {
   if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark-mode");
-    document.getElementById("darkModeToggle").checked = true;
+    const toggle = document.getElementById("darkModeToggle");
+    if (toggle) toggle.checked = true;
   }
-};
+});
 function selectClient(sessionId, name, phone, tags) {
   document.getElementById("detailName").innerText = name;
   document.getElementById("detailPhone").innerText = phone;
