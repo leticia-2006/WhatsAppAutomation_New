@@ -26,7 +26,7 @@ async function loadSessions() {
     let filtered = sessions;
     if (window.currentUser && window.currentUser.role === "agent") {
       filtered = sessions.filter((s) => s.agent_id === window.currentUser.id);}
-    renderSessions(filtered currentTab);
+    renderSessions(filtered, currentTab);
   } catch (err) {
     console.error("Error loading sessions:", err);
   }
