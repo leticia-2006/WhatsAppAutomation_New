@@ -42,7 +42,7 @@ async function loadSessions() {
 }
 
 // 🔹 Search bar
-document.adddEventListener("DOMContentLoaded", () => { 
+document.addEventListener("DOMContentLoaded", () => { 
 const searchBar = document.getElementById("search-clients");
   if (searchBar) {
     searchBar.addEventListener("input", () => {
