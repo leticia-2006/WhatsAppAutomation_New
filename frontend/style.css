@@ -514,6 +514,31 @@ main {
 }
 
 
+.context-menu {
+  position: absolute;
+  display: none;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  padding: 6px 0;
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.context-menu li {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.context-menu li:hover {
+  background: #f0f0f0;
+}
 
 
 
