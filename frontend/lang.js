@@ -79,7 +79,7 @@ const numbersLink = document.querySelector('[data-section="numbers"]');
 if (numbersLink) numbersLink.textContent = t.numbers;
 
 const usersLink = document.querySelector('[data-section="users"]');
-if (usersLink) usersLink.textContent = t.clients;
+if (usersLink) usersLink.textContent = t.users || "Users";
 
 /*const qrLink = document.querySelector('#qr-link a');
 if (qrLink) qrLink.textContent = t.linkWhatsapp;*/
