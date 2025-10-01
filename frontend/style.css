@@ -198,7 +198,12 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+.session-count {
+  font-size: 14px;
+  color: #555;
+  margin: 8px 0;
+  padding-left: 8px;
+}
 /* Chat */
 .chat-window {
   flex-grow: 1;
@@ -539,6 +544,7 @@ main {
 .context-menu li:hover {
   background: #f0f0f0;
 }
+
 
 
 
