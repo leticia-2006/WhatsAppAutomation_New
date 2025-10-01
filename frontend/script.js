@@ -25,7 +25,16 @@ function loadPage(page) {
   fetch(page)
     .then(res => res.text())
     .then(html => {
-      document.getElementById("main-content").innerHTML = html;
+      const main = document.getElementById("main-content");
+      main.innerHTML = html;
+
+      // استدعاء init حسب الصفحة
+      if (page === "users.html" && typeof initUsersPage === "function") {
+        initUsersPage();
+      }
+      if (page === "numbers.html" && typeof initNumbersPage === "function") {
+        initNumbersPage();
+      }
     })
     .catch(err => console.error("Error loading page:", err));
 }
@@ -113,6 +122,7 @@ document.addEventListener("click", async (e) => {
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
