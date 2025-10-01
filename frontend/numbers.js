@@ -51,6 +51,47 @@ function renderNumbers(numbers) {
     tbody.appendChild(tr);
   });
 }
+// ====== فتح مودال التحويل ======
+async function openTransferModal(id) {
+  document.getElementById("transferNumberId").value = id;
+
+  try {
+    // جلب قائمة الوكلاء
+    const res = await axios.get("/users?role=agent");
+    const agents = res.data;
+
+    const select = document.getElementById("agentSelect");
+    select.innerHTML = `<option value="">Select Agent</option>`;
+    agents.forEach(agent => {
+      const option = document.createElement("option");
+      option.value = agent.id;
+      option.textContent = agent.username;
+      select.appendChild(option);
+    });
+
+    new bootstrap.Modal(document.getElementById("transferModal")).show();
+  } catch (err) {
+    console.error("Error loading agents:", err);
+    alert("Error loading agents");
+  }
+}
+
+// ====== تأكيد التحويل ======
+async function confirmTransfer() {
+  const numberId = document.getElementById("transferNumberId").value;
+  const agentId = document.getElementById("agentSelect").value;
+
+  if (!agentId) return alert("Please select an agent");
+
+  try {
+    await axios.post(`/wa-numbers/${numberId}/transfer`, { agentId });
+    bootstrap.Modal.getInstance(document.getElementById("transferModal")).hide();
+    loadNumbers();
+  } catch (err) {
+    console.error("Error transferring number:", err);
+    alert("Error transferring number");
+  }
+}
 
 // ====== تصفية الأرقام ======
 function applyNumberFilter() {
