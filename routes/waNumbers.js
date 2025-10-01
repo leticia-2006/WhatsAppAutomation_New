@@ -31,7 +31,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 // 📌 إضافة رقم جديد + إنشاء جلسة
-router.post("/", requireLogin, checkRole(["super_admin"]), async (req, res) => {
+router.post("/", requireLogin, async (req, res) => {
   try {
     const { number } = req.body;
 
