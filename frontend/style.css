@@ -204,6 +204,29 @@ main {
   margin: 8px 0;
   padding-left: 8px;
 }
+.client-status {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.client-status.online {
+  background-color: #4caf50; /* أخضر */
+}
+
+.client-status.offline {
+  background-color: #9e9e9e; /* رمادي */
+}
+
+.client-status.unread {
+  background-color: #ff9800; /* برتقالي */
+}
+
+.client-status.group {
+  background-color: #2196f3; /* أزرق */
+}
 /* Chat */
 .chat-window {
   flex-grow: 1;
@@ -544,6 +567,7 @@ main {
 .context-menu li:hover {
   background: #f0f0f0;
 }
+
 
 
 
