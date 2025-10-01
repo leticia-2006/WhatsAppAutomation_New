@@ -1,1 +1,92 @@
+    <!-- Clients List -->
+    <section class="clients-list">
+    <div class="clients-header">
+        <input type="text" id="search-clients" placeholder="🔍 Search..." />
+        <select id="filter-period">
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+        </select>
+      </div>
+      <div id="session-count"
+        class="session-count">0 sessions found</div>
+      <ul id="sessions-body">
+        <!-- Populated dynamically from sessions.js -->
+      </ul>
+    </section>
 
+    <!-- Chat Section -->
+    <section class="chat-window">
+      <div class="chat-header">
+        <h3 id="chatClient">Select a conversation</h3>
+        <span id="chatStatus">Offline</span>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <!-- Messages loaded dynamically -->
+        <!-- Example message -->
+        
+        <div class="message other">
+          
+          <img src="assets/avatar.png" class="avatar" />
+          <div class="msg-content">
+            <div class="meta" >User Name, 11.24 AM</div>
+          <div class="bubble">Hello there!</div>
+          <button class="translate-btn">Translate</button>
+          <em class="translated-text">Hola!</em>
+        </div>
+        </div>
+      </div>
+      <div class="chat-input">
+        <i class="fa-regular fa-face-smile"></i>
+        <i class="fa-solid fa-paperclip"></i>
+        <textarea id="msgInput" placeholder="Type a message..."></textarea>
+        <input type="file" id="mediaInput"  style="display:none" /> 
+        <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </section>
+
+    <!-- Client Details -->
+    <aside class="client-details" id="client-details">
+  <!-- صورة واسم -->
+  <div class="profile">
+    <img src="assets/avatar.png" alt="Client Avatar" class="avatar">
+    <h3 id="detailName">Client Name</h3>
+    <p id="detailPhone" class="phone">+213796984727</p>
+  </div>
+
+  <!-- البطاقات -->
+  <div class="info-cards">
+    <div class="info-card">
+      <i class="fa-solid fa-signal"></i>
+      <div>
+        <span class="label">Status</span>
+        <span id="detailStatus" class="value active">Online</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <i class="fa-solid fa-tags"></i>
+      <div>
+        <span class="label">Tags</span>
+        <div id="detailTags" class="tags">
+          <span class="tag">VIP</span>
+          <span class="tag">New</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- قسم الملاحظات -->
+  <div class="notes-section">
+    <label for="detail-notes">Notes</label>
+    <div id="notes-list">
+      <!-- الملاحظات القديمة تضاف هنا -->
+      <p class="note-item">Call client tomorrow</p>
+    </div>
+    <textarea id="detail-notes" placeholder="Write a note..."></textarea>
+    <button id="save-notes">
+      <i class="fa-regular fa-floppy-disk"></i> Save
+    </button>
+  </div>
+    </aside>
+</main>
