@@ -54,3 +54,22 @@
     </div>
   </div>
 </div>
+<!-- Transfer Agent Modal -->
+<div class="modal fade" id="transferModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Transfer Number</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="transferNumberId">
+        <select id="agentSelect" class="form-control mb-3">
+          <option value="">Select Agent</option>
+          <!-- سيُملأ تلقائياً من السيرفر -->
+        </select>
+        <button class="btn btn-primary w-100" onclick="confirmTransfer()">Confirm Transfer</button>
+      </div>
+    </div>
+  </div>
+</div>
