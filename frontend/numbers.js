@@ -113,7 +113,10 @@ async function saveNewNumber() {
     const res = await axios.post("/wa-numbers", { number });
     const id = res.data.id;
 
-    bootstrap.Modal.getInstance(document.getElementById("addNumberModal")).hide();
+    // إخفاء المودال بالطريقة الصحيحة
+    const modalEl = document.getElementById("addNumberModal");
+    const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+    modalInstance.hide();
 
     // مباشرة بعد الحفظ نعرض QR
     showQR(id);
@@ -123,6 +126,7 @@ async function saveNewNumber() {
     console.error("Error adding number:", err);
     alert("Error adding number");
   }
+}
 }
 
 // ====== إظهار QR ======
