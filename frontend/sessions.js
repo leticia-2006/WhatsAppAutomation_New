@@ -354,14 +354,8 @@ document.addEventListener("click", () => {
 });
 
 // أمثلة على العمليات
-function transferSession() {
-  alert("Transfer session: " + selectedSession?.name);
-}
 function setupGroups() {
   alert("Setup groups for: " + selectedSession?.name);
-}
-function setLabel() {
-  alert("Set label for: " + selectedSession?.name);
 }
 function deleteTag() {
   alert("Delete tag from: " + selectedSession?.name);
@@ -374,9 +368,6 @@ function unpinSession() {
 }
 function doNotDisturb() {
   alert("DND mode enabled for: " + selectedSession?.name);
-}
-function refreshAvatar() {
-  alert("Refreshing avatar...");
 }
 function syncMessages() {
   alert("Syncing messages...");
