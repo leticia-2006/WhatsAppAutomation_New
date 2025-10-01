@@ -36,7 +36,7 @@ async function loadSessions() {
     // FIXED: دعم صلاحية الوكيل (Agent)
     sessions = res.data;
     let filtered = sessions;
-    if (window.user && user.role === "agent") {
+    if (window.currentUser && window.currentUser.role === "agent") {
       filtered = sessions.filter((s) => s.agent_id === user.id);
     }
 
