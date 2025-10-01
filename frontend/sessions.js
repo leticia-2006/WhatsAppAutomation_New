@@ -382,7 +382,7 @@ function batchOperation() {
   alert("Batch operation...");
 }
 function applyTagFilter(tag) {
-  const items = document.querySelectorAll("#sessionsListli, #sessionsTable tbody tr");
+  const items = document.querySelectorAll("#sessions-body li, #sessionsTable tbody tr");
 
   items.forEach(item => {
     if (tag === "all" || item.classList.contains(tag)) {
