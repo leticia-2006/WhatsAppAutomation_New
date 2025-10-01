@@ -44,7 +44,13 @@
 
     <!-- Clients List -->
     <section class="clients-list">
-      <div class="clients-header">
+      <nav class="tabs">
+    <a href="#" class="tab-link active" data-tab="all">All</a>
+    <a href="#" class="tab-link" data-tab="group">Groups</a>
+    <a href="#" class="tab-link" data-tab="unread">Unread</a>
+    <a href="#" class="tab-link" data-tab="unreplied">Unreplied</a>
+      </nav>
+    <div class="clients-header">
         <input type="text" id="search-clients" placeholder="🔍 Search..." />
         <select id="filter-period">
           <option value="today">Today</option>
