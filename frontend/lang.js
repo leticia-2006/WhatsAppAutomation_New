@@ -81,8 +81,8 @@ if (numbersLink) numbersLink.textContent = t.numbers;
 const usersLink = document.querySelector('[data-section="users"]');
 if (usersLink) usersLink.textContent = t.clients;
 
-const qrLink = document.querySelector('#qr-link a');
-if (qrLink) qrLink.textContent = t.linkWhatsapp;
+/*const qrLink = document.querySelector('#qr-link a');
+if (qrLink) qrLink.textContent = t.linkWhatsapp;*/
 
 // Chat Header
 const chatClient = document.getElementById("chatClient");
