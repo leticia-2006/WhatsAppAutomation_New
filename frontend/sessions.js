@@ -32,7 +32,7 @@ async function loadSessions() {
     sessions = res.data;
     let filtered = sessions;
     if (window.currentUser && window.currentUser.role === "agent") {
-      filtered = sessions.filter((s) => s.agent_id === user.id);
+      filtered = sessions.filter((s) => s.agent_id === window.currentUser.id);
     }
 
     renderSessions(filtered);
