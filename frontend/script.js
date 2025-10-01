@@ -57,6 +57,32 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSessions(); // نستعمل دالة sessions.js
 });
 
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("translate-btn")) {
+    const msgEl = e.target.closest(".msg-content").querySelector(".bubble");
+    const translatedEl = e.target.closest(".msg-content").querySelector(".translated-text");
+    
+    const originalText = msgEl.innerText;
+
+    try {
+      // هنا تستدعي API الترجمة اللي عندك (Google Translate أو سيرفر داخلي)
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: originalText, targetLang: "ar" }) // مثال: ترجم للعربية
+      });
+
+      const data = await res.json();
+      translatedEl.innerText = data.translated || "⚠️ Translation failed";
+      translatedEl.style.display = "block";
+    } catch (err) {
+      console.error("Translation error:", err);
+      translatedEl.innerText = "⚠️ Error";
+      translatedEl.style.display = "block";
+    }
+  }
+});
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
