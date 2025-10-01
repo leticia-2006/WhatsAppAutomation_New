@@ -136,6 +136,8 @@ function renderSessions(list = [], filterType = "all") {
 // ====== فتح المحادثة ======
 function openChat(session) {
   currentSession = session;
+  selectedSessionId = session.id;
+  selectedClientId = session.client_id;
   document.getElementById("chatClient").innerText = session.name || session.phone;
   document.getElementById("chatStatus").innerText = `Lang: ${
     session.lang || "Unknown"
@@ -323,6 +325,8 @@ let selectedClientId = null;
 function showContextMenu(e, session) {
   e.preventDefault();
   selectedSession = session;
+  selectedSessionId = session.id;
+  selectedClientId = session.client_id;
 
   // إزالة التحديد السابق
   document.querySelectorAll("#sessions-body li")
