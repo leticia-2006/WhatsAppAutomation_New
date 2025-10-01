@@ -46,36 +46,33 @@ async function loadSessions() {
   }
 }
 
+// 🔹 Search bar
+document.adddEventListener("DOMContentLoaded", () => { 
+const searchBar = document.getElementById("search-clients");
+  if (searchBar) {
+    searchBar.addEventListener("input", () => {
+    const value = searchBar.value.toLowerCase();
+      const filtered = sessions.filter((s) =>
+          (s.name || "").toLowerCase().includes(value) ||
+          (s.phone || "").includes(value)
+      );
+      renderSessions(filtered);
+    });
+  }
+});
+
 function renderSessions(list = [], filterType = "all") {
   const container = document.getElementById("sessions-body");
   if (!container) return;
-
   container.innerHTML = "";
-
-  // 🔹 Search bar
-  const searchBar = document.getElementById("search-clients");
-  if (searchBar) {
-    searchBar.addEventListener("input", () => {
-    renderSessions(
-      list.filter(
-        (s) =>
-          (s.name || "").toLowerCase().includes(searchBar.value.toLowerCase()) ||
-          (s.phone || "").includes(searchBar.value)
-      ),
-      filterType
-    );
-  });
-}
-
   // 🔹 Sessions list
+  
   const ul = document.createElement("ul");
   ul.className = "list-unstyled m-0";
-
   list.forEach((session) => {
     if (filterType === "unread" && session.status !== "unread") return;
     if (filterType === "unreplied" && session.status !== "unreplied") return;
     if (filterType === "group" && !session.group_id) return;
-
     const li = document.createElement("li");
 
     // avatar
