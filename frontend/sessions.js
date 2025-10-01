@@ -24,8 +24,7 @@ async function loadSessions() {
     if (currentTab === "group") {
       const groupId = document.getElementById ("groupSelect").value; url= `/sessions/group/${groupId}`; // FIXED: placeholder groupId
     }
-
-    const res = await axios.get(url, { withCredentials: true });
+      const res = await axios.get(url, { withCredentials: true });
     
 
     // FIXED: دعم صلاحية الوكيل (Agent)
@@ -34,7 +33,6 @@ async function loadSessions() {
     if (window.currentUser && window.currentUser.role === "agent") {
       filtered = sessions.filter((s) => s.agent_id === window.currentUser.id);
     }
-
     renderSessions(filtered);
   } catch (err) {
     console.error("Error loading sessions:", err);
