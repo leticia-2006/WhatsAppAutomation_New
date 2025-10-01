@@ -3,11 +3,6 @@ let sessions = [];
 let currentTab = "all";
 let currentSession = null;
 
-// ====== تحميل الجلسات عند بدء الصفحة ======
-document.addEventListener("DOMContentLoaded", () => {
-  loadSessions();
-});
-
 // ====== تغيير التبويبات ======
 const tabLinks = document.querySelectorAll(".tab-link");
 tabLinks.forEach((link) => {
