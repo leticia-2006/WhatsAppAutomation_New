@@ -405,7 +405,60 @@ function toggleDarkMode() {
     localStorage.setItem("theme", "light");
   }
 }
+async function transferSession() {
+  const agentId = prompt("🔄 Enter Agent ID to transfer:");
+  if (!agentId) return;
+await axios.post(`/sessions/transfer`, {
+    sessionId: selectedSessionId,
+    agentId
+  });
+alert("✅ Session transferred!");
+  hideContextMenu();
+}
+// إضافة Tag
+async function setTag() {
+  const tag = prompt("🏷️ Enter Tag:");
+  if (!tag) return;
 
+  await axios.post(`/clients/${selectedClientId}/tags`, { tag });
+  alert("✅ Tag added!");
+  hideContextMenu();
+}
+// إضافة Label
+async function setLabel() {
+  const label = prompt("📌 Enter Label:");
+  if (!label) return;
+
+  await axios.post(`/sessions/${selectedSessionId}/label`, { label });
+  alert("✅ Label set!");
+  hideContextMenu();
+}
+// تحديث Avatar
+async function refreshAvatar() {
+  await axios.post(`/clients/${selectedClientId}/refresh-avatar`);
+  alert("🔄 Avatar refreshed!");
+  hideContextMenu();
+}
+// Pin/Unpin
+async function pinSession() {
+  await axios.post(`/sessions/${selectedSessionId}/pin`);
+  alert("📌 Session pinned/unpinned!");
+  hideContextMenu();
+}
+// Mark Unread
+async function markUnread() {
+  await axios.post(`/sessions/${selectedSessionId}/unread`);
+  alert("📩 Session marked as unread!");
+  hideContextMenu();
+}
+// Block Customer
+async function blockCustomer() {
+  if (!confirm("🚫 Block this customer?")) return;
+
+  await axios.post(`/clients/${selectedClientId}/block`);
+  alert("🚫 Customer blocked!");
+  hideContextMenu();
+}
 // عند التحميل استرجاع الإعداد
 window.onload = () => {
   if (localStorage.getItem("theme") === "dark") {
@@ -417,7 +470,6 @@ function selectClient(sessionId, name, phone, tags) {
   document.getElementById("detailName").innerText = name;
   document.getElementById("detailPhone").innerText = phone;
   document.getElementById("detailTags").innerText = tags || "-";
-
-  // Load messages of this session
+// Load messages of this session
   loadMessages(sessionId);
 }
