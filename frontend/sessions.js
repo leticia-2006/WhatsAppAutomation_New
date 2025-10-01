@@ -317,6 +317,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 let selectedSession = null;
+let selectedSessionId = null;
+let selectedClientId = null;
 
 function showContextMenu(e, session) {
   e.preventDefault();
