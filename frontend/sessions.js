@@ -285,7 +285,7 @@ async function saveNoteDirect() {
   const noteText = textarea.value;
 
   try {
-    await axios.post("/sessions/add-note", { clientId: sessionId, note: noteText });
+    await axios.post("/sessions/add-note", { sessionId, note: noteText });
     console.log("Note saved!");
   } catch (err) {
     console.error("Error saving note:", err);
