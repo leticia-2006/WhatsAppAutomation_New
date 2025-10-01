@@ -1,18 +1,13 @@
-// numbers.js
-
-// FIXED: التأكد من تحميل الـ DOM قبل التنفيذ
 document.addEventListener("DOMContentLoaded", () => {
   loadNumbers();
 
   const addBtn = document.getElementById("addNumberBtn");
-  if (addBtn) {
-    addBtn.addEventListener("click", showAddNumberModal);
-  }
+  if (addBtn) addBtn.addEventListener("click", () => {
+    new bootstrap.Modal(document.getElementById("addNumberModal")).show();
+  });
 
   const searchInput = document.getElementById("search");
-  if (searchInput) {
-    searchInput.addEventListener("input", applyNumberFilter);
-  }
+  if (searchInput) searchInput.addEventListener("input", applyNumberFilter);
 });
 
 // ====== جلب الأرقام من السيرفر ======
@@ -35,17 +30,17 @@ function renderNumbers(numbers) {
   numbers.forEach((num) => {
     const tr = document.createElement("tr");
 
+    const statusClass =
+      num.status === "Active" ? "bg-success" :
+      num.status === "Blocked" ? "bg-secondary" : "bg-danger";
+
     tr.innerHTML = `
       <td>${num.id}</td>
       <td>${num.number}</td>
+      <td><span class="badge ${statusClass}">${num.status}</span></td>
+      <td>${num.assigned_agent_id || "-"}</td>
       <td>
-        <span class="badge ${num.status === "connected" ? "bg-success" : "bg-danger"}">
-          ${num.status}
-        </span>
-      </td>
-      <td>${num.agent || "-"}</td>
-      <td>
-        <button class="btn btn-sm btn-info" onclick="linkQR(${num.id})">
+        <button class="btn btn-sm btn-info" onclick="showQR(${num.id})">
           <i class="fas fa-qrcode"></i>
         </button>
         <button class="btn btn-sm btn-danger" onclick="deleteNumber(${num.id})">
@@ -68,43 +63,52 @@ function applyNumberFilter() {
   });
 }
 
-// ====== إظهار مودال إضافة رقم جديد ======
-function showAddNumberModal() {
-  const modal = new bootstrap.Modal(document.getElementById("addNumberModal"));
-  modal.show();
+// ====== إضافة رقم جديد ======
+async function saveNewNumber() {
+  const number = document.getElementById("newNumber").value.trim();
+  if (!number) return alert("Enter a number");
 
-  // FIXED: عرض QR جديد عند فتح المودال
-  document.getElementById("qr-loading").style.display = "block";
-  document.getElementById("qr-canvas").style.display = "none";
-
-  generateQR();
-}
-
-// ====== إنشاء QR وربطه ======
-async function generateQR() {
   try {
-    const res = await axios.post("/wa-numbers/generate-qr");
-    const qrData = res.data.qr;
+    const res = await axios.post("/wa-numbers", { number });
+    const id = res.data.id;
 
-    document.getElementById("qr-loading").style.display = "none";
-    const canvas = document.getElementById("qr-canvas");
-    canvas.style.display = "block";
+    bootstrap.Modal.getInstance(document.getElementById("addNumberModal")).hide();
 
-    await QRCode.toCanvas(canvas, qrData);
+    // مباشرة بعد الحفظ نعرض QR
+    showQR(id);
+
+    loadNumbers();
   } catch (err) {
-    console.error("Error generating QR:", err);
-    document.getElementById("qr-loading").textContent = "Error generating QR";
+    console.error("Error adding number:", err);
+    alert("Error adding number");
   }
 }
 
-// ====== ربط رقم عبر QR ======
-async function linkQR(id) {
+// ====== إظهار QR ======
+async function showQR(id) {
+  const modal = new bootstrap.Modal(document.getElementById("qrModal"));
+  modal.show();
+
+  document.getElementById("qr-loading").style.display = "block";
+  document.getElementById("qr-canvas").style.display = "none";
+
   try {
-    const res = await axios.post(`/wa-numbers/${id}/link`);
-    alert("Number linked successfully!");
-    loadNumbers(); // FIXED: إعادة تحميل الجدول بعد الربط
+    const res = await axios.get(`/wa-numbers/${id}/qr`);
+    const qrData = res.data.qr;
+
+    if (!qrData) {
+      document.getElementById("qr-loading").innerText = res.data.message || "No QR available";
+      return;
+    }
+
+    const canvas = document.getElementById("qr-canvas");
+    await QRCode.toCanvas(canvas, qrData);
+
+    document.getElementById("qr-loading").style.display = "none";
+    canvas.style.display = "block";
   } catch (err) {
-    console.error("Error linking number:", err);
+    console.error("Error showing QR:", err);
+    document.getElementById("qr-loading").innerText = "Error loading QR";
   }
 }
 
@@ -114,8 +118,9 @@ async function deleteNumber(id) {
 
   try {
     await axios.delete(`/wa-numbers/${id}`);
-    loadNumbers(); // FIXED: إعادة تحميل الجدول بعد الحذف
+    loadNumbers();
   } catch (err) {
     console.error("Error deleting number:", err);
+    alert("Error deleting number");
   }
 }
