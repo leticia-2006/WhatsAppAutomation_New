@@ -265,7 +265,7 @@ async function translateMessage(messageId) {
 // ====== ملاحظات ======
 async function loadNotes(sessionId) {
   try {
-    const res = await axios.get(`/sessions/${sessionId}/notes`, { withCredentials: true });
+    const res = await axios.get(`/sessions/${clientId}/notes`, { withCredentials: true });
     const textarea = document.getElementById("detail-notes");
     if (textarea) {
       // نفترض أن كل عميل له ملاحظة واحدة (آخر واحدة مثلاً)
@@ -285,7 +285,7 @@ async function saveNoteDirect() {
   const noteText = textarea.value;
 
   try {
-    await axios.post("/sessions/add-note", { sessionId, note: noteText });
+    await axios.post("/clients/${clientId}/add-note", {  note: noteText }, { withCredentials: true });
     console.log("Note saved!");
   } catch (err) {
     console.error("Error saving note:", err);
