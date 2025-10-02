@@ -67,7 +67,7 @@ async function createUser() {
         throw new Error("دور غير معروف");
     }
 
-    await axios.post(endpoint, { name, phone, role }, { withCredentials: true });
+    await axios.post(endpoint, { name, phone, role, password }, { withCredentials: true });
 
     alert("✅ User created!");
     bootstrap.Modal.getInstance(document.getElementById("addUserModal")).hide();
