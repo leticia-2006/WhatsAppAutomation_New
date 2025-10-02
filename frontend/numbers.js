@@ -127,7 +127,7 @@ async function saveNewNumber() {
     alert("Error adding number");
   }
 }
-}
+
 
 // ====== إظهار QR ======
 async function showQR(id) {
