@@ -11,7 +11,6 @@ async function loadUsers() {
         <td>${u.id}</td>
         <td>${u.name}</td>
         <td>${u.phone}</td>
-        <td>${u.password}</td>
         <td>${u.role}</td>
         <td>
           <button class="btn btn-sm btn-warning" onclick="editUser(${u.id})">Edit</button>
