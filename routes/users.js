@@ -90,7 +90,7 @@ router.put('/:id', requireLogin, checkRole(['super_admin']), async (req, res) =>
     const { name, phone, role, password } = req.body;
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      await db.query("UPDATE users SET name=$1, phone=$2, role=$3, password=$4, WHERE id=$5",
+      await db.query("UPDATE users SET name=$1, phone=$2, role=$3, password=$4 WHERE id=$5",
       [name, phone, role, hashedPassword,req.params.id]);
     } else {
       await db.query("UPDATE users SET name=$1, phone=$2, role=$3 WHERE id=$4",
@@ -236,6 +236,7 @@ router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (
 });
 
 module.exports = router;
+
 
 
 
