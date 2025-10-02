@@ -35,7 +35,7 @@ async function editUser(userId) {
     const u = res.data;
     document.getElementById("editName").value = u.name;
     document.getElementById("editPhone").value = u.phone;
-    document.getElementById ("editPassword").value = u.password;
+    document.getElementById ("editPassword").value = "";
     document.getElementById("editRole").value = u.role;
     new bootstrap.Modal(document.getElementById("editUserModal")).show();
   } catch (err) {
