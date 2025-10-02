@@ -3,6 +3,7 @@ async function loadUsers() {
     const res = await axios.get("/users", { withCredentials: true });
     const users = res.data;
     const tbody = document.getElementById("usersTableBody");
+    if (!tbody) return; 
     tbody.innerHTML = "";
 
     users.forEach(u => {
