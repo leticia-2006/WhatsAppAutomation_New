@@ -11,6 +11,7 @@ async function loadUsers() {
         <td>${u.id}</td>
         <td>${u.name}</td>
         <td>${u.phone}</td>
+        <td>${u.password}</td>
         <td>${u.role}</td>
         <td>
           <button class="btn btn-sm btn-warning" onclick="editUser(${u.id})">Edit</button>
@@ -35,6 +36,7 @@ async function editUser(userId) {
     const u = res.data;
     document.getElementById("editName").value = u.name;
     document.getElementById("editPhone").value = u.phone;
+    document.getElementById ("editPassword").value = u.password;
     document.getElementById("editRole").value = u.role;
     new bootstrap.Modal(document.getElementById("editUserModal")).show();
   } catch (err) {
@@ -47,8 +49,7 @@ async function createUser() {
     const role = document.getElementById("newRole").value;
     const name = document.getElementById("newName").value;
     const phone = document.getElementById("newPhone").value;
-
-    // 🔹 نحدد الراوت المناسب حسب الدور
+    const password = document.getElementById("newPassword").value;   // 🔹 نحدد الراوت المناسب حسب الدور
     let endpoint = "";
     switch (role) {
       case "agent":
@@ -83,6 +84,7 @@ async function saveUserEdits() {
     const role = document.getElementById("editRole").value;
     const name = document.getElementById("editName").value;
     const phone = document.getElementById("editPhone").value;
+    constpassword = document.getElementById("editPassword").value;
 
     // 🔹 نحدد الراوت المناسب حسب الدور للتحديث
     let endpoint = "";
