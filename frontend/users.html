@@ -105,6 +105,10 @@ const user = JSON.parse(localStorage.getItem("user"));
           <input type="text" id="newPhone" class="form-control">
         </div>
         <div class="form-group">
+         <label>Password</label>
+         <input type="password" id="newPassword" class="form-control">
+        </div>
+        <div class="form-group">
           <label>Role</label>
           <select id="newRole" class="form-control">
             <option value="super_admin">Super Admin</option>
@@ -112,10 +116,6 @@ const user = JSON.parse(localStorage.getItem("user"));
             <option value="admin">Admin</option>
             <option value="agent">Agent</option>
           </select>
-        </div>
-        <div class="form-group">
-         <label>Password</label>
-         <input type="password" id="newPassword" class="form-control">
         </div>
       </div>
       <div class="modal-footer">
