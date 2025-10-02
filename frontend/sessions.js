@@ -263,14 +263,13 @@ async function translateMessage(messageId) {
 }
 
 // ====== ملاحظات ======
-async function loadNotes(sessionId) {
+async function loadNotes(clientId) {
   try {
-    const res = await axios.get(`/sessions/${clientId}/notes`, { withCredentials: true });
+    const res = await axios.get(`/clients/${clientId}/notes`, { withCredentials: true });
     const textarea = document.getElementById("detail-notes");
     if (textarea) {
-      // نفترض أن كل عميل له ملاحظة واحدة (آخر واحدة مثلاً)
       textarea.value = res.data.length > 0 ? res.data[res.data.length - 1].note : "";
-      textarea.dataset.sessionId = sessionId; // نخزن ID لتحديثه لاحقًا
+      textarea.dataset.clientId = clientId;
     }
   } catch (err) {
     console.error("Error loading notes:", err);
@@ -281,25 +280,23 @@ async function saveNoteDirect() {
   const textarea = document.getElementById("detail-notes");
   if (!textarea) return;
 
-  const sessionId = textarea.dataset.sessionId;
+  const clientId = textarea.dataset.clientId;
   const noteText = textarea.value;
 
   try {
-    await axios.post("/sessions/${clientId}/add-note", {  note: noteText }, { withCredentials: true });
-    console.log("Note saved!");
+    await axios.post(`/clients/add-note`, { clientId, note: noteText }, { withCredentials: true });
+    console.log("✅ Note saved!");
   } catch (err) {
     console.error("Error saving note:", err);
   }
 }
 
-// ربط الحفظ عند فقدان التركيز (blur)
 document.addEventListener("DOMContentLoaded", () => {
   const textarea = document.getElementById("detail-notes");
   if (textarea) {
     textarea.addEventListener("blur", saveNoteDirect);
   }
-});
-document.addEventListener("DOMContentLoaded", () => {
+
   const saveBtn = document.getElementById("save-notes");
   if (saveBtn) {
     saveBtn.addEventListener("click", saveNoteDirect);
