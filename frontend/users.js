@@ -83,7 +83,7 @@ async function saveUserEdits() {
     const role = document.getElementById("editRole").value;
     const name = document.getElementById("editName").value;
     const phone = document.getElementById("editPhone").value;
-    constpassword = document.getElementById("editPassword").value;
+    const password = document.getElementById("editPassword").value;
 
     // 🔹 نحدد الراوت المناسب حسب الدور للتحديث
     let endpoint = "";
