@@ -177,7 +177,7 @@ function getQRForNumber(numberId) {
   return qrCodes[numberId] || null;
 }
 
-async function sendMessageToNumber(numberId, jid, text) {
+async function sendMessageToNumber(numberId, jid, content) {
   const sock = clients[numberId];
   if (!sock) throw new Error("Client not initialized");
 
