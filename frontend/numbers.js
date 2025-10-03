@@ -1,4 +1,3 @@
-// numbers.js
 async function initNumbersPage() {
   // الآن numbers-section موجود في DOM
   const numbersSection = document.getElementById("numbers-section");
@@ -15,7 +14,9 @@ async function initNumbersPage() {
       modal.show();
     });
   }
-
+  // ربط زر الحفظ في المودال
+  const saveBtn = document.querySelector("#addNumberModal .btn-success");
+  if (saveBtn) saveBtn.addEventListener("click", saveNewNumber);
   // ربط البحث للتصفية
   const searchInput = document.getElementById("search");
   if (searchInput) {
