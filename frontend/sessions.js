@@ -134,6 +134,17 @@ function openChat(session) {
   }`;
 
   loadMessages(session.id);
+   // ✅ ربط زر الإرسال
+  const sendBtn = document.getElementById("send-btn");
+  if (sendBtn) {
+    sendBtn.onclick = () => {
+      if (selectedSessionId) {
+        sendMessage(selectedSessionId);
+      } else {
+        alert("⚠️ اختر محادثة أولاً");
+      }
+    };
+  }
 }
 
 // ====== تحميل الرسائل ======
