@@ -18,7 +18,11 @@ async function loadSessions() {
   try {
     let url = `/sessions/all`;
     if (currentTab === "unread") { url = `/sessions/unread`;
-    } else if (currentTab === "groups") { url= `/sessions/group`}; // FIXED: placeholder groupId
+    } else if (currentTab === "groups") { 
+    const groupId = selectedGroupId || "all"; // أو أي قيمة افتراضية
+    url= `/sessions/group/${groupId}`;
+    } 
+    // FIXED: placeholder groupId
     const res = await axios.get(url, { withCredentials: true });
     
     // FIXED: دعم صلاحية الوكيل (Agent)
