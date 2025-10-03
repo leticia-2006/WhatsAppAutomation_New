@@ -69,6 +69,34 @@ router.post("/:messageId/translate", requireLogin, async (req, res) => {
   }
 });
 
+// إرسال ملفات
+router.post("/:sessionId/sendMedia", requireLogin, async (req, res) => {
+  try {
+    const sessionRes = await db.query("SELECT c.phone, c.wa_number_id FROM sessions s JOIN clients c ON c.id = s.client_id WHERE s.id=$1", [req.params.sessionId]);
+    if (sessionRes.rowCount === 0) return res.status(404).json({ error: "Session not found" });
 
+    const clientPhone = sessionRes.rows[0].phone;
+    const waNumberId = sessionRes.rows[0].wa_number_id;
+
+    // multer أو أي مكتبة لتحميل الملفات
+    const file = req.files.file; // assuming you use express-fileupload
+    const mediaType = req.body.mediaType;
+
+    const filePath = `/uploads/${file.name}`;
+    await file.mv(`./uploads/${file.name}`);
+
+    await sendMessageToNumber(waNumberId, clientPhone, { url: filePath, type: mediaType });
+
+    await db.query(
+      "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, created_at) VALUES ($1, $2, $3, $4, $5,NOW())",
+      [req.params.sessionId, "agent", null, mediaType, filePath]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to send media" });
+  }
+});
 
 module.exports = router;
