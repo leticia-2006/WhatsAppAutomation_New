@@ -1,15 +1,11 @@
-function initNumbersPage() {
+// numbers.js
+async function initNumbersPage() {
+  // الآن numbers-section موجود في DOM
   const numbersSection = document.getElementById("numbers-section");
   if (!numbersSection) return;
-  numbersSection.style.display = "block";
-  const addBtn = document.getElementById("addNumberBtn");
-  if (addBtn) addBtn.addEventListener("click", () => {
-    new bootstrap.Modal(document.getElementById("addNumberModal")).show();
-  });
 
-  const searchInput = document.getElementById("search");
-  if (searchInput) searchInput.addEventListener("input", applyNumberFilter);
-  loadNumbers();
+  // الكود الخاص بـ loadNumbers أو أي شيء تفعله مع Numbers
+  loadNumbers(); // افترض أن لديك دالة loadNumbers
 }
 
 // ====== جلب الأرقام من السيرفر ======
