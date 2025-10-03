@@ -25,7 +25,8 @@ router.get("/:sessionId", requireLogin, async (req, res) => {
 // إرسال رسالة
 // حفظ الرسالة بعد الإرسال
 router.post("/:sessionId/send", requireLogin, async (req, res) => {
-  const { text, mediaUrl, mediaType } = req.body;
+  let { text, mediaUrl, mediaType } = req.body;
+if (!mediaType) mediaType = text ? "text" : "unknown";
   try {
    const sessionRes = await db.query("SELECT c.phone, c.wa_number_id FROM sessions s JOIN clients c ON c.id = s.client_id WHERE s.id=$1", [req.params.sessionId]);
 if (sessionRes.rowCount === 0) return res.status(404).json({ error: "Session not found" });
