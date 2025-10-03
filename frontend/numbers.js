@@ -182,4 +182,3 @@ async function deleteNumber(id) {
     alert("Error deleting number");
   }
 }
-document.addEventListener("DOMContentLoaded", initNumbersPage);
