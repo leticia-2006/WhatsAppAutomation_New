@@ -17,25 +17,29 @@ async function initClient(numberId) {
   const sock = makeWASocket({ version, auth: state });
 
   sock.ev.on("connection.update", async (update) => {
-  const { qr } = update;
+  const { qr, connection, lastDisconnect } = update;
+
   if (qr) {
     qrCodes[numberId] = qr; // خزّن QR
     console.log(`📌 QR ready for number ${numberId}`);
   }
-   const { connection, lastDisconnect } = update;
-
-  if (connection === "close") {
+ if (connection === "open") {
+    console.log(`✅ Number ${numberId} connected`);
+    // تحديث الحالة في DB
+    try {
+      await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);
+    } catch (err) {
+      console.error("Error updating number status:", err);
+    }
+  }
+ if (connection === "close") {
     const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-
     if (shouldReconnect) {
       console.log("🔄 Reconnecting...");
-      if (clients[numberId]?.ws) {
-        clients[numberId].ws.close();
-    }
+      if (clients[numberId]?.ws) clients[numberId].ws.close();
       delete clients[numberId];
-      }
       setTimeout(() => initClient(numberId), 5000);
-    
+    }
   }
 });
 
