@@ -41,11 +41,6 @@ function renderNumbers(numbers) {
       status === "Active" ? "bg-success" :
       status === "Blocked" ? "bg-secondary" : "bg-danger";
     const tr = document.createElement("tr");
-
-    const statusClass =
-      num.status === "Active" ? "bg-success" :
-      num.status === "Blocked" ? "bg-secondary" : "bg-danger";
-
     tr.innerHTML = `
       <td>${id}</td>
       <td>${number}</td>
