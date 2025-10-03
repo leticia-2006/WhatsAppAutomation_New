@@ -226,9 +226,18 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
   }
 });
 
+router.post("/:id/pin", requireLogin, async (req, res) => {
+  await db.query("UPDATE sessions SET pinned=true WHERE id=$1", [req.params.id]);
+  res.json({ success: true });
+});
 
+router.post("/:id/unpin", requireLogin, async (req, res) => {
+  await db.query("UPDATE sessions SET pinned=false WHERE id=$1", [req.params.id]);
+  res.json({ success: true });
+});
 
 module.exports = router;
+
 
 
 
