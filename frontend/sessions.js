@@ -252,7 +252,7 @@ async function sendMessage(sessionId) {
 
     
 // ====== ترجمة رسالة ======
-async function translateMessage(messageId) {
+window.translateMessage = async function(messageId) {
   try {
     const res = await axios.post(
       `/messages/${messageId}/translate`,
