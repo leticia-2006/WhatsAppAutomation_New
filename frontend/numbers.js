@@ -18,7 +18,16 @@ async function loadNumbers() {
     const res = await axios.get("/wa-numbers");
     renderNumbers(res.data);
   } catch (err) {
-    console.error("Error in loadNumbers():", err.stack);
+    if (err.response) {
+      // الخطأ من السيرفر (status, data)
+      console.error("Server responded with error:", err.response.status, err.response.data);
+    } else if (err.request) {
+      // لم يصل الرد من السيرفر
+      console.error("No response received:", err.request);
+    } else {
+      // خطأ في الجافاسكربت نفسه
+      console.error("Error setting up request:", err.message, err.stack);
+    }
   }
 }
 
