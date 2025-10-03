@@ -13,6 +13,7 @@ sidebarLinks.forEach((link) => {
   });
 });
 
+let selectedGroupId = "all"; // أو قيمة افتراضية مناسبة
 // ====== تحميل الجلسات من API ======
 async function loadSessions() {
   try {
