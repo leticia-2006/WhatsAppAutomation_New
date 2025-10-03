@@ -25,8 +25,7 @@ router.get("/:sessionId", requireLogin, async (req, res) => {
 // إرسال رسالة
 // حفظ الرسالة بعد الإرسال
 router.post("/:sessionId/send", requireLogin, async (req, res) => {
-  let { text, mediaUrl, mediaType } = req.body;
-if (!mediaType) mediaType = text ? "text" : "unknown";
+  const { content, mediaUrl, mediaType } = req.body;
   try {
    const sessionRes = await db.query("SELECT c.phone, c.wa_number_id FROM sessions s JOIN clients c ON c.id = s.client_id WHERE s.id=$1", [req.params.sessionId]);
 if (sessionRes.rowCount === 0) return res.status(404).json({ error: "Session not found" });
@@ -35,8 +34,8 @@ const clientPhone = sessionRes.rows[0].phone;
     const waNumberId = sessionRes.rows[0].wa_number_id;
 
 // إرسال للواتساب
-    if (text) {
-      await sendMessageToNumber(waNumberId, clientPhone, text);
+    if (content) {
+      await sendMessageToNumber(waNumberId, clientPhone, content);
     } else if (mediaUrl) {
       await sendMessageToNumber(waNumberId, clientPhone, { url: mediaUrl, type: mediaType });
     }
