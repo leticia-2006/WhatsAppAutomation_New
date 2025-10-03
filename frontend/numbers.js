@@ -47,10 +47,10 @@ function renderNumbers(numbers) {
       <td><span class="badge ${statusClass}">${status}</span></td>
       <td>${assigned}</td>
       <td>
-        <button class="btn btn-sm btn-info" onclick="showQR(${id})">
+        <button class="btn btn-sm btn-info" onclick="showQR('${id}')">
           <i class="fas fa-qrcode"></i>
         </button>
-        <button class="btn btn-sm btn-danger" onclick="deleteNumber(${id})">
+        <button class="btn btn-sm btn-danger" onclick="deleteNumber('${id}')">
           <i class="fas fa-trash"></i>
         </button>
       </td>
