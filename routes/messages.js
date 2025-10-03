@@ -63,7 +63,9 @@ router.post("/:messageId/translate", requireLogin, async (req, res) => {
 
   const original = msgRes.rows[0].content;
   try {
-    const result = await translate(original, { to: lang });
+  const sessionRes = await db.query("SELECT lang FROM sessions s JOIN messages m ON m.session_id = s.id WHERE m.id=$1", [req.params.messageId]);
+  const fromLang = sessionRes.rows[0]?.lang || "auto";
+  const result = await translate(original, { from: fromLang, to: lang });
     await db.query("UPDATE messages SET translated_content=$1 WHERE id=$2", [result.text, req.params.messageId]);
     res.json({ translated: result.text });
   } catch (err) {
