@@ -211,38 +211,41 @@ async function sendMessage(sessionId) {
   const textInput = document.getElementById("msgInput");
   const fileInput = document.getElementById("mediaInput");
 
-  let payload = {};
-
   try {
-    // لو في ملف مرفق
+    // إذا المستخدم أرفق ملف
     if (fileInput.files.length > 0) {
       const file = fileInput.files[0];
 
-      // استخدام FormData عشان ترفع ميديا حقيقي للسيرفر
+      // إنشاء FormData لإرسال الملف
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("mediaType", file.type.split("/")[0]);
+      formData.append("mediaType", file.type.split("/")[0]); // image/video/audio
 
       await axios.post(`/messages/${sessionId}/sendMedia`, formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
-    } else {
-      // إرسال رسالة نصية فقط
-      const text = textInput.value.trim();
-      if (!text) return; // ما ترسلش فاضي
 
-      payload = { text };
+      // مسح الملف بعد الإرسال
+      fileInput.value = "";
+    } else {
+      // إرسال رسالة نصية
+      const text = textInput.value.trim();
+      if (!text) return; // لا ترسل رسالة فارغة
+
+      const payload = { text };
 
       await axios.post(`/messages/${sessionId}/send`, payload, {
         withCredentials: true,
       });
 
-      textInput.value = ""; // مسح البوكس بعد الإرسال
+      // مسح مربع النص بعد الإرسال
+      textInput.value = "";
     }
 
     // تحديث المحادثة بعد الإرسال
     loadMessages(sessionId);
+
   } catch (err) {
     console.error("Error sending message", err);
     alert("Failed to send message");
