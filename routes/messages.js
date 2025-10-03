@@ -40,6 +40,8 @@ const clientPhone = sessionRes.rows[0].phone;
       await sendMessageToNumber(waNumberId, clientPhone, { url: mediaUrl, type: mediaType });
     }
 
+   const session = await db.query("SELECT * FROM sessions WHERE id=$1", [req.params.sessionId]);
+  if (!session.rows.length) return res.status(404).json({ error: "Session not found" });
     // حفظ في DB
     await db.query(
       "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, created_at) VALUES ($1, $2, $3, $4, $5,NOW())",
