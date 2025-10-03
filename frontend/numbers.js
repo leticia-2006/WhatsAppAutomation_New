@@ -3,6 +3,7 @@ async function initNumbersPage() {
   // الآن numbers-section موجود في DOM
   const numbersSection = document.getElementById("numbers-section");
   if (!numbersSection) return;
+  numbersSection.style.display = "block"; // إظهار القسم
 
   // الكود الخاص بـ loadNumbers أو أي شيء تفعله مع Numbers
   loadNumbers(); // افترض أن لديك دالة loadNumbers
