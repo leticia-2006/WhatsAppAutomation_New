@@ -244,7 +244,7 @@ async function sendMessage(sessionId) {
       const text = textInput.value.trim();
       if (!text) return; // لا ترسل رسالة فارغة
 
-      const payload = { text, mediaType: "text", mediaUrl: null };
+      const payload = { content : text };
 
       await axios.post(`/messages/${sessionId}/send`, payload, {
         withCredentials: true,
