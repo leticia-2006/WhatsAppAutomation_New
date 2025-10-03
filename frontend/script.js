@@ -57,9 +57,10 @@ function closeQRModal() {
 
 // جلب بيانات المستخدم عند تحميل الصفحة
 async function fetchUser() {
-    try {
-      const res = await axios.get('/users/me', { withCredentials: true });
-    window.currentUser= res.data; user = res.data;
+  try {
+    const res = await axios.get('/users/me', { withCredentials: true });
+    window.currentUser = res.data;
+    user = res.data;
     console.log("currentUser:", user);
 
     // سوبر أدمن → إظهار زر ربط واتساب
@@ -71,16 +72,27 @@ async function fetchUser() {
     // تحميل الجلسات
     loadSessions();
 
-    // تحميل أرقام الواتساب إذا سوبر أدمن
+    // تحميل الأرقام إذا سوبر أدمن
     if (user.role === 'super_admin' && typeof loadNumbers === "function") {
-      document.getElementById("numbers-section").style.display = "block";
+      const numbersSection = document.getElementById("numbers-section");
+      if (numbersSection) numbersSection.style.display = "block";
       loadNumbers();
     }
 
   } catch (err) {
-    console.error("Not logged in", err);
-    window.location.href = 'index.html';
-   }
+    console.error("Error fetching user:", err);
+
+    // بدل redirect، نعرض رسالة خطأ في الصفحة
+    const main = document.getElementById("main-content");
+    if (main) {
+      main.innerHTML = `
+        <div class="alert alert-danger mt-4">
+          ⚠️ You are not logged in or there was an error fetching your session.<br>
+          Please check your connection or login again.
+        </div>
+      `;
+    }
+  }
 }
 function applyFilters() {
   const search = document.getElementById("search-input").value.toLowerCase();
@@ -123,6 +135,7 @@ document.addEventListener("click", async (e) => {
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
