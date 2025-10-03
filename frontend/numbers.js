@@ -14,19 +14,20 @@ function initNumbersPage() {
 
 // ====== جلب الأرقام من السيرفر ======
 async function loadNumbers() {
+  console.log("📌 Calling /wa-numbers API...");
   try {
     const res = await axios.get("/wa-numbers");
+    console.log("✅ API responded:", res.data);
     renderNumbers(res.data);
   } catch (err) {
+    console.error("❌ Axios error:");
     if (err.response) {
-      // الخطأ من السيرفر (status, data)
-      console.error("Server responded with error:", err.response.status, err.response.data);
+      console.error("Status:", err.response.status);
+      console.error("Data:", err.response.data);
     } else if (err.request) {
-      // لم يصل الرد من السيرفر
       console.error("No response received:", err.request);
     } else {
-      // خطأ في الجافاسكربت نفسه
-      console.error("Error setting up request:", err.message, err.stack);
+      console.error("Error message:", err.message);
     }
   }
 }
