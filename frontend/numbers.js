@@ -1,3 +1,17 @@
+function initNumbersPage() {
+  const numbersSection = document.getElementById("numbers-section");
+  if (!numbersSection) return;
+  numbersSection.style.display = "block";
+  loadNumbers();
+
+  const addBtn = document.getElementById("addNumberBtn");
+  if (addBtn) addBtn.addEventListener("click", () => {
+    new bootstrap.Modal(document.getElementById("addNumberModal")).show();
+  });
+
+  const searchInput = document.getElementById("search");
+  if (searchInput) searchInput.addEventListener("input", applyNumberFilter);
+}
 document.addEventListener("DOMContentLoaded", () => {
   loadNumbers();
 
