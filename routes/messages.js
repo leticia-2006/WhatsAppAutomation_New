@@ -45,7 +45,7 @@ const clientPhone = sessionRes.rows[0].phone;
     // حفظ في DB
     await db.query(
       "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, created_at) VALUES ($1, $2, $3, $4, $5,NOW())",
-      [req.params.sessionId, "agent", text || null, mediaType || "text", mediaUrl || null]
+      [req.params.sessionId, "agent", content || null, mediaType || "text", mediaUrl || null]
     );
 
     res.json({ success: true });
