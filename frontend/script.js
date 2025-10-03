@@ -73,11 +73,11 @@ async function fetchUser() {
     loadSessions();
 
     // تحميل الأرقام إذا سوبر أدمن
-    if (user.role === 'super_admin' && typeof loadNumbers === "function") {
+ /*   if (user.role === 'super_admin' && typeof loadNumbers === "function") {
       const numbersSection = document.getElementById("numbers-section");
       if (numbersSection) numbersSection.style.display = "block";
       loadNumbers();
-    }
+    }*/
 
   } catch (err) {
     console.error("Error fetching user:", err);
@@ -135,6 +135,7 @@ document.addEventListener("click", async (e) => {
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
