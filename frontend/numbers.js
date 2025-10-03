@@ -38,9 +38,11 @@ async function loadNumbers() {
 function renderNumbers(numbers) {
   const tbody = document.querySelector("#numbersTable tbody");
   if (!tbody) return;
-
+  if (!Array.isArray(numbers) || numbers.length === 0) {
+  tbody.innerHTML = "<tr><td colspan='5'>No numbers found</td></tr>";
+  return;
+ }
   tbody.innerHTML = "";
-
   numbers.forEach((num) => {
     const tr = document.createElement("tr");
 
