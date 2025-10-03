@@ -216,7 +216,18 @@ async function sendMessageToNumber(numberId, jid, text) {
   }
 
   // 4️⃣ أرسل الرسالة للواتساب
-  await sock.sendMessage(finalJid, { text });
+  if (typeof content === "string") {
+  await sock.sendMessage(finalJid, { text: content });
+} else if (content.url && content.type) {
+  const mediaBuffer = fs.readFileSync(path.join(__dirname, "..", content.url));
+  if (content.type === "image") {
+    await sock.sendMessage(finalJid, { image: mediaBuffer });
+  } else if (content.type === "video") {
+    await sock.sendMessage(finalJid, { video: mediaBuffer });
+  } else if (content.type === "audio") {
+    await sock.sendMessage(finalJid, { audio: mediaBuffer });
+  }
+  }
 
   // 5️⃣ خزّن الرسالة في DB
   const insertRes = await db.query(
