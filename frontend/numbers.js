@@ -7,6 +7,20 @@ async function initNumbersPage() {
 
   // الكود الخاص بـ loadNumbers أو أي شيء تفعله مع Numbers
   loadNumbers(); // افترض أن لديك دالة loadNumbers
+
+  const addBtn = document.getElementById("addNumberBtn");
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      const modal = new bootstrap.Modal(document.getElementById("addNumberModal"));
+      modal.show();
+    });
+  }
+
+  // ربط البحث للتصفية
+  const searchInput = document.getElementById("search");
+  if (searchInput) {
+    searchInput.addEventListener("input", applyNumberFilter);
+  }
 }
 
 // ====== جلب الأرقام من السيرفر ======
