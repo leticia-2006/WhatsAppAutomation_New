@@ -69,13 +69,16 @@ function renderNumbers(numbers) {
       <td><span class="badge ${statusClass}">${status}</span></td>
       <td>${assigned}</td>
       <td>
-        <button class="btn btn-sm btn-info" onclick="showQR('${id}')">
-          <i class="fas fa-qrcode"></i>
-        </button>
-        <button class="btn btn-sm btn-danger" onclick="deleteNumber('${id}')">
-          <i class="fas fa-trash"></i>
-        </button>
-      </td>
+  <button class="btn btn-sm btn-info" onclick="showQR('${id}')">
+    <i class="fas fa-qrcode"></i>
+  </button>
+  ${assigned ? `<button class="btn btn-sm btn-warning" onclick="openTransferModal('${id}')">
+    <i class="fas fa-exchange-alt"></i>
+  </button>` : ""}
+  <button class="btn btn-sm btn-danger" onclick="deleteNumber('${id}')">
+    <i class="fas fa-trash"></i>
+  </button>
+</td>
     `;
     tbody.appendChild(tr);
   });
