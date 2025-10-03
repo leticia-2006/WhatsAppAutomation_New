@@ -2,8 +2,6 @@ function initNumbersPage() {
   const numbersSection = document.getElementById("numbers-section");
   if (!numbersSection) return;
   numbersSection.style.display = "block";
-  loadNumbers();
-
   const addBtn = document.getElementById("addNumberBtn");
   if (addBtn) addBtn.addEventListener("click", () => {
     new bootstrap.Modal(document.getElementById("addNumberModal")).show();
@@ -11,18 +9,8 @@ function initNumbersPage() {
 
   const searchInput = document.getElementById("search");
   if (searchInput) searchInput.addEventListener("input", applyNumberFilter);
+  loadNumbers();
 }
-document.addEventListener("DOMContentLoaded", () => {
-  loadNumbers();
-
-  const addBtn = document.getElementById("addNumberBtn");
-  if (addBtn) addBtn.addEventListener("click", () => {
-    new bootstrap.Modal(document.getElementById("addNumberModal")).show();
-  });
-
-  const searchInput = document.getElementById("search");
-  if (searchInput) searchInput.addEventListener("input", applyNumberFilter);
-});
 
 // ====== جلب الأرقام من السيرفر ======
 async function loadNumbers() {
@@ -44,6 +32,14 @@ function renderNumbers(numbers) {
  }
   tbody.innerHTML = "";
   numbers.forEach((num) => {
+    const id = num.id ?? "-";
+    const number = num.number ?? "-";
+    const status = num.status ?? "Unknown";
+    const assigned = num.assigned_agent_id ?? "-";
+
+    const statusClass =
+      status === "Active" ? "bg-success" :
+      status === "Blocked" ? "bg-secondary" : "bg-danger";
     const tr = document.createElement("tr");
 
     const statusClass =
@@ -51,15 +47,15 @@ function renderNumbers(numbers) {
       num.status === "Blocked" ? "bg-secondary" : "bg-danger";
 
     tr.innerHTML = `
-      <td>${num.id}</td>
-      <td>${num.number}</td>
-      <td><span class="badge ${statusClass}">${num.status}</span></td>
-      <td>${num.assigned_agent_id || "-"}</td>
+      <td>${id}</td>
+      <td>${number}</td>
+      <td><span class="badge ${statusClass}">${status}</span></td>
+      <td>${assigned}</td>
       <td>
-        <button class="btn btn-sm btn-info" onclick="showQR(${num.id})">
+        <button class="btn btn-sm btn-info" onclick="showQR(${id})">
           <i class="fas fa-qrcode"></i>
         </button>
-        <button class="btn btn-sm btn-danger" onclick="deleteNumber(${num.id})">
+        <button class="btn btn-sm btn-danger" onclick="deleteNumber(${id})">
           <i class="fas fa-trash"></i>
         </button>
       </td>
