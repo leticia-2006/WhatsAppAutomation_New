@@ -111,16 +111,20 @@ router.get("/:id/qr", requireLogin, async (req, res) => {
       return res.status(400).json({ error: "Invalid number id" });
     }
 
-    const qr = getQRForNumber(numberId);
-    console.log("API /qr called for:", numberId, "result:", qr ? "FOUND" : "NULL");
+    let qr;
+try {
+  qr = getQRForNumber(numberId);
+} catch (e) {
+  console.error("Error generating QR:", e);
+  return res.status(500).json({ qr: null, message: "Error generating QR" });
+}
 
-    if (!qr) {
-      return res.json({
-        qr: null,
-        message: "QR expired or client already connected"
-      });
-    }
-    res.json({ qr });
+console.log("API /qr called for:", numberId, "result:", qr ? "FOUND" : "NULL");
+
+res.json({
+  qr: qr || null,
+  message: qr ? "QR ready" : "QR expired or client already connected"
+});
   } catch (err) {
     console.error("Error fetching QR:", err);
     res.status(500).json({ error: "Server error" });
