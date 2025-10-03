@@ -18,7 +18,7 @@ async function loadNumbers() {
     const res = await axios.get("/wa-numbers");
     renderNumbers(res.data);
   } catch (err) {
-    console.error("Error loading numbers:", err);
+    console.error("Error in loadNumbers():", err.stack);
   }
 }
 
@@ -78,7 +78,7 @@ async function openTransferModal(id) {
 
     new bootstrap.Modal(document.getElementById("transferModal")).show();
   } catch (err) {
-    console.error("Error loading agents:", err);
+    console.error("Error in openTransferModal():", err.stack);
     alert("Error loading agents");
   }
 }
@@ -95,7 +95,7 @@ async function confirmTransfer() {
     bootstrap.Modal.getInstance(document.getElementById("transferModal")).hide();
     loadNumbers();
   } catch (err) {
-    console.error("Error transferring number:", err);
+    console.error("Error in confirmTransfer():", err.stack);
     alert("Error transferring number");
   }
 }
@@ -130,7 +130,7 @@ async function saveNewNumber() {
 
     loadNumbers();
   } catch (err) {
-    console.error("Error adding number:", err);
+    console.error("Error in saveNewNumber():", err.stack);
     alert("Error adding number");
   }
 }
@@ -159,7 +159,7 @@ async function showQR(id) {
     document.getElementById("qr-loading").style.display = "none";
     canvas.style.display = "block";
   } catch (err) {
-    console.error("Error showing QR:", err);
+    console.error("Error in showQR():", err.stack);
     document.getElementById("qr-loading").innerText = "Error loading QR";
   }
 }
@@ -172,7 +172,7 @@ async function deleteNumber(id) {
     await axios.delete(`/wa-numbers/${id}`);
     loadNumbers();
   } catch (err) {
-    console.error("Error deleting number:", err);
+    console.error("Error in DeleteNumber():", err.stack);
     alert("Error deleting number");
   }
 }
