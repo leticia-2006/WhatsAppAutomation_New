@@ -172,7 +172,7 @@ async function loadMessages(sessionId) {
       });
 
       const div = `
-        <div class="message ${msg.sender_type === "client" ? "client" : "agent"}" ${msg.is_deleted ? "deleted" : ""}" data-id="${msg.id}">
+        <div class="message ${msg.sender_type === "client" ? "client" : "agent"} ${msg.is_deleted ? "deleted" : ""}" data-id="${msg.id}">
          <img src="${msg.sender_avatar || "/default-avatar.png"}"
                style="width:28px; height:28px; border-radius:50%; vertical-align:middle;">
           <div class="bubble">
