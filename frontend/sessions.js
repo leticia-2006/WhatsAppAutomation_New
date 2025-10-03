@@ -4,12 +4,14 @@ let currentTab = "all";
 let currentSession = null;
 
 // ====== تغيير التبويبات ======
-const sidebarLinks = document.querySelectorAll(".sidebar-menu a");
-sidebarLinks.forEach((link) => {
-  link.addEventListener("click", (e) => {
-    e.preventDefault();
-    currentTab = link.dataset.section;
-  loadSessions();
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebarLinks = document.querySelectorAll(".sidebar-menu a");
+  sidebarLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      currentTab = link.dataset.section;
+      loadSessions();
+    });
   });
 });
 
