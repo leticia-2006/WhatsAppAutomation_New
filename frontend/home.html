@@ -31,8 +31,8 @@
           <div class="msg-content">
             <div class="meta" >User Name, 11.24 AM</div>
           <div class="bubble">Hello there!</div>
-          <button class="translate-btn">Translate</button>
-          <em class="translated-text">Hola!</em>
+          <button class="translate-btn" onclick="translateMessage(this)">Translate</button>
+          <em class="translated-text" style="display:none"></em>
         </div>
         </div>
       </div>
@@ -50,8 +50,8 @@
   <!-- صورة واسم -->
   <div class="profile">
     <img src="assets/avatar.png" alt="Client Avatar" class="avatar">
-    <h3 id="detailName">Client Name</h3>
-    <p id="detailPhone" class="phone">+213796984727</p>
+    <h3 id="detailName"></h3>
+    <p id="detailPhone" class="phone"></p>
   </div>
 
   <!-- البطاقات -->
@@ -68,10 +68,7 @@
       <i class="fa-solid fa-tags"></i>
       <div>
         <span class="label">Tags</span>
-        <div id="detailTags" class="tags">
-          <span class="tag">VIP</span>
-          <span class="tag">New</span>
-        </div>
+        <div id="detailTags" class="tags"></div>
       </div>
     </div>
   </div>
