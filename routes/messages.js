@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { sendMessageToNumber } = require("../waClient");
+const { sendMessageToNumber, clients } = require("../waClient");
 const translate = require("@vitalets/google-translate-api");
 const db = require("../db");
 const { requireLogin } = require("../middleware/auth");
