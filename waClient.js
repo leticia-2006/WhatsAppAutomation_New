@@ -177,6 +177,9 @@ function getQRForNumber(numberId) {
   return qrCodes[numberId] || null;
 }
 
+if (!waClient.info) {
+    return res.status(500).json({ error: "WhatsApp client not initialized yet" });
+}
 async function sendMessageToNumber(numberId, jid, content) {
   const sock = clients[numberId];
   if (!sock) throw new Error("Client not initialized");
