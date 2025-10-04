@@ -269,4 +269,4 @@ async function reconnectAllActive() {
 }
 
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive };
-});
+
