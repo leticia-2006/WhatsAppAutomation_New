@@ -26,14 +26,13 @@ async function initClient(numberId) {
   }
  if (connection === "open") {
     console.log(`✅ Number ${numberId} connected`);
-   resolve();
- }
-    // تحديث الحالة في DB
+   // تحديث الحالة في DB
     try {
       await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);
     } catch (err) {
       console.error("Error updating number status:", err);
     }
+   resolve();
   }
  if (connection === "close") {
     const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
