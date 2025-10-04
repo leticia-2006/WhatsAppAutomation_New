@@ -255,7 +255,7 @@ async function sendMessage(sessionId) {
     }
 
     // تحديث المحادثة بعد الإرسال
-    loadMessages(sessionId);
+  
 
   } catch (err) {
     console.error("Error sending message", err);
