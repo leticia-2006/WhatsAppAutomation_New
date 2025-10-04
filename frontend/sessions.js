@@ -487,12 +487,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (fileBtn && fileInput) {
     fileBtn.addEventListener("click", () => fileInput.click());
-  }
+ fileInput.addEventListener("change", () => {
+    if (fileInput.files.length > 0) {
+      const fileName = fileInput.files[0].name;
+      alert(`📎 Selected file: ${fileName}`);
+      // يمكنك لاحقاً عرضها في واجهة مخصصة أسفل حقل الإدخال
+    }
+  });
+ } 
 
   if (emojiBtn) {
-    emojiBtn.addEventListener("click", () => {
-      alert("😀 Soon: emoji picker!");
-      // لاحقًا يمكنك ربط مكتبة مثل EmojiMart
+  emojiBtn.addEventListener("click", () => {
+    const pickerContainer = document.createElement("div");
+    pickerContainer.id = "emoji-picker";
+    pickerContainer.style.position = "absolute";
+    pickerContainer.style.bottom = "60px";
+    pickerContainer.style.right = "100px";
+    pickerContainer.style.zIndex = "9999";
+    pickerContainer.style.background = "#fff";
+    pickerContainer.style.border = "1px solid #ccc";
+    pickerContainer.style.borderRadius = "8px";
+    pickerContainer.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+    document.body.appendChild(pickerContainer);
+
+    const picker = new EmojiMart.Picker({
+      onEmojiSelect: (emoji) => {
+        const input = document.getElementById("msgInput");
+        input.value += emoji.native;
+        pickerContainer.remove();
+      }
     });
+
+    pickerContainer.appendChild(picker);
+  });
   }
+      
+    
+  
 });
