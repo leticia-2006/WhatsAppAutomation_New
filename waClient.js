@@ -182,71 +182,57 @@ function getQRForNumber(numberId) {
 
 async function sendMessageToNumber(numberId, jid, content) {
   const sock = clients[numberId];
-  if (!sock) throw new Error("Client not initialized");
+  if (!sock) throw new Error(`⚠️ Client ${numberId} not initialized`);
 
-  // 1️⃣ جهّز الـ JID
+  // تحقق أن الاتصال مفتوح فعلاً
+  if (!sock.user || !sock.user.id) {
+    console.warn(`⚠️ Client ${numberId} not authenticated or disconnected`);
+    return { error: "Client not authenticated or disconnected" };
+  }
+
+  // ✅ تجهيز الـ JID الصحيح
   const finalJid = jid.includes("@s.whatsapp.net")
-    ? jid : jid + "@s.whatsapp.net";
+    ? jid
+    : `${jid}@s.whatsapp.net`;
 
-  // 2️⃣ ابحث عن client
-  let clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [jid]);
-  let clientId;
-  if (clientRes.rowCount === 0) {
-    const newClient = await db.query(
-      "INSERT INTO clients (name, phone) VALUES ($1,$2) RETURNING id",
-      ["Unknown", jid]
-    );
-    clientId = newClient.rows[0].id;
-  } else {
-    clientId = clientRes.rows[0].id;
+  // 🔍 طباعة بيانات مفيدة للتتبع
+  console.log(`📤 Sending message to ${finalJid} via ${numberId}`);
+
+  // 📨 إرسال الرسالة
+  try {
+    if (typeof content === "string") {
+      await sock.sendMessage(finalJid, { text: content });
+    } else if (content.url && content.type) {
+      const mediaBuffer = fs.readFileSync(path.join(__dirname, "..", content.url));
+      if (content.type === "image") {
+        await sock.sendMessage(finalJid, { image: mediaBuffer });
+      } else if (content.type === "video") {
+        await sock.sendMessage(finalJid, { video: mediaBuffer });
+      } else if (content.type === "audio") {
+        await sock.sendMessage(finalJid, { audio: mediaBuffer });
+      }
+    }
+  } catch (sendErr) {
+    console.error(`❌ Failed to send message for ${numberId}:`, sendErr);
+    return { error: sendErr.message };
   }
 
-  // 3️⃣ ابحث عن session
-  let sessionRes = await db.query(
-    "SELECT id FROM sessions WHERE client_id=$1 AND wa_number_id=$2",
-    [clientId, numberId]
-  );
-
-  let sessionId;
-  if (sessionRes.rowCount === 0) {
-    const newSession = await db.query(
-      "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, jid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
-      [clientId, numberId, jid]
-    );
-    sessionId = newSession.rows[0].id;
-  } else {
-    sessionId = sessionRes.rows[0].id;
-  }
-
-  // 4️⃣ أرسل الرسالة للواتساب
-  if (typeof content === "string") {
-  await sock.sendMessage(finalJid, { text: content });
-} else if (content.url && content.type) {
-  const mediaBuffer = fs.readFileSync(path.join(__dirname, "..", content.url));
-  if (content.type === "image") {
-    await sock.sendMessage(finalJid, { image: mediaBuffer });
-  } else if (content.type === "video") {
-    await sock.sendMessage(finalJid, { video: mediaBuffer });
-  } else if (content.type === "audio") {
-    await sock.sendMessage(finalJid, { audio: mediaBuffer });
-  }
-  }
-
-  // 5️⃣ خزّن الرسالة في DB
+  // 📦 حفظ الرسالة في قاعدة البيانات
   const insertRes = await db.query(
     "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,NOW(),$8) RETURNING *",
-    [sessionId, "agent", typeof content === "string" ? content : null,   // يدخل في العمود content
-    typeof content === "string" ? "text" : content.type,
-    typeof content === "object" ? content.url : null,
-    numberId,
-    false,
-    finalJid
-  ]
+    [
+      (await getOrCreateSession(numberId, jid)),
+      "agent",
+      typeof content === "string" ? content : null,
+      typeof content === "string" ? "text" : content.type,
+      typeof content === "object" ? content.url : null,
+      numberId,
+      false,
+      finalJid
+    ]
   );
 
-  console.log("✅ رسالة أُرسلت وخُزنت:", insertRes.rows[0]);
-
-  // 6️⃣ أرجع الرسالة الجديدة للواجهة (حتى تظهر فورًا)
+  console.log("✅ Message sent and saved:", insertRes.rows[0]);
   return insertRes.rows[0];
 }
 
@@ -266,6 +252,33 @@ async function reconnectAllActive() {
   } catch (err) {
     console.error("⚠️ خطأ أثناء إعادة الاتصال بالأرقام:", err);
   }
+}
+async function getOrCreateSession(numberId, jid) {
+  const clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [jid]);
+  let clientId;
+  if (clientRes.rowCount === 0) {
+    const newClient = await db.query(
+      "INSERT INTO clients (name, phone) VALUES ($1,$2) RETURNING id",
+      ["Unknown", jid]
+    );
+    clientId = newClient.rows[0].id;
+  } else {
+    clientId = clientRes.rows[0].id;
+  }
+
+  const sessionRes = await db.query(
+    "SELECT id FROM sessions WHERE client_id=$1 AND wa_number_id=$2",
+    [clientId, numberId]
+  );
+
+  if (sessionRes.rowCount > 0) return sessionRes.rows[0].id;
+
+  const newSession = await db.query(
+    "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, jid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
+    [clientId, numberId, jid]
+  );
+
+  return newSession.rows[0].id;
 }
 
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };
