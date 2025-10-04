@@ -15,7 +15,7 @@ async function initClient(numberId) {
   const { version } = await fetchLatestBaileysVersion();
 
   const sock = makeWASocket({ version, auth: state });
- 
+}
   await new Promise((resolve, reject) => {
   sock.ev.on("connection.update", async (update) => {
   const { qr, connection, lastDisconnect } = update;
@@ -149,8 +149,7 @@ let msgCount = 0;
        [sender]
      );
      msgCount = 
-parseInt(countRes.rows[0].count);
-   }     
+parseInt(countRes.rows[0].count);  
     if (msgCount >= 3) {
       await db.query(
         "UPDATE sessions SET group_id = 2 WHERE client_id = $1",
@@ -158,8 +157,8 @@ parseInt(countRes.rows[0].count);
       );
       console.log(`🚀 المستخدم ${sender} تم نقله إلى الجروب 2 بعد ${msgCount} رسائل`);
     }
-
-  } catch (err) {
+  }
+ } catch (err) {
     console.error("خطأ أثناء معالجة الرسالة:", err);
   };
  });
