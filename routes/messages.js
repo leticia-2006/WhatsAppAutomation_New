@@ -33,7 +33,14 @@ if (sessionRes.rowCount === 0) return res.status(404).json({ error: "Session not
 const clientPhone = sessionRes.rows[0].phone;
     const waNumberId = sessionRes.rows[0].wa_number_id;
 
-// إرسال للواتساب
+console.log("=== Debug Sending Message ===");
+console.log("waNumberId:", waNumberId);
+console.log("clients keys:", Object.keys(clients));
+const sock = clients[waNumberId];
+console.log("sock:", sock ? "exists" : "not found");
+console.log("sock readyState:", sock?.ws?.readyState);
+console.log("clientPhone (JID):", clientPhone);
+  // إرسال للواتساب
     if (content) {
       await sendMessageToNumber(waNumberId, clientPhone, content);
     } else if (mediaUrl) {
