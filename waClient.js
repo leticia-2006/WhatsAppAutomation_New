@@ -15,7 +15,9 @@ async function initClient(numberId) {
   const { version } = await fetchLatestBaileysVersion();
 
   const sock = makeWASocket({ version, auth: state });
-
+ 
+  await new Promise((resolve, reject) => {
+  sock.ev.on("connection.update
   sock.ev.on("connection.update", async (update) => {
   const { qr, connection, lastDisconnect } = update;
 
@@ -25,6 +27,8 @@ async function initClient(numberId) {
   }
  if (connection === "open") {
     console.log(`✅ Number ${numberId} connected`);
+   resolve();
+ }
     // تحديث الحالة في DB
     try {
       await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);
@@ -34,7 +38,7 @@ async function initClient(numberId) {
   }
  if (connection === "close") {
     const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-    if (shouldReconnect) {
+    if (shouldReconnect) reject(new Error("Logged out"));{
       console.log("🔄 Reconnecting...");
       if (clients[numberId]?.ws) clients[numberId].ws.close();
       delete clients[numberId];
@@ -177,9 +181,6 @@ function getQRForNumber(numberId) {
   return qrCodes[numberId] || null;
 }
 
-if (!waClient.info) {
-    return res.status(500).json({ error: "WhatsApp client not initialized yet" });
-}
 async function sendMessageToNumber(numberId, jid, content) {
   const sock = clients[numberId];
   if (!sock) throw new Error("Client not initialized");
