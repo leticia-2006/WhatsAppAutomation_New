@@ -38,12 +38,13 @@ async function initClient(numberId) {
   }
  if (connection === "close") {
     const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-    if (shouldReconnect) reject(new Error("Logged out"));{
+    if (shouldReconnect) {
       console.log("🔄 Reconnecting...");
       if (clients[numberId]?.ws) clients[numberId].ws.close();
       delete clients[numberId];
       setTimeout(() => initClient(numberId), 5000);
-    }
+    } else { reject(new Error("Logged out"));}
+    
   }
 });
 
