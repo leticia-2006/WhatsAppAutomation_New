@@ -480,3 +480,19 @@ function selectClient(sessionId, name, phone, tags) {
 // Load messages of this session
   loadMessages(sessionId);
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const fileBtn = document.getElementById("file-btn");
+  const emojiBtn = document.getElementById("emoji-btn");
+  const fileInput = document.getElementById("mediaInput");
+
+  if (fileBtn && fileInput) {
+    fileBtn.addEventListener("click", () => fileInput.click());
+  }
+
+  if (emojiBtn) {
+    emojiBtn.addEventListener("click", () => {
+      alert("😀 Soon: emoji picker!");
+      // لاحقًا يمكنك ربط مكتبة مثل EmojiMart
+    });
+  }
+});
