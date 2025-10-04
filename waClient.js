@@ -170,10 +170,9 @@ sock.ev.on("messages.update", async (updates) => {
          await db.query("UPDATE messages SET is_deleted=true WHERE wa_message_id=$1", [key.id]);
       }
     }
-  });
+  
+ clients[numberId] = sock;
 
-  clients[numberId] = sock;
-}
 
 function getQRForNumber(numberId) {
   return qrCodes[numberId] || null;
@@ -268,3 +267,4 @@ async function reconnectAllActive() {
 }
 
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive };
+});
