@@ -15,7 +15,7 @@ async function initClient(numberId) {
   const { version } = await fetchLatestBaileysVersion();
 
   const sock = makeWASocket({ version, auth: state });
-}
+
   await new Promise((resolve, reject) => {
   sock.ev.on("connection.update", async (update) => {
   const { qr, connection, lastDisconnect } = update;
