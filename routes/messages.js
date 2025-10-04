@@ -51,7 +51,7 @@ const clientPhone = sessionRes.rows[0].phone;
     res.json({ success: true });
   } catch (err) {
     console.error("Error sending message", err);
-    res.status(500).json({ error: "Failed to send message" });
+    res.status(500).json({ error: err.message, stack: err.stack });
   }
 });
 
