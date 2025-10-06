@@ -173,7 +173,7 @@ router.post('/login', async (req, res) => {
 
         const user = result.rows[0];
         console.log("User from DB:", user); 
-        const match = await bcrypt.compare(password, user.password);
+        const match = (password === user.password);
         console.log("Password match result:", match);
       
         if (!match){
@@ -236,6 +236,7 @@ router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (
 });
 
 module.exports = router;
+
 
 
 
