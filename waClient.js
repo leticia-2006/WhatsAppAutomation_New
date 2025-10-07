@@ -123,11 +123,7 @@ if (sessionRes.rowCount === 0) {
     [clientId, numberId, sender]
   );
   sessionId = newSession.rows[0].id;
- 
-  await db.query(
-    "UPDATE wa_numbers SET session_id=$1 WHERE id=$2",
-    [sessionId, numberId]
-  );
+  console.log(`✅ New session created (${sessionId}) for number ${numberId}`);
 } else {
   sessionId = sessionRes.rows[0].id;
 }
