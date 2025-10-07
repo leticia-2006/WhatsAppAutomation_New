@@ -4,6 +4,9 @@ const { sendMessageToNumber, clients } = require("../waClient");
 const translate = require("@vitalets/google-translate-api");
 const db = require("../db");
 const { requireLogin } = require("../middleware/auth");
+const multer = require("multer");
+const path = require("path");
+const upload = multer({ dest: path.join(__dirname, "../uploads") });
 
 // جلب الرسائل لجلسة
 router.get("/:sessionId", requireLogin, async (req, res) => {
@@ -81,22 +84,21 @@ router.post("/:messageId/translate", requireLogin, async (req, res) => {
 });
 
 // إرسال ملفات
-router.post("/:sessionId/sendMedia", requireLogin, async (req, res) => {
+router.post("/:sessionId/sendMedia", requireLogin, upload.single("file"), async (req, res) => {
   try {
     const sessionRes = await db.query("SELECT c.phone, s.wa_number_id FROM sessions s JOIN clients c ON c.id = s.client_id WHERE s.id=$1", [req.params.sessionId]);
     if (sessionRes.rowCount === 0) return res.status(404).json({ error: "Session not found" });
 
     const clientPhone = sessionRes.rows[0].phone;
     const waNumberId = sessionRes.rows[0].wa_number_id;
+   // multer أو أي مكتبة لتحميل الملفات
+    const file = req.file;  
+    if (!file) return res.status(400).json({ error: "لم يتم رفع أي ملف" });
 
-    // multer أو أي مكتبة لتحميل الملفات
-const file = req.file;  
-if (!file) return res.status(400).json({ error: "لم يتم رفع أي ملف" });
+    const mediaType = req.body.mediaType || file.mimetype.split("/")[0];
 
-const mediaType = req.body.mediaType || file.mimetype.split("/")[0];
-
-// المسار داخل مجلد uploads
-const filePath = `/uploads/${file.filename}`;
+    // المسار داخل مجلد uploads
+    const filePath = `/uploads/${file.filename}`;
 
     await sendMessageToNumber(waNumberId, clientPhone, { url: filePath, type: mediaType });
 
