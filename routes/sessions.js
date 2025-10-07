@@ -107,41 +107,6 @@ router.get("/all", requireLogin, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-router.patch('/:id/status', async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body; // "unread" | "unreplied" | "human"
-
-  try {
-    const result = await db.query(
-      `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2 RETURNING id`,
-      [status, id]
-    );
-   if (result.rowCount === 0) {
-   return res.status(404).json({ error: "Session not found" });
-}
-
-   res.json({ success: true });
-  } catch (err) {
-    console.error("Error updating session status:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-
-// --- 1️⃣ عرض QR Code لرقم محدد ---
-router.get('/qr/:number_id', async (req, res) => {
-    try {
-        const numberId = req.params.number_id;
-        const qr = getQRForNumber(numberId);
-      if(!qr) {
-        return res.status(404).json({ error: "QR not found or client already connected" });
-      }
-        res.json({ qr });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
 
 
 // --- 3️⃣ جلسات حسب المجموعة ---
@@ -201,6 +166,22 @@ router.get('/unreplied', requireLogin, async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+// --- 1️⃣ عرض QR Code لرقم محدد ---
+router.get('/qr/:number_id', async (req, res) => {
+    try {
+        const numberId = req.params.number_id;
+        const qr = getQRForNumber(numberId);
+      if(!qr) {
+        return res.status(404).json({ error: "QR not found or client already connected" });
+      }
+        res.json({ qr });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 router.post("/add-note", async (req, res) => {
   const { clientId, note } = req.body;
   try {
@@ -225,6 +206,25 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch notes" });
   }
 });
+router.patch('/:id/status', async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body; // "unread" | "unreplied" | "human"
+
+  try {
+    const result = await db.query(
+      `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2 RETURNING id`,
+      [status, id]
+    );
+   if (result.rowCount === 0) {
+   return res.status(404).json({ error: "Session not found" });
+}
+
+   res.json({ success: true });
+  } catch (err) {
+    console.error("Error updating session status:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 router.post("/:id/pin", requireLogin, async (req, res) => {
   await db.query("UPDATE sessions SET pinned=true WHERE id=$1", [req.params.id]);
@@ -237,6 +237,7 @@ router.post("/:id/unpin", requireLogin, async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
