@@ -90,11 +90,13 @@ router.post("/:sessionId/sendMedia", requireLogin, async (req, res) => {
     const waNumberId = sessionRes.rows[0].wa_number_id;
 
     // multer أو أي مكتبة لتحميل الملفات
-    const file = req.files.file; // assuming you use express-fileupload
-    const mediaType = req.body.mediaType;
+const file = req.file;  
+if (!file) return res.status(400).json({ error: "لم يتم رفع أي ملف" });
 
-    const filePath = `/uploads/${file.name}`;
-    await file.mv(`./uploads/${file.name}`);
+const mediaType = req.body.mediaType || file.mimetype.split("/")[0];
+
+// المسار داخل مجلد uploads
+const filePath = `/uploads/${file.filename}`;
 
     await sendMessageToNumber(waNumberId, clientPhone, { url: filePath, type: mediaType });
 
