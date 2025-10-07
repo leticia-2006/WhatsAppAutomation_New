@@ -486,15 +486,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const fileInput = document.getElementById("mediaInput");
 
   if (fileBtn && fileInput) {
-    fileBtn.addEventListener("click", () => fileInput.click());
- fileInput.addEventListener("change", () => {
+  fileBtn.addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", () => {
+    const preview = document.getElementById("file-preview");
+    preview.innerHTML = "";
     if (fileInput.files.length > 0) {
-      const fileName = fileInput.files[0].name;
-      alert(`📎 Selected file: ${fileName}`);
-      // يمكنك لاحقاً عرضها في واجهة مخصصة أسفل حقل الإدخال
+      [...fileInput.files].forEach(file => {
+        const div = document.createElement("div");
+        div.className = "file-item";
+        div.innerHTML = `📎 ${file.name}`;
+        preview.appendChild(div);
+      });
     }
   });
- } 
+  }
 
   if (emojiBtn) {
   emojiBtn.addEventListener("click", () => {
