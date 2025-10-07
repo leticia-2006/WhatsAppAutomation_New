@@ -71,22 +71,38 @@ router.get("/all", requireLogin, async (req, res) => {
 
 // --- 3️⃣ جلسات حسب المجموعة ---
 router.get('/group/:group_id', async (req, res) => {
-    try {
-        const groupId = req.params.group_id;
-        const result = await db.query(`
-           SELECT s.id, s.client_id, c.name as client_name,
-            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-            s.status, s.created_at, s.updated_at
-            FROM sessions s
-            JOIN clients c ON c.id = s.client_id
-            WHERE s.group_id = $1
-            ORDER BY s.updated_at DESC
-        `, [groupId]);
-        res.json(result.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
+  try {
+    const groupId = req.params.group_id;
+
+    let result;
+    if (groupId === "all") {
+      // ✅ في حالة /group/all نعرض كل الجلسات بدون فلترة
+      result = await db.query(`
+        SELECT s.id, s.client_id, c.name as client_name,
+               (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+               s.status, s.created_at, s.updated_at
+        FROM sessions s
+        JOIN clients c ON c.id = s.client_id
+        ORDER BY s.updated_at DESC
+      `);
+    } else {
+      // ✅ في حالة رقم حقيقي فقط
+      result = await db.query(`
+        SELECT s.id, s.client_id, c.name as client_name,
+               (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+               s.status, s.created_at, s.updated_at
+        FROM sessions s
+        JOIN clients c ON c.id = s.client_id
+        WHERE s.group_id = $1
+        ORDER BY s.updated_at DESC
+      `, [groupId]);
     }
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error in /group/:group_id", err);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 // --- 4️⃣ جلسات غير مقروءة ---
@@ -238,6 +254,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
