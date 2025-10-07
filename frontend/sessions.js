@@ -530,7 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(pickerContainer);
   });
   }
-
+});
 document.addEventListener("DOMContentLoaded", () => {
   const groupSelect = document.getElementById("groupSelect");
   if (groupSelect) {
