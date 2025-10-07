@@ -525,6 +525,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     pickerContainer.appendChild(picker);
   });
+    const emojiBtn = document.getElementById("emoji-btn");
+const emojiPicker = document.getElementById("emoji-picker");
+const messageInput = document.getElementById("message-input");
+
+// قائمة بسيطة من الإيموجيات
+const emojis = ["😀","😂","😍","😎","😭","😡","👍","👎","❤️","🔥","💡","🎉","🙏"];
+
+if (emojiPicker) {
+  emojiPicker.innerHTML = emojis.map(e => `<span class="emoji">${e}</span>`).join("");
+}
+
+if (emojiBtn && emojiPicker) {
+  emojiBtn.addEventListener("click", () => {
+    emojiPicker.classList.toggle("hidden");
+  });
+}
+
+if (emojiPicker && messageInput) {
+  emojiPicker.addEventListener("click", (e) => {
+    if (e.target.classList.contains("emoji")) {
+      messageInput.value += e.target.textContent;
+      emojiPicker.classList.add("hidden");
+    }
+  });
+}
   }
       
     
