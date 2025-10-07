@@ -572,6 +572,20 @@ main {
 }
 
 
+.file-preview {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.file-item {
+  background: #f3f3f3;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+}
 
 
 
