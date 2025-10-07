@@ -540,6 +540,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-document.addEventListener("DOMContentLoaded", () => {
-  if (typeof initChatButtons === "function") initChatButtons();
-});
+function rebindChatButtons() {
+  // تأكد أن العناصر موجودة فعلاً في DOM
+  if (document.getElementById("file-btn") && document.getElementById("emoji-btn")) {
+    initChatButtons();
+  } else {
+    // انتظر قليلاً حتى تُحمّل الصفحة بالكامل
+    setTimeout(rebindChatButtons, 500);
+  }
+}
+rebindChatButtons();
+
