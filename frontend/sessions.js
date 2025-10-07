@@ -503,6 +503,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (emojiBtn) {
   emojiBtn.addEventListener("click", () => {
+   
+    const existing = document.getElementById("emoji-picker");
+    if (existing) existing.remove();
     const pickerContainer = document.createElement("div");
     pickerContainer.id = "emoji-picker";
     pickerContainer.style.position = "absolute";
@@ -513,7 +516,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pickerContainer.style.border = "1px solid #ccc";
     pickerContainer.style.borderRadius = "8px";
     pickerContainer.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-    document.body.appendChild(pickerContainer);
+    
 
     const picker = new EmojiMart.Picker({
       onEmojiSelect: (emoji) => {
@@ -524,34 +527,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     pickerContainer.appendChild(picker);
+    document.body.appendChild(pickerContainer);
   });
-    const emojiBtn = document.getElementById("emoji-btn");
-const emojiPicker = document.getElementById("emoji-picker");
-const messageInput = document.getElementById("message-input");
-
-// قائمة بسيطة من الإيموجيات
-const emojis = ["😀","😂","😍","😎","😭","😡","👍","👎","❤️","🔥","💡","🎉","🙏"];
-
-if (emojiPicker) {
-  emojiPicker.innerHTML = emojis.map(e => `<span class="emoji">${e}</span>`).join("");
-}
-
-if (emojiBtn && emojiPicker) {
-  emojiBtn.addEventListener("click", () => {
-    emojiPicker.classList.toggle("hidden");
-  });
-}
-
-if (emojiPicker && messageInput) {
-  emojiPicker.addEventListener("click", (e) => {
-    if (e.target.classList.contains("emoji")) {
-      messageInput.value += e.target.textContent;
-      emojiPicker.classList.add("hidden");
-    }
-  });
-}
   }
-});
+
 document.addEventListener("DOMContentLoaded", () => {
   const groupSelect = document.getElementById("groupSelect");
   if (groupSelect) {
