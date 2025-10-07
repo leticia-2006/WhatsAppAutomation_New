@@ -551,7 +551,13 @@ if (emojiPicker && messageInput) {
   });
 }
   }
-      
-    
-  
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const groupSelect = document.getElementById("groupSelect");
+  if (groupSelect) {
+    groupSelect.addEventListener("change", () => {
+      selectedGroupId = groupSelect.value;
+      loadSessions();
+    });
+  }
 });
