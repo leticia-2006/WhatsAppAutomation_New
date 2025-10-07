@@ -480,57 +480,57 @@ function selectClient(sessionId, name, phone, tags) {
 // Load messages of this session
   loadMessages(sessionId);
 }
-document.addEventListener("DOMContentLoaded", () => {
+function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
   const emojiBtn = document.getElementById("emoji-btn");
   const fileInput = document.getElementById("mediaInput");
 
   if (fileBtn && fileInput) {
-  fileBtn.addEventListener("click", () => fileInput.click());
-  fileInput.addEventListener("change", () => {
-    const preview = document.getElementById("file-preview");
-    preview.innerHTML = "";
-    if (fileInput.files.length > 0) {
-      [...fileInput.files].forEach(file => {
-        const div = document.createElement("div");
-        div.className = "file-item";
-        div.innerHTML = `📎 ${file.name}`;
-        preview.appendChild(div);
-      });
-    }
-  });
+    fileBtn.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", () => {
+      const preview = document.getElementById("file-preview");
+      if (!preview) return;
+      preview.innerHTML = "";
+      if (fileInput.files.length > 0) {
+        [...fileInput.files].forEach(file => {
+          const div = document.createElement("div");
+          div.className = "file-item";
+          div.innerHTML = `📎 ${file.name}`;
+          preview.appendChild(div);
+        });
+      }
+    });
   }
 
   if (emojiBtn) {
-  emojiBtn.addEventListener("click", () => {
-   
-    const existing = document.getElementById("emoji-picker");
-    if (existing) existing.remove();
-    const pickerContainer = document.createElement("div");
-    pickerContainer.id = "emoji-picker";
-    pickerContainer.style.position = "absolute";
-    pickerContainer.style.bottom = "60px";
-    pickerContainer.style.right = "100px";
-    pickerContainer.style.zIndex = "9999";
-    pickerContainer.style.background = "#fff";
-    pickerContainer.style.border = "1px solid #ccc";
-    pickerContainer.style.borderRadius = "8px";
-    pickerContainer.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-    
+    emojiBtn.addEventListener("click", () => {
+      const existing = document.getElementById("emoji-picker");
+      if (existing) existing.remove();
 
-    const picker = new EmojiMart.Picker({
-      onEmojiSelect: (emoji) => {
-        const input = document.getElementById("msgInput");
-        input.value += emoji.native;
-        pickerContainer.remove();
-      }
+      const pickerContainer = document.createElement("div");
+      pickerContainer.id = "emoji-picker";
+      pickerContainer.style.position = "absolute";
+      pickerContainer.style.bottom = "60px";
+      pickerContainer.style.right = "100px";
+      pickerContainer.style.zIndex = "9999";
+      pickerContainer.style.background = "#fff";
+      pickerContainer.style.border = "1px solid #ccc";
+      pickerContainer.style.borderRadius = "8px";
+      pickerContainer.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+
+      const picker = new EmojiMart.Picker({
+        onEmojiSelect: (emoji) => {
+          const input = document.getElementById("msgInput");
+          if (input) input.value += emoji.native;
+          pickerContainer.remove();
+        }
+      });
+
+      pickerContainer.appendChild(picker);
+      document.body.appendChild(pickerContainer);
     });
-
-    pickerContainer.appendChild(picker);
-    document.body.appendChild(pickerContainer);
-  });
   }
-});
+}
 document.addEventListener("DOMContentLoaded", () => {
   const groupSelect = document.getElementById("groupSelect");
   if (groupSelect) {
@@ -539,4 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loadSessions();
     });
   }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof initChatButtons === "function") initChatButtons();
 });
