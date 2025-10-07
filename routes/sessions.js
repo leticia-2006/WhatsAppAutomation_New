@@ -4,47 +4,7 @@ const db = require('../db');
 const { getQRForNumber } = require('../waClient'); // استدعاء العميل الذي أنشأناه
 const { requireLogin } = require("../middleware/auth");
 
-router.get("/", requireLogin, async (req, res) => {
- if (!req.session.user) {
-   return res.status(401).json({ message: "Unauthorized" });
- }
-  const userRole = req.session.user.role;
-  const userId = req.session.user.id;
 
-  try {
-    let result;
-    if (userRole === "agent") {
-      result = await db.query(`
-      SELECT s.id, s.client_id, c.name AS name, c.phone AS phone,
-            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-            s.status, s.created_at, s.updated_at,
-            s.wa_number_id, s.jid
-            FROM sessions s
-            JOIN clients c ON c.id = s.client_id
-            JOIN wa_numbers wn ON wn.id = s.wa_number_id 
-            WHERE assigned_agent_id = $1
-            ORDER BY s.updated_at DESC `, [userId]
-     );
-    } else {
-      result = await db.query(
-        `SELECT s.id, s.client_id, c.name As name, c.phone AS phone, c.avatar_url, 
-                (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-                s.status, s.created_at, s.updated_at,
-                wn.assigned_agent_id AS agent_id,
-                s.wa_number_id, s.jid       
-         FROM sessions s
-         JOIN clients c ON c.id = s.client_id
-         JOIN wa_numbers wn ON wn.id = s.wa_number_id
-         ORDER BY s.updated_at DESC`
-      );
-    }
-
-    res.json(result.rows);
-  } catch (err) {
-    console.error("Error fetching sessions:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
 router.get("/all", requireLogin, async (req, res) => {
  const { role, id, permissions} = req.session.user;
  try {
@@ -236,7 +196,49 @@ router.post("/:id/unpin", requireLogin, async (req, res) => {
   res.json({ success: true });
 });
 
+router.get("/", requireLogin, async (req, res) => {
+ if (!req.session.user) {
+   return res.status(401).json({ message: "Unauthorized" });
+ }
+  const userRole = req.session.user.role;
+  const userId = req.session.user.id;
+
+  try {
+    let result;
+    if (userRole === "agent") {
+      result = await db.query(`
+      SELECT s.id, s.client_id, c.name AS name, c.phone AS phone,
+            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+            s.status, s.created_at, s.updated_at,
+            s.wa_number_id, s.jid
+            FROM sessions s
+            JOIN clients c ON c.id = s.client_id
+            JOIN wa_numbers wn ON wn.id = s.wa_number_id 
+            WHERE assigned_agent_id = $1
+            ORDER BY s.updated_at DESC `, [userId]
+     );
+    } else {
+      result = await db.query(
+        `SELECT s.id, s.client_id, c.name As name, c.phone AS phone, c.avatar_url, 
+                (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+                s.status, s.created_at, s.updated_at,
+                wn.assigned_agent_id AS agent_id,
+                s.wa_number_id, s.jid       
+         FROM sessions s
+         JOIN clients c ON c.id = s.client_id
+         JOIN wa_numbers wn ON wn.id = s.wa_number_id
+         ORDER BY s.updated_at DESC`
+      );
+    }
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching sessions:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 module.exports = router;
+
 
 
 
