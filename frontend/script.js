@@ -36,7 +36,13 @@ function loadPage(page) {
         initNumbersPage();
       }
       if (page === "home.html" && typeof loadSessions === "function") {
-        loadSessions(); }  })
+  loadSessions();
+
+  // بعد تحميل الصفحة، نعيد ربط أزرار الشات (الملفات والإيموجي)
+  if (typeof rebindChatButtons === "function") {
+    setTimeout(() => rebindChatButtons(), 800);
+  }
+      } })
     .catch(err => console.error("Error loading page:", err));
 }
 // Logout
@@ -135,6 +141,7 @@ document.addEventListener("click", async (e) => {
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
