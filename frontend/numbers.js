@@ -46,43 +46,54 @@ async function loadNumbers() {
 
 // ====== عرض الأرقام في الجدول ======
 function renderNumbers(numbers) {
-  const tbody = document.querySelector("#numbersTable tbody");
-  if (!tbody) return;
+  const grid = document.getElementById("numbersGrid");
+  if (!grid) return;
+
+  grid.innerHTML = "";
+
   if (!Array.isArray(numbers) || numbers.length === 0) {
-  tbody.innerHTML = "<tr><td colspan='5'>No numbers found</td></tr>";
-  return;
- }
-  tbody.innerHTML = "";
+    grid.innerHTML = "<p class='text-center text-muted'>No numbers found</p>";
+    return;
+  }
+
   numbers.forEach((num) => {
     const id = num.id ?? "-";
     const number = num.number ?? "-";
     const status = num.status ?? "Unknown";
-    const assigned = num.assigned_agent_id ?? "-";
+    const agent = num.assigned_agent_id ?? "-";
 
     const statusClass =
-      status === "Active" ? "bg-success" :
-      status === "Blocked" ? "bg-secondary" : "bg-danger";
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${id}</td>
-      <td>${number}</td>
-      <td><span class="badge ${statusClass}">${status}</span></td>
-      <td>${assigned}</td>
-      <td>
-  <button class="btn btn-sm btn-info" onclick="showQR('${id}')">
-    <i class="fas fa-qrcode"></i>
-  </button>
-  ${assigned ? `<button class="btn btn-sm btn-warning" onclick="openTransferModal('${id}')">
-    <i class="fas fa-exchange-alt"></i>
-  </button>` : ""}
-  <button class="btn btn-sm btn-danger" onclick="deleteNumber('${id}')">
-    <i class="fas fa-trash"></i>
-  </button>
-</td>
+      status === "Active"
+        ? "status-active"
+        : status === "Pending"
+        ? "status-pending"
+        : "status-blocked";
+
+    const card = document.createElement("div");
+    card.className = "number-card";
+    card.innerHTML = `
+      <div class="number-header">
+        <span class="number-id">#${id}</span>
+        <span class="number-status ${statusClass}">${status}</span>
+      </div>
+      <div class="number-body">
+        <h5>${number}</h5>
+        <div class="number-agent">👤 ${agent}</div>
+      </div>
+      <div class="number-actions">
+        <button onclick="showQR('${id}')" title="Show QR"><i class="fas fa-qrcode"></i></button>
+        ${
+          agent
+            ? `<button onclick="openTransferModal('${id}')" title="Transfer"><i class="fas fa-exchange-alt"></i></button>`
+            : ""
+        }
+        <button onclick="deleteNumber('${id}')" title="Delete"><i class="fas fa-trash"></i></button>
+      </div>
     `;
-    tbody.appendChild(tr);
+    grid.appendChild(card);
   });
 }
+
 // ====== فتح مودال التحويل ======
 async function openTransferModal(id) {
   document.getElementById("transferNumberId").value = id;
