@@ -105,7 +105,7 @@ async function saveUserEdits() {
         throw new Error("دور غير معروف");
     }
 
-    await axios.put(`endpoint`, { name, phone, role, password }, { withCredentials: true });
+    await axios.put(endpoint, { name, phone, role, password }, { withCredentials: true });
 
     alert("✅ User updated!");
     bootstrap.Modal.getInstance(document.getElementById("editUserModal")).hide();
