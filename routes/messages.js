@@ -22,8 +22,18 @@ router.get("/:sessionId", requireLogin, async (req, res) => {
   JOIN sessions s ON m.session_id = s.id
   JOIN clients c ON c.id = s.client_id WHERE m.session_id=$1
   ORDER BY created_at ASC`, [req.params.sessionId]);
-  res.json(result.rows);
+  const baseUrl = process.env.BASE_URL || "https://whatsappautomation-new-4fec.onrender.com";
+
+  const messages = result.rows.map(msg => {
+    if (msg.media_url && !msg.media_url.startsWith("http")) {
+      msg.media_url = `${baseUrl}${msg.media_url.startsWith("/uploads") ? msg.media_url : `/uploads/${msg.media_url}`}`;
+    }
+    return msg;
+  });
+
+  res.json(messages);
 });
+
 
 // إرسال رسالة
 // حفظ الرسالة بعد الإرسال
