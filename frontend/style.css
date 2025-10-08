@@ -773,3 +773,20 @@ main {
   background: #007bff;
   color: white;
   }
+/* ===== Titles Row (above cards) ===== */
+.numbers-table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 0.6fr; /* عمود لكل عنوان */
+  background: #f9fafc;
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #666;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.numbers-table-header span {
+  text-align: left;
+}
