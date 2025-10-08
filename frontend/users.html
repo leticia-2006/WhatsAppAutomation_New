@@ -5,7 +5,21 @@
     <button id="addUserBtn" class="btn btn-primary">+ Add User</button>
   </div>
   <div class="card-body">
-    <table class="table" id="usersTable">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="text" id="search-users" class="form-control form-control-lg" placeholder="🔍 Search clients..." oninput="applyFilters()">
+      </div>
+      <div class="col-md-3">
+        <select id="tagFilterUsers" class="form-control form-control-lg" onchange="applyFilters()">
+          <option value="">All tags</option>
+          <option value="VIP">VIP</option>
+          <option value="New">New</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+    <table class="table w-100" id="usersTable">
   <thead>
     <tr>
       <th>ID</th>
@@ -15,23 +29,10 @@
       <th>Actions</th>
     </tr>
   </thead>
-  <tbody id="usersTableBody">
-    <!-- مثال على صف -->
-    <!--
-    <tr>
-      <td>1</td>
-      <td>Admin</td>
-      <td>+213555555</td>
-      <td>super_admin</td>
-      <td>
-        <button class="btn btn-sm btn-warning" onclick="openEditUser(1)">Edit</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteUser(1)">Delete</button>
-      </td>
-    </tr>
-    -->
-  </tbody>
+  <tbody id="usersTableBody"></tbody>
     </table>
   </div>
+</div>
 </div>
 
 <script>
@@ -165,17 +166,7 @@ const user = JSON.parse(localStorage.getItem("user"));
   </div>
 </div>
  <!-- Controls -->
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <input type="text" id="search-users" class="form-control form-control-lg" placeholder="🔍 Search clients..." oninput="applyFilters()">
-      </div>
-      <div class="col-md-3">
-        <select id="tagFilterUsers" class="form-control form-control-lg" onchange="applyFilters()">
-          <option value="">All tags</option>
-          <option value="VIP">VIP</option>
-          <option value="New">New</option>
-        </select>
-      </div>
+    
       <div class="col-md-3 text-right">
         <button id="logout-btn" class="btn btn-danger btn-lg"><i class="fas fa-sign-out-alt"></i> Logout</button>
       </div>
