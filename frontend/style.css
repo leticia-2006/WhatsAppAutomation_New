@@ -635,6 +635,7 @@ main {
   background: #f4f6fb;
   min-height: 100vh;
   border-radius: 20px;
+  width: 100%
 }
 
 .numbers-header {
@@ -764,6 +765,7 @@ main {
   background: #007bff;
   color: white;
   }
+
 
 
 
