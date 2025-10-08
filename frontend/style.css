@@ -625,3 +625,7 @@ main {
   object-fit: contain;
   display: block;
 }
+
+#usersTable {
+  width: 100%;
+}
