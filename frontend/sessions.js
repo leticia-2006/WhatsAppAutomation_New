@@ -180,10 +180,10 @@ if (
     : msg.content;
 
   content = `
-    <img src="${fullUrl}" 
-         alt="image"
-         style="max-width:220px; border-radius:10px; margin:4px 0;">
-  `;
+  <div class="msg-media">
+    <img src="${fullUrl}" alt="Image">
+  </div>
+`;
 }
    if (msg.content_type === "video" && msg.media_url) {
         content = `<video controls style="max-width:250px; border-radius:8px;">
