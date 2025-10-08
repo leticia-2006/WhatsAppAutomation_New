@@ -688,12 +688,13 @@ main {
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   padding: 10px 16px;
-  display: flex;
+  display: grid;
   justify-content: space-between;
   transition: transform 0.2s ease, box-shadow:0.2s ease;
   width: 100%;
   align-items: center;
   min-height: 55px;
+  grid-template-columns: 2fr 1fr 1fr 0.6fr;
 }
 .number-card:hover {
   transform: translateY(-2px);
@@ -790,3 +791,4 @@ main {
 .numbers-table-header span {
   text-align: left;
 }
+
