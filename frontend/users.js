@@ -1,3 +1,31 @@
+function initUsersPage() {
+  const user = window.currentUser;
+
+  if (!user) {
+    console.warn("⚠️ No user loaded yet, waiting...");
+    return;
+  }
+
+  const usersSection = document.getElementById("users-section");
+
+  // 👑 Super Admin → وصول كامل
+  if (user.role === "super_admin") {
+    if (usersSection) usersSection.style.display = "block";
+    loadUsers();
+    return;
+  }
+
+  // 🧑‍💼 Supervisor → يتحقق من صلاحية إدارة المستخدمين
+  if (user.role === "supervisor" && user.permissions?.manage_users === true) {
+    if (usersSection) usersSection.style.display = "block";
+    loadUsers();
+    return;
+  }
+
+  // 👨‍💻 Admin أو Agent → لا صلاحية
+  console.log("🚫 لا تملك صلاحيات عرض المستخدمين");
+  if (usersSection) usersSection.style.display = "none";
+}
 async function loadUsers() {
   try {
     const res = await axios.get("/users", { withCredentials: true });
