@@ -199,7 +199,8 @@ async function sendMessageToNumber(numberId, jid, content) {
     if (typeof content === "string") {
       await sock.sendMessage(finalJid, { text: content });
     } else if (content.url && content.type) {
-      const mediaBuffer = fs.readFileSync(path.join(__dirname, "..", content.url));
+      const mediaPath = path.join(__dirname, "..", content.url.replace(/^\//, "")); // إزالة /
+      const mediaBuffer = fs.readFileSync(mediaPath);
       if (content.type === "image") {
         await sock.sendMessage(finalJid, { image: mediaBuffer });
       } else if (content.type === "video") {
