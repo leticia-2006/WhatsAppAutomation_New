@@ -170,15 +170,21 @@ async function loadMessages(sessionId) {
   }
 
 // FIXED: دعم أنواع الميديا
-   if (msg.content_type === "image" && msg.media_url) {
-       const fullUrl = msg.media_url.startsWith("http")
-  ? msg.media_url
-  : `${window.location.origin}${msg.media_url}`;
+   // ✅ عرض الصور سواء من الإرسال أو من الاستقبال
+if (
+  (msg.content_type === "image" && msg.media_url) ||
+  (msg.content && msg.content.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+) {
+  const fullUrl = msg.media_url
+    ? (msg.media_url.startsWith("http") ? msg.media_url : `${window.location.origin}${msg.media_url}`)
+    : msg.content;
 
- content = `<img src="${fullUrl}" 
-  alt="image" 
-  style="max-width:220px; border-radius:10px; margin:4px 0;">`;
-  }
+  content = `
+    <img src="${fullUrl}" 
+         alt="image"
+         style="max-width:220px; border-radius:10px; margin:4px 0;">
+  `;
+}
    if (msg.content_type === "video" && msg.media_url) {
         content = `<video controls style="max-width:250px; border-radius:8px;">
                      <source src="${msg.media_url}" type="video/mp4">
