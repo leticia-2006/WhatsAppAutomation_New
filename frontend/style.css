@@ -676,9 +676,10 @@ main {
 
 .numbers-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 16px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 10px 0;
+  width: 100%
 }
 
 .number-card {
@@ -763,5 +764,6 @@ main {
   background: #007bff;
   color: white;
   }
+
 
 
