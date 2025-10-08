@@ -171,18 +171,24 @@ async function loadMessages(sessionId) {
 
 // FIXED: دعم أنواع الميديا
    if (msg.content_type === "image" && msg.media_url) {
-        content = `<img src="${msg.media_url}" style="max-width:200px; border-radius:8px;">`;
-      }
-      if (msg.content_type === "video" && msg.media_url) {
+       const fullUrl = msg.media_url.startsWith("http")
+  ? msg.media_url
+  : `${window.location.origin}${msg.media_url}`;
+
+ content = `<img src="${fullUrl}" 
+  alt="image" 
+  style="max-width:220px; border-radius:10px; margin:4px 0;">`;
+  }
+   if (msg.content_type === "video" && msg.media_url) {
         content = `<video controls style="max-width:250px; border-radius:8px;">
                      <source src="${msg.media_url}" type="video/mp4">
                    </video>`;
-      }
-      if (msg.content_type === "audio" && msg.media_url) {
+  }
+  if (msg.content_type === "audio" && msg.media_url) {
         content = `<audio controls>
                      <source src="${msg.media_url}" type="audio/mpeg">
                    </audio>`;
-      }
+  }
 
       const time = new Date(msg.created_at).toLocaleTimeString([], {
         hour: "2-digit",
