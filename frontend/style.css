@@ -676,29 +676,35 @@ main {
 }
 
 .numbers-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 10px 0;
   width: 100%
 }
 
 .number-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  padding: 10px 16px;
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.2s, box-shadow:0.2s ;
+  transition: transform 0.2s ease, box-shadow:0.2s ease;
   width: 100%;
+  align-items: center;
+  min-height: 55px;
 }
 .number-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
 }
-
+.number-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-grow: 1;
+}
 .number-header {
   display: flex;
   justify-content: space-between;
@@ -712,10 +718,11 @@ main {
 }
 
 .number-status {
-  padding: 3px 8px;
-  border-radius: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .status-active {
@@ -732,31 +739,31 @@ main {
 }
 
 .number-body {
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .number-body h5 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 15px;
   color: #333;
 }
 
 .number-agent {
   color: #666;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .number-actions {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
   gap: 8px;
-  margin-top: 12px;
 }
 
 .number-actions button {
   border: none;
   background: #f3f3f3;
-  padding: 8px;
+  padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.2s;
@@ -766,11 +773,3 @@ main {
   background: #007bff;
   color: white;
   }
-
-
-
-
-
-
-
-
