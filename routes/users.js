@@ -155,6 +155,12 @@ router.get('/:id', requireLogin, checkRole(['super_admin']), async (req, res) =>
     console.error("❌ Error fetching user by ID:", err);
     res.status(500).json({ error: "Internal server error" });
   }
+  const user = result.rows[0];
+  if (user.role === 'supervisor') {
+    const perms = await db.query('SELECT * FROM supervisor_permissions WHERE supervisor_id=$1', [req.params.id]);
+    user.permissions = perms.rows[0] || {};
+  }
+  res.json(user);
 });
 //login
 router.post('/login', async (req, res) => {
@@ -236,6 +242,7 @@ router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (
 });
 
 module.exports = router;
+
 
 
 
