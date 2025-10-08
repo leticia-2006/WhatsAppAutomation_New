@@ -83,7 +83,7 @@ if (!fs.existsSync(uploadsDir)) {
 
 const filePath = path.join(uploadsDir, fileName);
   fs.writeFileSync(filePath, buffer);
-  mediaUrl = `/uploads/${fileName}`;
+  mediaUrl = `${process.env.BASE_URL || "https://whatsappautomation-new-4fec.onrender.com"}/uploads/${fileName}`;
   text = "[📷 صورة]";
 } else if (msg.message.videoMessage) {
   contentType = "video";
@@ -94,7 +94,7 @@ const filePath = path.join(uploadsDir, fileName);
     fs.mkdirSync("./uploads");
   }
   fs.writeFileSync(filePath, buffer);
-  mediaUrl = `/uploads/${fileName}`;
+  mediaUrl = `${process.env.BASE_URL || "https://whatsappautomation-new-4fec.onrender.com"}/uploads/${fileName}`;
   text = "[🎥 فيديو]";
 }
 console.log("Content of the message", text, "نوع:", contentType, "رابط:", mediaUrl);
