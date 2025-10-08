@@ -61,7 +61,8 @@ function renderNumbers(numbers) {
     const number = num.number ?? "-";
     const status = num.status ?? "Unknown";
     const agent = num.assigned_agent_id ?? "-";
-
+    const name = num.name ?? `Number ${number}`;
+    const avatar = num.avatar ?? "/images/default-avatar.png";
     const statusClass =
       status === "Active"
         ? "status-active"
