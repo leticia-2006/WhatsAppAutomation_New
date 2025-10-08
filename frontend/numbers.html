@@ -1,27 +1,18 @@
 <!-- Numbers Management -->
-<div id="numbers-section" class="mt-4" style="display:none;">
-    <h3 class="card-title">WhatsApp Numbers</h3>
-    <button id="addNumberBtn" class="btn btn-primary">+ Add Number</button>
-  
-  <div class="card-body">
-    <input type="text" id="search" class="form-control mb-2" placeholder="🔍 Search numbers...">
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped w-100" id="numbersTable">
-        <thead class="table-light" > 
-          <tr>
-            <th>ID</th>
-            <th>Number</th>
-            <th>Status</th>
-            <th>Agent</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+<div id="numbers-section" style="display:none;">
+  <div class="numbers-header">
+    <h3>WhatsApp Numbers</h3>
+    <div class="actions">
+      <input type="text" id="search" class="search-box" placeholder="🔍 Search number...">
+      <button id="addNumberBtn" class="btn-modern">+ Add Number</button>
     </div>
   </div>
-</div>
 
+  <div class="numbers-grid" id="numbersGrid">
+    <!-- سيتم ملؤها ديناميكياً من JS -->
+  </div>
+</div>
+    
 <!-- Add Number Modal -->
 <div class="modal fade" id="addNumberModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
