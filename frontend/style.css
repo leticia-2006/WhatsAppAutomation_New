@@ -617,18 +617,11 @@ main {
 }
 
 /* 📸 تنسيق الصور داخل الرسائل */
-.message img,
-.msg-media img,
-.chat-message img {
+.msg-media img {
   width: 100%;
-  max-width: 350px;   /* حتى لا تتجاوز حجم الفقاعة */
+  max-width: 350px;
   height: auto;
   border-radius: 10px;
   object-fit: contain;
-  margin: 5px 0;
   display: block;
 }
-
-
-
-
