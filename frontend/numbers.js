@@ -70,27 +70,31 @@ function renderNumbers(numbers) {
         : "status-blocked";
 
     const card = document.createElement("div");
-    card.className = "number-card";
-    card.innerHTML = `
-      <div class="number-header">
-        <span class="number-id">#${id}</span>
-        <span class="number-status ${statusClass}">${status}</span>
-      </div>
-      <div class="number-body">
-        <h5>${number}</h5>
-        <div class="number-agent">👤 ${agent}</div>
-      </div>
-      <div class="number-actions">
-        <button onclick="showQR('${id}')" title="Show QR"><i class="fas fa-qrcode"></i></button>
-        ${
-          agent
-            ? `<button onclick="openTransferModal('${id}')" title="Transfer"><i class="fas fa-exchange-alt"></i></button>`
-            : ""
-        }
-        <button onclick="deleteNumber('${id}')" title="Delete"><i class="fas fa-trash"></i></button>
-      </div>
-    `;
-    grid.appendChild(card);
+card.className = "number-card";
+card.innerHTML = `
+  <div class="number-info">
+    <img src="${avatar}" alt="avatar" class="number-avatar">
+    <div class="number-details">
+      <div class="number-name">${name}</div>
+      <div class="number-agent">${number}</div>
+    </div>
+  </div>
+
+  <div class="number-contact">${agent}</div>
+
+  <div class="number-status ${statusClass}">${status}</div>
+
+  <div class="number-actions">
+    <button onclick="showQR('${id}')" title="Show QR"><i class="fas fa-qrcode"></i></button>
+    ${
+      agent
+        ? `<button onclick="openTransferModal('${id}')" title="Transfer"><i class="fas fa-exchange-alt"></i></button>`
+        : ""
+    }
+    <button onclick="deleteNumber('${id}')" title="Delete"><i class="fas fa-trash"></i></button>
+  </div>
+`;
+grid.appendChild(card);
   });
 }
 
