@@ -629,10 +629,136 @@ main {
 #usersTable {
   width: 100%;
 }
+/* ===== Modern Numbers Design ===== */
 #numbers-section {
-  width: 100%;
-  padding: 0 10px;
+  padding: 20px;
+  background: #f4f6fb;
+  min-height: 100vh;
+  border-radius: 20px;
 }
-.table {
-  width: 100% !important;
+
+.numbers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
 }
+
+.numbers-header h3 {
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.search-box {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: 0.2s;
+}
+.search-box:focus {
+  border-color: #007bff;
+}
+
+.btn-modern {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.btn-modern:hover {
+  background-color: #0056b3;
+}
+
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 20px;
+}
+
+.number-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: 0.2s;
+}
+.number-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.number-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.number-id {
+  font-size: 13px;
+  color: #888;
+}
+
+.number-status {
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-active {
+  background: #e6f8e9;
+  color: #2e8b57;
+}
+.status-pending {
+  background: #fff6e5;
+  color: #d69300;
+}
+.status-blocked {
+  background: #fde7e7;
+  color: #c0392b;
+}
+
+.number-body {
+  margin-top: 10px;
+}
+
+.number-body h5 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.number-agent {
+  color: #666;
+  font-size: 14px;
+}
+
+.number-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.number-actions button {
+  border: none;
+  background: #f3f3f3;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.number-actions button:hover {
+  background: #007bff;
+  color: white;
+  }
+
