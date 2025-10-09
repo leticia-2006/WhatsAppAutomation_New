@@ -1,3 +1,5 @@
+// تحديد دور المستخدم الحالي
+const userRole = window.userRole || localStorage.getItem("role");
 async function initNumbersPage() {
   // الآن numbers-section موجود في DOM
   const numbersSection = document.getElementById("numbers-section");
@@ -87,7 +89,7 @@ card.innerHTML = `
   <div class="number-actions">
     <button onclick="showQR('${id}')" title="Show QR"><i class="fas fa-qrcode"></i></button>
     ${
-      agent
+      (window.userRole === "super_admin")
         ? `<button onclick="openTransferModal('${id}')" title="Transfer"><i class="fas fa-exchange-alt"></i></button>`
         : ""
     }
