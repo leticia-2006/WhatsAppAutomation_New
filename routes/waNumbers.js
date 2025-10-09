@@ -12,11 +12,11 @@ router.get("/", requireLogin, async (req, res) => {
     if (role === "super_admin") {
       const result = await db.query(`
     SELECT 
-      w.id, w.number, w.status, w.assigned_agent_id, u_client.name AS client_name, u_client.avatar_url AS client_avatar, u_agent.name AS agent_name,
+      w.id, w.number, w.status, w.assigned_to, u.name AS client_name, u.avatar_url AS client_avatar,
       u_agent.id AS agent_id
     FROM wa_numbers w
     LEFT JOIN users u_client ON w.user_id = u_client.id
-    LEFT JOIN users u_agent ON w.assigned_agent_id = u_agent.id
+    LEFT JOIN users u_agent ON w.assigned_to = u_agent.id
     ORDER BY w.id DESC
   `);
       return res.json(result.rows);
