@@ -644,7 +644,7 @@ main {
   align-items: stretch;
   margin-bottom: 50px !important;
   width: 100%;
-  gap: 15px;
+  gap: 20px;
 }
 
 .numbers-header h3 {
@@ -844,6 +844,7 @@ number-avatar {
   object-fit: cover;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
 
 
 
