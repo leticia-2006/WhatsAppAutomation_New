@@ -60,9 +60,9 @@ function renderNumbers(numbers) {
     const id = num.id ?? "-";
     const phoneNumber = num.number ?? "-";
     const status = num.status ?? "Unknown";
-    const agentName = num.assigned_agent_id ?? "-";
-    const clientName = num.name ?? `Unknown User`;
-    const avatar = num.avatar ?? "/images/default-avatar.png";
+    const agentId = num.agent_id ?? "-";
+    const clientName = num.client_name ?? `Unknown User`;
+    const avatar = num.client_avatar ?? "/images/default-avatar.png";
     const statusClass =
       status === "Active"
         ? "status-active"
@@ -76,12 +76,12 @@ card.innerHTML = `
   <div class="number-info">
     <img src="${avatar}" alt="avatar" class="number-avatar">
     <div class="number-details">
-      <div class="number-name">${ClientName}</div>
+      <div class="number-name">${clientName}</div>
       </div>
       </div>
 
   <div class="number-contact">${phoneNumber}</div>
-  <div class="number-agent">${AgentName}</div>
+  <div class="number-agent">${AgentId}</div>
   <div class="number-status ${statusClass}">${status}</div>
 
   <div class="number-actions">
