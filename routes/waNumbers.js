@@ -13,10 +13,8 @@ router.get("/", requireLogin, async (req, res) => {
       const result = await db.query(`
     SELECT 
       w.id, w.number, w.status, w.assigned_to, u.name AS client_name, u.avatar_url AS client_avatar,
-      u_agent.id AS agent_id
     FROM wa_numbers w
-    LEFT JOIN users u_client ON w.user_id = u_client.id
-    LEFT JOIN users u_agent ON w.assigned_to = u_agent.id
+    LEFT JOIN users ON w.assigned_to = u.id
     ORDER BY w.id DESC
   `);
       return res.json(result.rows);
