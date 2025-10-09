@@ -81,7 +81,7 @@ card.innerHTML = `
       </div>
 
   <div class="number-contact">${phoneNumber}</div>
-  <div class="number-agent">${AgentId}</div>
+  <div class="number-agent">${agentId}</div>
   <div class="number-status ${statusClass}">${status}</div>
 
   <div class="number-actions">
