@@ -644,7 +644,7 @@ main {
   align-items: stretch;
   margin-bottom: 25px;
   width: 100%;
-  gap: 15px;
+  gap: 20px;
 }
 
 .numbers-header h3 {
@@ -653,9 +653,9 @@ main {
 numbers-header .actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
-  gap: 10px;
+  gap: 12px;
 }
 .search-box {
   padding: 0px 15px;
@@ -679,16 +679,17 @@ numbers-header .actions {
   background: linear-gradient(135deg, #007bff, #0069d9);
   border: none;
   color: white;
-  padding: 0px 22px;
   border-radius: 12px;
-  font-weight: 500;
-  font-size: 15px;
+  font-weight: bold;
+  font-size: 22px;
   justify-content: center;
   align-items: center;
   display: flex;
   white-space: nowrap;
   transition: background 0.2s ease, transform 0,1s ease;;
   hight: 46px;
+  width: 46px;
+  flex-shrink: 0;
 }
 .btn-modern:hover {
   background: linear-gradient(135deg, #0069d9, #0056b3);
@@ -841,6 +842,7 @@ number-avatar {
   object-fit: cover;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
 
 
 
