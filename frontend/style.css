@@ -653,9 +653,9 @@ main {
 .numbers-header .actions {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   width: 100%;
-  gap: 12px;
+  gap: 10px;
 }
 .search-box {
   padding: 0px 15px;
@@ -668,7 +668,7 @@ main {
   font-size: 15px;
   height: 46px;
   flex: 1;
-  width: 100%;
+  max-width: calc(100% - 70px);
 }
 .search-box:focus {
   border-color: #007bff;
@@ -842,6 +842,7 @@ number-avatar {
   object-fit: cover;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
 
 
 
