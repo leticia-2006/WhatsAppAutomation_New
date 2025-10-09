@@ -1,40 +1,28 @@
 <!-- Users Management -->
-<div class="card mt-4" id="users-section" style="display:none;">
-  <div class="card-header d-flex justify-content-between">
-    <h3 class="card-title">Users Management</h3>
-    <button id="addUserBtn" class="btn btn-primary">+ Add User</button>
-  </div>
-  <div class="card-body">
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <input type="text" id="search-users" class="form-control form-control-lg" placeholder="🔍 Search clients..." oninput="applyFilters()">
-      </div>
-      <div class="col-md-3">
-        <select id="tagFilterUsers" class="form-control form-control-lg" onchange="applyFilters()">
+<section id="users-section" style="display:none;">
+  <div class="users-header">
+    <h3>Users Management</h3>
+    <div class="actions">
+    <input type="text" id="search-users" class="search-box" placeholder="🔍 Search clients..." oninput="applyFilters()">
+    <button id="addUserBtn" class="btn-modern"></button>
+    <select id="tagFilterUsers" class="form-control form-control-lg" onchange="applyFilters()">
           <option value="">All tags</option>
           <option value="VIP">VIP</option>
           <option value="New">New</option>
         </select>
-      </div>
-    </div>
-
-    <div class="table-responsive">
-    <table class="table w-100" id="usersTable">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Phone</th>
-      <th>Role</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody id="usersTableBody"></tbody>
-    </table>
   </div>
-</div>
-</div>
-
+  </div>
+  
+        
+<div class="users-table-header">
+      <span>ID</span>
+      <span>Name</span>
+      <span>Phone</span>
+      <span>Role</span>
+      <span>Actions</span>
+  </div>
+      <div class="users-grid" id="usersGrid"></div>
+</section>
 <script>
   // تحميل بيانات المستخدم من localStorage
 const user = JSON.parse(localStorage.getItem("user")); 
