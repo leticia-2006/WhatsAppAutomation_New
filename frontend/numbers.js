@@ -60,7 +60,7 @@ function renderNumbers(numbers) {
     const id = num.id ?? "-";
     const phoneNumber = num.number ?? "-";
     const status = num.status ?? "Unknown";
-    const agentId = num.agent_id ?? "-";
+    const agentId = num.assigned_to ?? "-";
     const clientName = num.client_name ?? `Unknown User`;
     const avatar = num.client_avatar ?? "/images/default-avatar.png";
     const statusClass =
