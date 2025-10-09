@@ -1,5 +1,5 @@
 // تحديد دور المستخدم الحالي
-indow.userRole = (window.currentUser?.role || localStorage.getItem("role") || "").toLowerCase();
+window.userRole = (window.currentUser?.role || localStorage.getItem("role") || "").toLowerCase();
 async function initNumbersPage() {
   // الآن numbers-section موجود في DOM
   const numbersSection = document.getElementById("numbers-section");
