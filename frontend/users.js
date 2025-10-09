@@ -36,14 +36,17 @@ async function loadUsers() {
 
     users.forEach(u => {
       const card = document.createElement("div");
-      card.className = "user.card";
+      card.className = "user-card";
       card.innerHTML = `
         <span>${u.id}</span>
-        <span>${u.name}</span>
-        <span>${u.phone}</span>
-        <span>${u.role}</span>
+        <div class="user-info">
+        <img src="${u.avatar_url || '/images/default-avatar.png'}" class="user-avatar" alt="">
+        <span class="user-name">${u.name}</span>
+        </div>
+        <span>${u.phone || '-'}</span>
+        <span class="role-tag ${u.role}">${u.role}</span>
         <div class="user-actions">
-          <button onclick="editUser(${u.id})"><i class="fas fa-edit></i></button>
+          <button onclick="editUser(${u.id})"><i class="fas fa-edit"></i></button>
           <button onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>
           ${u.role === "supervisor"
             ? `<button onclick="openPermModal(${u.id})"><i class="fas fa-key"></i></button>`
