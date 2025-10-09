@@ -12,7 +12,7 @@ router.get("/", requireLogin, async (req, res) => {
     if (role === "super_admin") {
       const result = await db.query(`
     SELECT 
-      w.id, w.number, w.status, w.assigned_to, u.name AS client_name, u.avatar_url AS client_avatar,
+      w.id, w.number, w.status, w.assigned_to, u.name AS client_name, u.avatar_url AS client_avatar
     FROM wa_numbers w
     LEFT JOIN users ON w.assigned_to = u.id
     ORDER BY w.id DESC
