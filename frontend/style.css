@@ -650,7 +650,7 @@ main {
 .numbers-header h3 {
   margin-bottom: 5px;
 }
-numbers-header .actions {
+.numbers-header .actions {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -687,7 +687,7 @@ numbers-header .actions {
   display: flex;
   white-space: nowrap;
   transition: background 0.2s ease, transform 0,1s ease;;
-  hight: 46px;
+  height: 46px;
   width: 46px;
   flex-shrink: 0;
 }
@@ -712,7 +712,7 @@ numbers-header .actions {
   padding: 10px 0;
   width: 100%
 }
-numbers-section,
+#numbers-section,
 .numbers-table-header,
 .numbers-grid,
 .numbers-header {
@@ -842,6 +842,7 @@ number-avatar {
   object-fit: cover;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
 
 
 
