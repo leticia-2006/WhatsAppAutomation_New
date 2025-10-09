@@ -824,7 +824,7 @@ main {
   background: #f9fafc;
   padding: 12px 20px;
   border-radius: 12px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
   font-weight: 600;
   color: #666;
   font-size: 14px;
@@ -844,6 +844,7 @@ number-avatar {
   object-fit: cover;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
 
 
 
