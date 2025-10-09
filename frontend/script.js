@@ -101,7 +101,9 @@ async function fetchUser() {
   }
 }
 function applyFilters() {
-  const search = document.getElementById("search-input").value.toLowerCase();
+  const input = document.getElementById("search-input");
+  if (!input) return; // 🛡️ حماية: إذا ما وُجد العنصر، لا تكمل تنفيذ الكود
+  const search = input.value.toLowerCase();
   const rows = document.querySelectorAll("#sessions-body tr");
   rows.forEach(r => {
     const text = r.textContent.toLowerCase();
@@ -141,6 +143,7 @@ document.addEventListener("click", async (e) => {
 
 // Load initial data
 window.addEventListener("load", fetchUser);
+
 
 
 
