@@ -1,5 +1,22 @@
-// تحديد دور المستخدم الحالي
-window.userRole = (window.currentUser?.role || localStorage.getItem("role") || "").toLowerCase();
+// ====== التأكد من تحميل المستخدم قبل تشغيل الصفحة ======
+async function waitForUser() {
+  return new Promise((resolve) => {
+    const checkUser = setInterval(() => {
+      if (window.currentUser && window.currentUser.role) {
+        clearInterval(checkUser);
+        resolve(window.currentUser);
+      }
+    }, 100); // يفحص كل 100ms
+  });
+}
+
+(async () => {
+  const user = await waitForUser();
+  window.userRole = (user.role || localStorage.getItem("role") || "").toLowerCase();
+  localStorage.setItem("role", window.userRole);
+  console.log("✅ userRole loaded:", window.userRole);
+  initNumbersPage(); // بعد التأكد من تحميل الدور
+})();
 async function initNumbersPage() {
   // الآن numbers-section موجود في DOM
   const numbersSection = document.getElementById("numbers-section");
