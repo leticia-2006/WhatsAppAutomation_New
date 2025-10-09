@@ -646,9 +646,7 @@ main {
 }
 
 .numbers-header h3 {
-  font-size: 1.5rem;
-  color: #333;
-  font-weight: 600;
+  margin-bottom: 5px;
 }
 
 .search-box {
@@ -659,9 +657,10 @@ main {
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
   transition: 0.2s ease;
   background: #fff;
-  font-size: 14px;
-  height: 42px;
+  font-size: 15px;
+  height: 46px;
   flex: 1;
+  width: 100%;
 }
 .search-box:focus {
   border-color: #007bff;
@@ -669,21 +668,22 @@ main {
 }
 
 .btn-modern {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #007bff, #0069d9);
   border: none;
   color: white;
-  padding: 0px 18px;
+  padding: 0px 22px;
   border-radius: 12px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 15px;
   justify-content: center;
   align-items: center;
   display: flex;
   white-space: nowrap;
   transition: background 0.2s ease, transform 0,1s ease;;
+  hight: 46px;
 }
 .btn-modern:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
 .btn-modern:active {
@@ -693,7 +693,7 @@ main {
   content: "+";
   font-weight: bold;
   margin-right: 6px;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .numbers-grid {
@@ -826,4 +826,5 @@ number-avatar {
   object-fit: cover;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
 
