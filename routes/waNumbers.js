@@ -14,7 +14,7 @@ router.get("/", requireLogin, async (req, res) => {
     SELECT 
       w.id, w.number, w.status, w.assigned_to, u.name AS client_name, u.avatar_url AS client_avatar
     FROM wa_numbers w
-    LEFT JOIN users ON w.assigned_to = u.id
+    LEFT JOIN users u ON w.assigned_to = u.id
     ORDER BY w.id DESC
   `);
       return res.json(result.rows);
