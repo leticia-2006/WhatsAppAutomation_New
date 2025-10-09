@@ -1,5 +1,5 @@
 // تحديد دور المستخدم الحالي
-const userRole = window.userRole || localStorage.getItem("role");
+window.userRole = (window.currentUser?.role || localStorage.getItem("role") || "").toLowerCase();
 async function initNumbersPage() {
   // الآن numbers-section موجود في DOM
   const numbersSection = document.getElementById("numbers-section");
@@ -10,8 +10,9 @@ async function initNumbersPage() {
   loadNumbers(); // افترض أن لديك دالة loadNumbers
 
   const addBtn = document.getElementById("addNumberBtn");
-  if (addBtn) {
+  if (addBtn && window.userRole ==== "super_admin") {
     addBtn.addEventListener("click", () => {
+      addBtn.style.display = "inline-block";
       const modal = new bootstrap.Modal(document.getElementById("addNumberModal"));
       modal.show();
     });
@@ -48,6 +49,9 @@ async function loadNumbers() {
 
 // ====== عرض الأرقام في الجدول ======
 function renderNumbers(numbers) {
+ const canTransfer = ["super_admin", "admin", "supervisor"].includes(window.userRole);
+ const canDelete = window.userRole === "super_admin";
+ const canAdd = window.userRole === "super_admin";
   const grid = document.getElementById("numbersGrid");
   if (!grid) return;
 
@@ -88,12 +92,8 @@ card.innerHTML = `
 
   <div class="number-actions">
     <button onclick="showQR('${id}')" title="Show QR"><i class="fas fa-qrcode"></i></button>
-    ${
-      (window.userRole === "super_admin")
-        ? `<button onclick="openTransferModal('${id}')" title="Transfer"><i class="fas fa-exchange-alt"></i></button>`
-        : ""
-    }
-    <button onclick="deleteNumber('${id}')" title="Delete"><i class="fas fa-trash"></i></button>
+    ${canTransfer ? `<button onclick="openTransferModal('${id}')" title="Transfer"><i class="fas fa-exchange-alt"></i></button>` : ""}
+    ${canDelete ? `<button onclick="deleteNumber('${id}')" title="Delete"><i class="fas fa-trash"></i></button>` : ""}
   </div>
 `;
 grid.appendChild(card);
