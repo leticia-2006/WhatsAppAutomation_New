@@ -30,26 +30,27 @@ async function loadUsers() {
   try {
     const res = await axios.get("/users", { withCredentials: true });
     const users = res.data;
-    const tbody = document.getElementById("usersTableBody");
-    if (!tbody) return; 
-    tbody.innerHTML = "";
+    const grid = document.getElementById("usersGrid");
+    if (!grid) return; 
+    grid.innerHTML = "";
 
     users.forEach(u => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${u.id}</td>
-        <td>${u.name}</td>
-        <td>${u.phone}</td>
-        <td>${u.role}</td>
-        <td>
-          <button class="btn btn-sm btn-warning" onclick="editUser(${u.id})">Edit</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
+      const card = document.createElement("div");
+      card.className = "user.card";
+      card.innerHTML = `
+        <span>${u.id}</span>
+        <span>${u.name}</span>
+        <span>${u.phone}</span>
+        <span>${u.role}</span>
+        <div class="user-actions">
+          <button onclick="editUser(${u.id})"><i class="fas fa-edit></i></button>
+          <button onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>
           ${u.role === "supervisor"
-            ? `<button class="btn btn-sm btn-info" onclick="openPermModal(${u.id})">Manage Permissions</button>`
+            ? `<button onclick="openPermModal(${u.id})"><i class="fas fa-key"></i></button>`
             : ""}
-        </td>
-      `;
-      tbody.appendChild(tr);
+            </div>
+        `;
+      grid.appendChild(card);
     });
   } catch (err) {
     console.error("Error loading users", err);
