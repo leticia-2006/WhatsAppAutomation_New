@@ -694,7 +694,7 @@ main {
   width: 100%;
   align-items: center;
   min-height: 55px;
-  grid-template-columns: 2fr 1fr 1fr 0.6fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.6fr;
 }
 .number-card:hover {
   transform: translateY(-2px);
@@ -777,7 +777,7 @@ main {
 /* ===== Titles Row (above cards) ===== */
 .numbers-table-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 0.6fr; /* عمود لكل عنوان */
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.6fr; /* عمود لكل عنوان */
   background: #f9fafc;
   padding: 12px 20px;
   border-radius: 12px;
@@ -791,4 +791,5 @@ main {
 .numbers-table-header span {
   text-align: left;
 }
+
 
