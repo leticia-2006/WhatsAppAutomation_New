@@ -644,7 +644,7 @@ main {
   align-items: stretch;
   margin-bottom: 25px;
   width: 100%;
-  gap: 20px;
+  gap: 30px;
 }
 
 .numbers-header h3 {
@@ -653,9 +653,10 @@ main {
 .numbers-header .actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   gap: 10px;
+  margin-bottom: 10px;
 }
 .search-box {
   padding: 0px 15px;
@@ -681,7 +682,7 @@ main {
   color: white;
   border-radius: 12px;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 26px;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -690,6 +691,7 @@ main {
   height: 46px;
   width: 46px;
   flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
 .btn-modern:hover {
   background: linear-gradient(135deg, #0069d9, #0056b3);
@@ -701,8 +703,8 @@ main {
 .btn-modern::before {
   content: "+";
   font-weight: bold;
-  margin-right: 6px;
-  font-size: 18px;
+  margin: 0px;
+  font-size: 28px;
 }
 
 .numbers-grid {
@@ -842,6 +844,7 @@ number-avatar {
   object-fit: cover;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
 
 
 
