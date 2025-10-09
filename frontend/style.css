@@ -652,27 +652,48 @@ main {
 }
 
 .search-box {
-  padding: 8px 14px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+  padding: 0px 15px;
+  border: 1px solid #d0d4dc;
+  border-radius: 12px;
   outline: none;
-  transition: 0.2s;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  transition: 0.2s ease;
+  background: #fff;
+  font-size: 14px;
+  height: 42px;
+  flex: 1;
 }
 .search-box:focus {
   border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
 }
 
 .btn-modern {
   background-color: #007bff;
   border: none;
   color: white;
-  padding: 8px 18px;
-  border-radius: 10px;
+  padding: 0px 18px;
+  border-radius: 12px;
   font-weight: 500;
-  transition: 0.2s;
+  font-size: 14px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0,1s ease;;
 }
 .btn-modern:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
+}
+.btn-modern:active {
+  transform: scale(0.98);
+}
+.btn-modern::before {
+  content: "+";
+  font-weight: bold;
+  margin-right: 6px;
+  font-size: 16px;
 }
 
 .numbers-grid {
@@ -724,6 +745,7 @@ main {
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
+  width: fit-content;
 }
 
 .status-active {
@@ -763,18 +785,21 @@ main {
 
 .number-actions button {
   border: none;
-  background: #f3f3f3;
-  padding: 8px 10px;
-  border-radius: 8px;
+  background: #eef1f5;
+  padding: 7px 9px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease;
+  font-size: 15px;
 }
 
 .number-actions button:hover {
   background: #007bff;
-  color: white;
-  }
-/* ===== Titles Row (above cards) ===== */
+}
+.number-actions button:hover i { color: white;}
+.number-actions button i {
+  color: #555;}
+
 .numbers-table-header {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr 0.6fr; /* عمود لكل عنوان */
@@ -791,5 +816,6 @@ main {
 .numbers-table-header span {
   text-align: left;
 }
+
 
 
