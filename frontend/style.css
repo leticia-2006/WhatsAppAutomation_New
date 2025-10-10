@@ -120,7 +120,7 @@ main {
   font-size: 14px;
   font-weight: 500;
 } */
-/* === New Modern Sidebar === */
+ === New Modern Sidebar === 
 .modern-sidebar {
   width: 90px;
   background-color: #324C4F; /* اللون الأخضر الرمادي */
@@ -222,7 +222,7 @@ main {
   overflow: auto;  
   background-color: var(--bg-main);  
   padding: 20px;  
-}
+}*/
 /* Clients List */
 .clients-list {
   width: 300px;
@@ -1014,6 +1014,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
