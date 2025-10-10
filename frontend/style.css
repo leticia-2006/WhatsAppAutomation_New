@@ -527,7 +527,7 @@ main {
   align-items: center;
   gap: 6px;
 }
-Translate 
+/*Translate */
 .translate-btn {
   background-color: transparent;
   border: none;
@@ -912,6 +912,7 @@ Translate
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
