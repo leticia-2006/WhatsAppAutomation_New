@@ -120,109 +120,7 @@ main {
   font-size: 14px;
   font-weight: 500;
 } 
-/* === New Modern Sidebar === 
-.modern-sidebar {
-  width: 90px;
-  background-color: #324C4F;  
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-}
-.modern-sidebar .sidebar-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-.modern-sidebar .sidebar-header .avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  object-fit: cover;
-}
-.modern-sidebar .sidebar-header h3 {
-  font-size: 13px;
-  color: #fff;
-  font-weight: 500;
-  text-align: center;
-}
 
- === Icons in center === 
-.modern-sidebar .sidebar-menu {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-}
-.modern-sidebar .sidebar-menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-.modern-sidebar .sidebar-menu ul li a {
-  color: #D9E3E6;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 45px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-.modern-sidebar .sidebar-menu ul li a:hover,
-.modern-sidebar .sidebar-menu ul li a.active {
-  background-color: #FFFFFF;
-  color: #324C4F;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
- === Footer === 
-.modern-sidebar .sidebar-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  padding-bottom: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-.modern-sidebar .sidebar-footer button {
-  background: none;
-  border: none;
-  color: #D9E3E6;
-  font-size: 18px;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-.modern-sidebar .sidebar-footer button:hover {
-  color: #FFFFFF;
-}
-.modern-sidebar .sidebar-footer input[type="checkbox"],
-.modern-sidebar .sidebar-footer select {
-  display: none;  نخفيها داخل الإعدادات لاحقًا 
-}
-.app-container {  
-  display: flex;  
-  flex-direction: row;  
-  height: 100vh;  
-}  
-  
-#main-content {  
-  flex-grow: 1;  
-  overflow: auto;  
-  background-color: var(--bg-main);  
-  padding: 20px;  
-} */
 /* Clients List */
 .clients-list {
   width: 300px;
@@ -1014,6 +912,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
