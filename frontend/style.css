@@ -887,6 +887,11 @@ main {
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
   transition: 0.2s ease;
 }
+.users-search:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
+}
+  
 .users-add-btn {
   background: linear-gradient(135deg, #007bff, #0069d9);
   border: none;
@@ -907,3 +912,4 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
