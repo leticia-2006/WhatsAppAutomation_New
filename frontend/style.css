@@ -55,21 +55,9 @@ main {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  display: flex;
+  margin-bottom: 25px;
 }
-.sidebar-header avatar { width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  border: 2px solid #e0e0e0;
-  object-fit: cover;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.sidebar-header h3 {
-  font-size: 14px;
-  margin-top: 4px;
-  color: #444;
-  text-align: center;
-}
+.sidebar-header h3 { display: none; }
 .sidebar-menu ul {
   list-style: none;
   display: flex;
@@ -940,6 +928,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
