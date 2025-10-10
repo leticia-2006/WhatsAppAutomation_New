@@ -40,7 +40,7 @@ main {
   flex: 1;
   display: flex;
   overflow: hidden;}
-/* Sidebar 
+/* Sidebar */
 .sidebar {
   width: 260px;
   background-color: var(--container-bg);
@@ -119,11 +119,11 @@ main {
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-} */
- === New Modern Sidebar === 
+} 
+/* === New Modern Sidebar === 
 .modern-sidebar {
   width: 90px;
-  background-color: #324C4F; /* اللون الأخضر الرمادي */
+  background-color: #324C4F;  
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -151,7 +151,7 @@ main {
   text-align: center;
 }
 
-/* === Icons in center === */
+ === Icons in center === 
 .modern-sidebar .sidebar-menu {
   flex: 1;
   display: flex;
@@ -186,7 +186,7 @@ main {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* === Footer === */
+ === Footer === 
 .modern-sidebar .sidebar-footer {
   display: flex;
   flex-direction: column;
@@ -209,7 +209,7 @@ main {
 }
 .modern-sidebar .sidebar-footer input[type="checkbox"],
 .modern-sidebar .sidebar-footer select {
-  display: none; /* نخفيها داخل الإعدادات لاحقًا */
+  display: none;  نخفيها داخل الإعدادات لاحقًا 
 }
 .app-container {  
   display: flex;  
@@ -222,7 +222,7 @@ main {
   overflow: auto;  
   background-color: var(--bg-main);  
   padding: 20px;  
-}*/
+} */
 /* Clients List */
 .clients-list {
   width: 300px;
@@ -1014,6 +1014,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
