@@ -1,17 +1,17 @@
 <!-- Users Management -->
 <section id="users-section" style="display:none;">
-  <div class="numbers-header">
+  <div class="users-header">
     <h3>Users Management</h3>
-    <div class="actions">
-    <input type="text" id="search-users" class="search-box" placeholder="🔍 Search clients..." oninput="applyFilters()">
-    <select id="tagFilterUsers" class="form-select filter-select" onchange="applyFilters()">
+    <div class="users-actions">
+    <input type="text" id="search-users" class="users-search" placeholder="🔍 Search clients..." oninput="applyFilters()">
+    <select id="tagFilterUsers" class="users-filter" onchange="applyFilters()">
           <option value="">All Roles</option>
           <option value="super_admin">Super Admin</option>
           <option value="supervisor">Supervisor</option>
           <option value ="admin">Admin</option>  
           <option value ="agent">Agent</option> 
     </select>
-    <button id="addUserBtn" class="btn-modern"><i class="fas fa-plus"></i></button>
+    <button id="addUserBtn" class="users-add-btn"><i class="fas fa-plus"></i></button>
   </div>
   </div>
   
