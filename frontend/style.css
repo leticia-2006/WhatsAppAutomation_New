@@ -57,7 +57,7 @@ main {
   gap: 6px;
   margin-bottom: 25px;
 }
-.sidebar-header { display: none;}
+.sidebar-header h3 { display: none;}
 .sidebar-menu ul {
   list-style: none;
   display: flex;
@@ -921,6 +921,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
