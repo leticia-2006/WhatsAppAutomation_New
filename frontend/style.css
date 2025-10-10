@@ -42,39 +42,53 @@ main {
   overflow: hidden;}
 /* Sidebar */
 .sidebar {
-  width: 80px;
-  background-color: var(--container-bg);
-  border-right: 1px solid var(--border-color);
+  width: 90px;
+  background-color: #fff;
+  border-right: 1px solid #e2e5ec;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 15px 8px;
+  padding: 18px 10px;
 }
 
 .sidebar-header {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  margin-bottom: 25px;
+  display: flex;
 }
-.sidebar-header h3 { display: none;}
+.sidebar-header avatar { width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.sidebar-header h3 {
+  font-size: 14px;
+  margin-top: 4px;
+  color: #444;
+  text-align: center;
+}
 .sidebar-menu ul {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  gap: 14px;
 }
-
 .sidebar-menu ul li a {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  padding: 12px 15px;
-  border-radius: 12px;
-  cursor: pointer;
-  color: var(--text-dark);
-  font-weight: 500;
-  transition: all 0.3s ease;
+  border-radius: 14px;
+  color: #555;
+  font-size: 20px;
+  transition: all 0.25s ease;
+  background: #f6f8fb;
+  width: 52px;
+  height: 52px;
 }
 
 .sidebar-menu ul li a .icon {
@@ -98,27 +112,28 @@ main {
 
 .sidebar-menu ul li a:hover,
 .sidebar-menu ul li.active a {
-  background-color: var(--light-green-bg);
-  color: var(--primary-green);
+  background: linear-gradient(135deg, #007bff, #0069d9);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,123,255,0.15);
 }
 
 .sidebar-footer {
   display: flex;
-  justify-content: space-around;
+  gap: 10px;
   align-items: center;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid #e4e7ec;
   padding-top: 15px;
-  padding-bottom: 10px;
-  flex-direction: bottom;
+  flex-direction: column;
 }
 
 .sidebar-footer button {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border: none;
   border-radius: 12px;
-  background-color: var(--light-green-bg);
-  color: var(--primary-green);
+  background-color: #f6f8fb;
+  color: #007bff;
   font-size: 18px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -921,6 +936,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
