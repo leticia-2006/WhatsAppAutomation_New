@@ -45,7 +45,7 @@ async function loadUsers() {
       const role = u.role ?? "-";
       const avatar = u.avatar_url ?? "/images/default-avatar.png";
       const card = document.createElement("div");
-      card.className = "numbers-card";
+      card.className = "number-card";
       card.innerHTML = `
         <div class="number-info">
           <img src="${avatar}" alt="avatar" class="number-avatar">
