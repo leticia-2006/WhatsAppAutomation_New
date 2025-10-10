@@ -2,14 +2,16 @@
 <section id="users-section" style="display:none;">
   <div class="users-header">
     <h3>Users Management</h3>
-    <div class="actions">
+    <div class="numbers-header actions">
     <input type="text" id="search-users" class="search-box" placeholder="🔍 Search clients..." oninput="applyFilters()">
-    <button id="addUserBtn" class="btn-modern"></button>
-    <select id="tagFilterUsers" class="form-control form-control-lg" onchange="applyFilters()">
-          <option value="">All tags</option>
-          <option value="VIP">VIP</option>
-          <option value="New">New</option>
-        </select>
+    <select id="tagFilterUsers" class="form-select filter-select" onchange="applyFilters()">
+          <option value="">All Roles</option>
+          <option value="super_admin">Super Admin</option>
+          <option value="supervisor">Supervisor</option>
+          <option value ="admin">Admin</option>  
+          <option value ="agent">Agent</option> 
+    </select>
+    <button id="addUserBtn" class="btn-modern"><i class="fas fa-plus"></i></button>
   </div>
   </div>
   
