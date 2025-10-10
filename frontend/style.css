@@ -116,22 +116,17 @@ main {
   height: 42px;
   border: none;
   border-radius: 12px;
-  background-color: #f6f8fb;
-  color: #007bff;
+  background-color: var(--light-green-bg);
+  color: var(--primary-green);
   font-size: 18px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
 }
 
 .sidebar-footer button:hover {
   background-color: linear-gradient(135deg, #007bff, #0069d9);
   color: white;
   transform: scale(1.1);
-}
-/* Highlight active section */
-.sidebar-menu ul li a.active {
-  background: linear-gradient(135deg, #007bff, #0069d9);
-  color: #fff;
 }
 /* Clients List */
 .clients-list {
@@ -924,6 +919,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
