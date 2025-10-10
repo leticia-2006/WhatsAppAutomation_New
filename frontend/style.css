@@ -109,6 +109,7 @@ main {
   border-top: 1px solid var(--border-color);
   padding-top: 15px;
   padding-bottom: 10px;
+  flex-direction: bottom;
 }
 
 .sidebar-footer button {
@@ -920,6 +921,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
