@@ -103,11 +103,12 @@ main {
 
 .sidebar-footer {
   display: flex;
-  gap: 10px;
   align-items: center;
-  border-top: 1px solid #e4e7ec;
+  border-top: 1px solid var(--border-color);
   padding-top: 15px;
-  flex-direction: column;
+  padding-bottom: 10px;
+  flex-direction: bottom;
+  justify-content: space-around;
 }
 
 .sidebar-footer button {
@@ -923,6 +924,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
