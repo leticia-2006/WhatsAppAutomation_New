@@ -121,7 +121,7 @@ main {
   font-weight: 500;
 } */
 /* === New Modern Sidebar === */
-.sidebar {
+.modern-sidebar {
   width: 90px;
   background-color: #324C4F; /* اللون الأخضر الرمادي */
   display: flex;
@@ -131,20 +131,20 @@ main {
   padding: 20px 0;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
-.sidebar-header {
+.modern-sidebar .sidebar-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
 }
-.sidebar-header .avatar {
+.modern-sidebar .sidebar-header .avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   border: 2px solid #fff;
   object-fit: cover;
 }
-.sidebar-header h3 {
+.modern-sidebar .sidebar-header h3 {
   font-size: 13px;
   color: #fff;
   font-weight: 500;
@@ -152,14 +152,14 @@ main {
 }
 
 /* === Icons in center === */
-.sidebar-menu {
+.modern-sidebar .sidebar-menu {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 20px;
 }
-.sidebar-menu ul {
+.modern-sidebar .sidebar-menu ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -168,7 +168,7 @@ main {
   align-items: center;
   gap: 20px;
 }
-.sidebar-menu ul li a {
+.modern-sidebar .sidebar-menu ul li a {
   color: #D9E3E6;
   font-size: 20px;
   display: flex;
@@ -179,15 +179,15 @@ main {
   border-radius: 12px;
   transition: all 0.3s ease;
 }
-.sidebar-menu ul li a:hover,
-.sidebar-menu ul li a.active {
+.modern-sidebar .sidebar-menu ul li a:hover,
+.modern-sidebar .sidebar-menu ul li a.active {
   background-color: #FFFFFF;
   color: #324C4F;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* === Footer === */
-.sidebar-footer {
+.modern-sidebar .sidebar-footer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -196,7 +196,7 @@ main {
   padding-bottom: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
-.sidebar-footer button {
+.modern-sidebar .sidebar-footer button {
   background: none;
   border: none;
   color: #D9E3E6;
@@ -204,11 +204,11 @@ main {
   cursor: pointer;
   transition: color 0.3s ease;
 }
-.sidebar-footer button:hover {
+.modern-sidebar .sidebar-footer button:hover {
   color: #FFFFFF;
 }
-.sidebar-footer input[type="checkbox"],
-.sidebar-footer select {
+.modern-sidebar .sidebar-footer input[type="checkbox"],
+.modern-sidebar .sidebar-footer select {
   display: none; /* نخفيها داخل الإعدادات لاحقًا */
 }
 
@@ -1003,6 +1003,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
