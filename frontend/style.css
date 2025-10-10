@@ -211,7 +211,18 @@ main {
 .modern-sidebar .sidebar-footer select {
   display: none; /* نخفيها داخل الإعدادات لاحقًا */
 }
-
+.app-container {  
+  display: flex;  
+  flex-direction: row;  
+  height: 100vh;  
+}  
+  
+#main-content {  
+  flex-grow: 1;  
+  overflow: auto;  
+  background-color: var(--bg-main);  
+  padding: 20px;  
+}
 /* Clients List */
 .clients-list {
   width: 300px;
@@ -1003,6 +1014,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
