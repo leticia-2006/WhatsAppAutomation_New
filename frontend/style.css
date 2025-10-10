@@ -120,96 +120,98 @@ main {
   font-size: 14px;
   font-weight: 500;
 }
-/* === Modern Sidebar (WhatsApp-style) === */
-.sidebar-modern {
+/* === New Modern Sidebar === */
+.sidebar {
   width: 90px;
-  background-color: #1e3a8a; /* أزرق داكن مثل الصورة */
+  background-color: #324C4F; /* اللون الأخضر الرمادي */
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
   padding: 20px 0;
-  border-radius: 20px;
-  margin: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
-
-.sidebar-top {
+.sidebar-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 10px;
 }
-
-.sidebar-top .logo {
-  font-size: 26px;
-  color: #fff;
-  background: rgba(255,255,255,0.1);
-  padding: 10px;
-  border-radius: 16px;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-
-.nav-item {
+.sidebar-header .avatar {
   width: 50px;
   height: 50px;
-  color: #CBD5E1;
-  background: transparent;
-  border-radius: 16px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+}
+.sidebar-header h3 {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* === Icons in center === */
+.sidebar-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+.sidebar-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.sidebar-menu ul li a {
+  color: #D9E3E6;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  font-size: 20px;
-}
-
-.nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-.nav-item.active {
-  background: #fff;
-  color: #1e3a8a;
-}
-
-.sidebar-bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.icon-btn {
   width: 45px;
   height: 45px;
-  border: none;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  cursor: pointer;
+  border-radius: 12px;
   transition: all 0.3s ease;
+}
+.sidebar-menu ul li a:hover,
+.sidebar-menu ul li a.active {
+  background-color: #FFFFFF;
+  color: #324C4F;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* === Footer === */
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding-bottom: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+.sidebar-footer button {
+  background: none;
+  border: none;
+  color: #D9E3E6;
   font-size: 18px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.sidebar-footer button:hover {
+  color: #FFFFFF;
+}
+.sidebar-footer input[type="checkbox"],
+.sidebar-footer select {
+  display: none; /* نخفيها داخل الإعدادات لاحقًا */
 }
 
-.icon-btn:hover {
-  background: #fff;
-  color: #1e3a8a;
-}
-
-.icon-btn.logout {
-  background: rgba(255, 80, 80, 0.15);
-  color: #ff6b6b;
-}
-
-.icon-btn.logout:hover {
-  background: #ff6b6b;
-  color: #fff;
-  }
 /* Clients List */
 .clients-list {
   width: 300px;
@@ -1001,5 +1003,6 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
