@@ -714,7 +714,8 @@ main {
 #numbers-section,
 .numbers-table-header,
 .numbers-grid,
-.numbers-header {
+.numbers-header
+.users-header {
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -844,12 +845,13 @@ main {
   object-fit: cover;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
-.filter-select {
+.users-filter {
+  flex: 1;
   height: 46px;
   border-radius: 12px;
   border: 1px solid #d0d4dc;
-  padding: 0 10px;
   background: #fff;
+  padding: 0 10px;
   font-size: 15px;
   color: #333;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
@@ -861,5 +863,47 @@ main {
   box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
 }
   
+.users-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 40px !important;
+}
 
-
+.users-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.users-search {
+  flex: 3;
+  padding: 0 15px;
+  height: 46px;
+  border: 1px solid #d0d4dc;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 15px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  transition: 0.2s ease;
+}
+.users-add-btn {
+  background: linear-gradient(135deg, #007bff, #0069d9);
+  border: none;
+  color: white;
+  border-radius: 12px;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+  font-weight: bold;
+  font-size: 26px;
+}
+.users-add-btn:hover {
+  background: linear-gradient(135deg, #0069d9, #0056b3);
+  transform: translateY(-1px);
+}
