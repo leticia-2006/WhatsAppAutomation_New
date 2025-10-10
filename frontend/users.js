@@ -33,26 +33,50 @@ async function loadUsers() {
     const grid = document.getElementById("usersGrid");
     if (!grid) return; 
     grid.innerHTML = "";
+    if (!Array.isArray(users) || users.length === 0) {
+      grid.innerHTML = "<p class='text-center text-muted'>No users found</p>";
+      return;
+    }
 
-    users.forEach(u => {
+ users.forEach(u => {
+      const id = u.id ?? "-";
+      const name = u.name ?? "-";
+      const phone = u.phone ?? "-";
+      const role = u.role ?? "-";
+      const avatar = u.avatar_url ?? "/images/default-avatar.png";
       const card = document.createElement("div");
-      card.className = "user-card";
+      card.className = "numbers-card";
       card.innerHTML = `
-        <span>${u.id}</span>
-        <div class="user-info">
-        <img src="${u.avatar_url || '/images/default-avatar.png'}" class="user-avatar" alt="">
-        <span class="user-name">${u.name}</span>
+        <div class="number-info">
+          <img src="${avatar}" alt="avatar" class="number-avatar">
+          <div class="number-details">
+            <div class="number-name">${name}</div>
+            <div class="number-role text-muted">${role}</div>
+          </div>
         </div>
-        <span>${u.phone || '-'}</span>
-        <span class="role-tag ${u.role}">${u.role}</span>
-        <div class="user-actions">
-          <button onclick="editUser(${u.id})"><i class="fas fa-edit"></i></button>
-          <button onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>
-          ${u.role === "supervisor"
-            ? `<button onclick="openPermModal(${u.id})"><i class="fas fa-key"></i></button>`
-            : ""}
-            </div>
-        `;
+
+        <div class="number-contact">${phone}</div>
+
+        <div class="number-agent">${id}</div>
+
+        <div class="number-status ${
+          role === "super_admin"
+            ? "status-active"
+            : role === "admin"
+            ? "status-pending"
+            : "status-blocked"
+        }">${role}</div>
+
+        <div class="number-actions">
+          <button onclick="editUser(${id})" title="Edit"><i class="fas fa-edit"></i></button>
+          <button onclick="deleteUser(${id})" title="Delete"><i class="fas fa-trash"></i></button>
+          ${
+            role === "supervisor"
+              ? `<button onclick="openPermModal(${id})" title="Permissions"><i class="fas fa-key"></i></button>`
+              : ""
+          }
+        </div>
+      `;
       grid.appendChild(card);
     });
   } catch (err) {
