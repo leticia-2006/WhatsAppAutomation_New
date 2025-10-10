@@ -42,22 +42,22 @@ main {
   overflow: hidden;}
 /* Sidebar */
 .sidebar {
-  width: 260px;
+  width: 80px;
   background-color: var(--container-bg);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px 15px;
+  padding: 15px 8px;
 }
 
 .sidebar-header {
-  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   margin-bottom: 25px;
 }
-
+.sidebar-header { display: none;}
 .sidebar-menu ul {
   list-style: none;
   display: flex;
@@ -920,6 +920,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
