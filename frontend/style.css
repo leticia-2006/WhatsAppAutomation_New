@@ -120,7 +120,96 @@ main {
   font-size: 14px;
   font-weight: 500;
 }
+/* === Modern Sidebar (WhatsApp-style) === */
+.sidebar-modern {
+  width: 90px;
+  background-color: #1e3a8a; /* أزرق داكن مثل الصورة */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-radius: 20px;
+  margin: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.sidebar-top .logo {
+  font-size: 26px;
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 16px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.nav-item {
+  width: 50px;
+  height: 50px;
+  color: #CBD5E1;
+  background: transparent;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 20px;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.nav-item.active {
+  background: #fff;
+  color: #1e3a8a;
+}
+
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.icon-btn {
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 18px;
+}
+
+.icon-btn:hover {
+  background: #fff;
+  color: #1e3a8a;
+}
+
+.icon-btn.logout {
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff6b6b;
+}
+
+.icon-btn.logout:hover {
+  background: #ff6b6b;
+  color: #fff;
+  }
 /* Clients List */
 .clients-list {
   width: 300px;
@@ -527,7 +616,7 @@ main {
   align-items: center;
   gap: 6px;
 }
-/*Translate */
+/*Translate 
 .translate-btn {
   background-color: transparent;
   border: none;
@@ -544,7 +633,7 @@ main {
   margin-top: 3px;
 }
 
-
+*/
 .context-menu {
   position: absolute;
   display: none;
@@ -912,4 +1001,5 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
