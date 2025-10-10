@@ -22,27 +22,25 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <div class="profile">
           <img src="assets/avatar.png" alt="User" class="avatar"/>
           <h3 id="username">My Account</h3>
         </div>
-      </div>
       <nav class="sidebar-menu">
     <ul>
-    <li><a href="#" data-section="groups"><i class="fa-solid fa-users"></i> Groups</a></li>
-    <li><a href="#" data-section="unread"><i class="fa-solid fa-envelope-open-text"></i> Unread</a></li>
-    <li><a href="#" data-section="numbers"><i class="fa-solid fa-hashtag"></i> Numbers</a></li>
-    <li><a href="#" data-section="users"><i class="fa-solid fa-user"></i> Users</a></li>
+    <li><a href="#" class="active" data-section="groups"><i class="fa-solid fa-users"></i></a></li>
+    <li><a href="#" data-section="unread"><i class="fa-solid fa-envelope-open-text"></i></a></li>
+    <li><a href="#" data-section="numbers"><i class="fa-solid fa-hashtag"></i></a></li>
+    <li><a href="#" data-section="users"><i class="fa-solid fa-user"></i></a></li>
     </ul>
       </nav>
       <div class="sidebar-footer">
-        <button id="lang-switch">🌐 Translate</button>
-        <button id="logout-btn">🚪 Logout</button>
-        <input type="checkbox" id="darkModeToggle"> Dark Mode
+        <button id="lang-switch"><i class="fa-solid fa-globe"></button>
+        <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></button>
+     <!-- <input type="checkbox" id="darkModeToggle"> Dark Mode 
         <select id="groupSelect">
         <option value="all">All Groups</option>
         <option value="1">Group 1</option>
-        </select>
+        </select> -->
       </div>
     </aside>
     <section id="main-content"></section>
