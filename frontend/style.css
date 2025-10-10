@@ -124,8 +124,8 @@ main {
 }
 
 .sidebar-footer button:hover {
-  background-color: linear-gradient(135deg, #007bff, #0069d9);
-  color: white;
+  background-color: var(--primary-green);
+  color: #fff;
   transform: scale(1.1);
 }
 /* Clients List */
@@ -919,6 +919,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
