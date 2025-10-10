@@ -41,93 +41,138 @@ main {
   display: flex;
   overflow: hidden;}
 /* Sidebar */
+
 .sidebar {
   width: 80px;
-  background-color: var(--container-bg);
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9f9 100%);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 15px 8px
+  padding: 20px 10px;
+  transition: width 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar:hover {
+  width: 200px;
 }
 
 .sidebar-header {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 25px;
+  gap: 10px;
+  margin-bottom: 35px;
 }
-.sidebar-header h3 { display: none; }
+
+.sidebar-header .profile img.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--light-green-bg);
+  padding: 3px;
+  object-fit: cover;
+  background-color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header .profile img.avatar:hover {
+  transform: scale(1.08);
+}
+
+.sidebar-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar:hover .sidebar-header h3 {
+  opacity: 1;
+}
 .sidebar-menu ul {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+  padding: 0px;
+  align-items: center;
 }
+
 .sidebar-menu ul li a {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 15px;
-  border-radius: 12px;
-  cursor: pointer;
-  color: var(--text-dark);
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.sidebar-menu ul li a .icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background-color: var(--light-green-bg);
-  display: flex;
-  align-items: center;
   justify-content: center;
-  color: var(--primary-green);
-  font-size: 16px;
-  transition: background-color 0.3s, color 0.3s;
+  gap: 12px;
+  padding: 10px;
+  width: 100%;
+  border-radius: 14px;
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-.sidebar-menu ul li a:hover .icon,
+.sidebar-menu ul li a i {
+  font-size: 20px;
+  color: var(--primary-green);
+  transition: transform 0.3s, color 0.3s;
+}
+
+.sidebar-menu ul li a:hover {
+  background-color: var(--light-green-bg);
+  transform: 
+}
+
+.sidebar-menu ul li a:hover i {
+  color: #fff;
+  background-color: var(--primary-green);
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.sidebar-menu ul li.active a {
+  background-color: var(--primary-green);
+  color: #fff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
 .sidebar-menu ul li.active a .icon {
   background-color: var(--primary-green);
   color: #fff;
 }
-
-.sidebar-menu ul li a:hover,
-.sidebar-menu ul li.active a {
-  background-color: var(--light-green-bg);
-  color: var(--primary-green);
-}
-
+.sidebar:hover .sidebar-menu ul li a { justify-content: flex-start; padding-right: 130px;
+width: 100%;}
+.sidebar:hover .sidebar-menu ul li a i {margin-left: 12px;}
 .sidebar-footer {
   display: flex;
-  align-items: center;
+  justify-content: center;
+  gap: 7px;
   border-top: 1px solid var(--border-color);
-  padding-top: 15px;
-  padding-bottom: 10px;
-  flex-direction: bottom;
-  justify-content: space-around;
-}
+  padding: 5px 10px 0px 10px;
+ }
 
 .sidebar-footer button {
-  width: 42px;
-  height: 42px;
-  border: none;
-  border-radius: 12px;
-  background-color: var(--light-green-bg);
+  width: 45px;
+  height: 45px;
+  border: 1px solid var(--light-green-bg);
+  border-radius: 14px;
+  background-color: transparent;
   color: var(--primary-green);
   font-size: 18px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: inset 0 0 0 0 var(--primary-green);
 }
 
 .sidebar-footer button:hover {
   background-color: var(--primary-green);
   color: #fff;
+  box-shadow: 0 0 10px rgba(37, 211, 102, 0.5);
   transform: scale(1.1);
 }
+
 /* Clients List */
 .clients-list {
   width: 300px;
@@ -919,6 +964,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
