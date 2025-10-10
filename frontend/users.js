@@ -224,18 +224,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function applyFilters() {
   const search = document.getElementById("search-users").value.toLowerCase();
-  const tag = document.getElementById("tagFilterUsers").value;
-  const rows = document.querySelectorAll("#usersTableBody tr");
+  const roleFilter = document.getElementById("tagFilterUsers").value;
+  const cards = document.querySelectorAll("#usersGrid .number-card");
 
-  rows.forEach(row => {
-    const name = row.children[1].textContent.toLowerCase();
-    const role = row.children[3].textContent;
+  cards.forEach(card => {
+    const name = card.querySelector(".number-name").textContent.toLowerCase();
+    const role = card.querySelector(".number-role").textContent;
     let match = true;
 
     if (search && !name.includes(search)) match = false;
-    if (tag && role !== tag) match = false;
+    if (roleFilter && role !== roleFilter) match = false;
 
-    row.style.display = match ? "" : "none";
+    card.style.display = match ? "" : "none";
   });
 }
 document.getElementById("logout-btn").addEventListener("click", () => {
