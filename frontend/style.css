@@ -136,15 +136,19 @@ main {
   color: #007bff;
   font-size: 18px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .sidebar-footer button:hover {
-  background-color: var(--primary-green);
-  color: #fff;
+  background-color: linear-gradient(135deg, #007bff, #0069d9);
+  color: white;
   transform: scale(1.1);
 }
-
+/* Highlight active section */
+.sidebar-menu ul li a.active {
+  background: linear-gradient(135deg, #007bff, #0069d9);
+  color: #fff;
+}
 /* Clients List */
 .clients-list {
   width: 300px;
@@ -936,6 +940,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
