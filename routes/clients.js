@@ -13,19 +13,35 @@ router.get('/', requireLogin, async (req, res) => {
 
     if (role === "super_admin") {
       result = await db.query(`
-        SELECT c.*, 
-          (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
-        FROM clients c
-        ORDER BY c.id DESC
-      `);
+  SELECT 
+    c.*,
+    (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+    (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
+    (SELECT COUNT(*) FROM clients cc WHERE cc.phone = c.phone) > 1 AS is_repeat,
+    u.name AS agent_name,
+    u.avatar_url AS agent_avatar
+  FROM clients c
+  LEFT JOIN sessions s ON s.client_id = c.id
+  LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
+  LEFT JOIN users u ON u.id = wn.assigned_agent_id
+  ORDER BY c.updated_at DESC
+`);
     } else if (role === "supervisor") {
       if (permissions.can_manage_users) {
         result = await db.query(`
-          SELECT c.*, 
-            (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
-          FROM clients c
-          ORDER BY c.id DESC
-        `);
+  SELECT 
+    c.*,
+    (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+    (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
+    (SELECT COUNT(*) FROM clients cc WHERE cc.phone = c.phone) > 1 AS is_repeat,
+    u.name AS agent_name,
+    u.avatar_url AS agent_avatar
+  FROM clients c
+  LEFT JOIN sessions s ON s.client_id = c.id
+  LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
+  LEFT JOIN users u ON u.id = wn.assigned_agent_id
+  ORDER BY c.updated_at DESC
+`);
       } else {
         result = await db.query(`
           SELECT c.*, 
@@ -119,10 +135,9 @@ router.post("/:client_id/notes", requireLogin, async (r
     }
 
     const newNote = await db.query(
-      "INSERT INTO notes (client_id, user_id, note) VALUES ($1, $2, $3) RETURNING *",
-      [client_id, req.session.user.id, note]
-    );
-
+  "INSERT INTO notes (client_id, user_id, note, created_at) VALUES ($1, $2, $3, NOW())",
+  [client_id, req.session.user.id, note]
+);
     res.json(newNote.rows[0]);
   } catch (err) {
     console.error("Error adding note:", err);
@@ -173,6 +188,7 @@ router.delete("/:client_id", requireLogin, checkRole(["super_admin"]), async (re
 
 
 module.exports = router;
+
 
 
 
