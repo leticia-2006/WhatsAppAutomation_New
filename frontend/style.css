@@ -105,30 +105,39 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   padding: 10px;
   width: 100%;
   border-radius: 14px;
   color: var(--text-dark);
   transition: all 0.3s ease;
-  position: relative;
+  overflow: hidden;
 }
 
 .sidebar-menu ul li a i {
   font-size: 20px;
   color: var(--primary-green);
+  background-color: #fff;
   transition: transform 0.3s, color 0.3s;
+  padding: 8px;
+}
+sidebar-menu ul li a .label {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 0.3s ease, width 0.3s ease;
+  color: var(--text-dark);
+  font-size: 15px;
 }
 
 .sidebar-menu ul li a:hover {
   background-color: var(--light-green-bg);
-  transform: 
 }
 
 .sidebar-menu ul li a:hover i {
   color: #fff;
   background-color: var(--primary-green);
-  padding: 8px;
   border-radius: 10px;
 }
 
@@ -142,8 +151,12 @@ main {
   background-color: var(--primary-green);
   color: #fff;
 }
-.sidebar:hover .sidebar-menu ul li a { justify-content: flex-start; padding-left: 5px;
-width: 100%;}
+.sidebar:hover .sidebar-menu ul li a { justify-content: flex-start; padding-left: 15px;
+}
+.sidebar:hover .sidebar-menu ul li a .label {
+  opacity: 1;
+  width: auto;
+}
 .sidebar:hover .sidebar-menu ul li a i {margin-right: 135px;}
 .sidebar-footer {
   display: flex;
@@ -964,6 +977,7 @@ width: 100%;}
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
