@@ -594,12 +594,14 @@ clients-header select:focus {
 /* Client Details */
 .client-details {
   width: 300px;
-  background: #fff;
-  border-left: 1px solid var(--border-color);
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background: linear-gradient(to bottom, #ffffff, #f7faf9);
+  border-left: 1px solid #e2e8f0;
+  box-shadow: -3px 0 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
 }
 
 /* صورة + اسم */
@@ -615,12 +617,14 @@ clients-header select:focus {
   height: 90px;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #e6f8eb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .profile h3 {
   font-size: 18px;
   font-weight: 600;
-  color: var(--text-dark);
+  color: #212529;
   line-height: 0.3;
 }
 .profile .phone {
@@ -640,15 +644,19 @@ clients-header select:focus {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #f9fafb;
-  border: 1px solid var(--border-color);
+  background: #ffffff;
+  border: 1px solid #edf2f7;
   padding: 12px 14px;
-  border-radius: 12px;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .info-card i {
   font-size: 18px;
   color: var(--primary-green);
+  background: #e6f8eb;
+  border-radius: 50%;
 }
 
 .info-card .label {
@@ -668,6 +676,10 @@ clients-header select:focus {
 .value.offline {
   color: #ef4444; /* أحمر */
 }
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
 
 /* Tags */
 .tags {
@@ -678,12 +690,14 @@ clients-header select:focus {
 }
 
 .tag {
-  background: #e9f5ff;
+  background: #e6f4ff;
   color: #0369a1;
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
+
 
 /* Notes */
 .notes-section {
@@ -695,7 +709,8 @@ clients-header select:focus {
 
 .notes-section label {
   font-size: 14px;
-  color: var(--text-medium);
+  font-weight: 600;
+  color: #333;
 }
 
 #notes-list {
@@ -705,12 +720,12 @@ clients-header select:focus {
 }
 
 .note-item {
-  background: #f8f9fa;
+  background: #f1f5f9;
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 13px;
   color: var(--text-dark);
-  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--primary-green);
 }
 
 /* Notes Textarea بتصميم بطاقة */
@@ -721,7 +736,7 @@ clients-header select:focus {
   border-radius: 12px;
   padding: 12px 14px;
   font-size: 14px;
-  background: #f9fafb;
+  background: #fafafa;
   color: var(--text-dark);
   resize: none;
   outline: none;
@@ -748,8 +763,13 @@ clients-header select:focus {
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: transform 0.1s ease, background-color 0.2s ease;
 }
-/*Translate */
+
+.notes-section button:hover {
+  background-color: #1ebe5d;
+  transform: scale(1.03);
+}
 
 
 
@@ -1120,6 +1140,7 @@ clients-header select:focus {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
