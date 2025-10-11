@@ -120,6 +120,7 @@ main {
   background-color: #fff;
   transition: transform 0.3s, color 0.3s;
   padding: 8px;
+  border-radius: 10px;
 }
 sidebar-menu ul li a .label {
   opacity: 0;
@@ -138,7 +139,7 @@ sidebar-menu ul li a .label {
 .sidebar-menu ul li a:hover i {
   color: #fff;
   background-color: var(--primary-green);
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .sidebar-menu ul li.active a {
@@ -157,7 +158,7 @@ sidebar-menu ul li a .label {
   opacity: 1;
   width: auto;
 }
-.sidebar:hover .sidebar-menu ul li a i {margin-right: 135px;}
+.sidebar:hover .sidebar-menu ul li a i {margin-right: 65px;}
 .sidebar-footer {
   display: flex;
   justify-content: center;
@@ -977,31 +978,3 @@ sidebar-menu ul li a .label {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
