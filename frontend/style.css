@@ -209,9 +209,14 @@ main {
 /* Clients List */
 .clients-list {
   width: 300px;
+  background-color: var(--container-bg);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin: 10px;
+  overflow: hidden;
 }
 
 .clients-header {
@@ -997,5 +1002,6 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
