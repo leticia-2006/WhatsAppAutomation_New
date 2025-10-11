@@ -122,7 +122,7 @@ main {
   padding: 8px;
   border-radius: 10px;
 }
-sidebar-menu ul li a .label {
+.sidebar-menu ul li a .label {
   opacity: 0;
   width: 0;
   overflow: hidden;
@@ -978,3 +978,4 @@ sidebar-menu ul li a .label {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
