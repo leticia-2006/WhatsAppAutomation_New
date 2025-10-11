@@ -142,9 +142,9 @@ main {
   background-color: var(--primary-green);
   color: #fff;
 }
-.sidebar:hover .sidebar-menu ul li a { justify-content: flex-start; padding-right: 130px;
+.sidebar:hover .sidebar-menu ul li a { justify-content: flex-start; padding-left: 5px;
 width: 100%;}
-.sidebar:hover .sidebar-menu ul li a i {margin-left: 12px;}
+.sidebar:hover .sidebar-menu ul li a i {margin-right: 135px;}
 .sidebar-footer {
   display: flex;
   justify-content: center;
@@ -964,6 +964,7 @@ width: 100%;}
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
