@@ -220,27 +220,46 @@ main {
 }
 
 .clients-header {
-  padding: 6px;
-  border-bottom: 0px solid var(--border-color);
+  padding: 10px;
   display: flex;
+  align-items: center;
   gap: 10px;
+  background-color: var(--light-green-bg);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.clients-header input{
-  width: 100%;
-  padding: 10px 15px 10px 10px;
-  border-radius: 10px;
+.clients-header input {
+  flex: 1;
+  padding: 10px 15px 10px 35px;
+  border-radius: 12px;
   border: 1px solid var(--border-color);
-  background-color: #F8F9FA;
+  background-color: #fff;
+  background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+  background-size: 15px;
+  background-position: 12px center;
+  background-repeat: no-repeat;
   font-size: 14px;
+  transition: all 0.2s ease;
 }
-.clients-header select{
-  width: 32%;
-  padding: 10px px 10px 10px;
-  border-radius: 10px;
-  border: 2px solid var(--border-color);
-  background-color: #F8F9FA;
+
+.clients-header input:focus {
+  border-color: var(--primary-green);
+  outline: none;
+}
+
+.clients-header select {
+  width: 120px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background-color: #fff;
   font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clients-header select:hover {
+  border-color: var(--primary-green);
 }
 .clients-list  ul {
   list-style: none;
@@ -1002,6 +1021,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
