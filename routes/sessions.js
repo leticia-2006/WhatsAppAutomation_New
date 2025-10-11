@@ -11,22 +11,42 @@ router.get("/all", requireLogin, async (req, res) => {
     let result;
      if (role === "super_admin") {
        result = await db.query(`
-      SELECT s.*, c.name, c.phone,
-             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-             s.status, s.created_at, s.updated_at
-      FROM sessions s
-      JOIN clients c ON c.id = s.client_id
-      ORDER BY s.updated_at DESC
+      SELECT 
+  s.*, 
+  c.name, c.phone, c.avatar_url,
+  (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+  (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
+  s.status, s.created_at, s.updated_at,
+  u.name AS agent_name,
+  u.avatar_url AS agent_avatar,
+  c.is_blacklisted,
+  c.is_invalid,
+  c.tags
+FROM sessions s
+JOIN clients c ON c.id = s.client_id
+LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
+LEFT JOIN users u ON u.id = wn.assigned_agent_id
+ORDER BY s.updated_at DESC
     `);
  } else if(role === "supervisor") {
    if (permissions.can_manage_numbers)
    { result = await db.query(`
-      SELECT s.*, c.name, c.phone,
-             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-             s.status, s.created_at, s.updated_at
-      FROM sessions s
-      JOIN clients c ON c.id = s.client_id
-      ORDER BY s.updated_at DESC
+      SELECT 
+  s.*, 
+  c.name, c.phone, c.avatar_url,
+  (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+  (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
+  s.status, s.created_at, s.updated_at,
+  u.name AS agent_name,
+  u.avatar_url AS agent_avatar,
+  c.is_blacklisted,
+  c.is_invalid,
+  c.tags
+FROM sessions s
+JOIN clients c ON c.id = s.client_id
+LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
+LEFT JOIN users u ON u.id = wn.assigned_agent_id
+ORDER BY s.updated_at DESC
     `);
    } else { 
      result = await db.query(`
@@ -192,7 +212,7 @@ router.patch('/:id/status', async (req, res) => {
 
   try {
     const result = await db.query(
-      `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2 RETURNING id`,
+      `UPDATE sessions SET status=$1, updated_at=NOW() WHERE id=$2 RETURNING id, status`,
       [status, id]
     );
    if (result.rowCount === 0) {
@@ -213,6 +233,21 @@ router.post("/:id/pin", requireLogin, async (req, res) => {
 
 router.post("/:id/unpin", requireLogin, async (req, res) => {
   await db.query("UPDATE sessions SET pinned=false WHERE id=$1", [req.params.id]);
+  res.json({ success: true });
+});
+
+router.patch('/:id/mark', async (req, res) => {
+  const { id } = req.params;
+  const { type } = req.body; // 'pinned' | 'invalid' | 'human' | 'blacklisted'
+
+  let field = null;
+  if (type === 'pinned') field = 'pinned';
+  if (type === 'invalid') field = 'is_invalid';
+  if (type === 'human') field = 'is_human';
+  if (type === 'blacklisted') field = 'is_blacklisted';
+  if (!field) return res.status(400).json({ error: 'Invalid mark type' });
+
+  await db.query(`UPDATE sessions SET ${field}=true WHERE id=$1`, [id]);
   res.json({ success: true });
 });
 
@@ -258,6 +293,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
