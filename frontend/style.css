@@ -229,8 +229,8 @@ main {
 }
 
 .clients-header input {
-  flex: 1;
-  padding: 10px 15px 10px 35px;
+  width: 100%;
+  padding: 10px 15px ;
   border-radius: 12px;
   border: 1px solid var(--border-color);
   background-color: #fff;
@@ -239,23 +239,28 @@ main {
   background-position: 12px center;
   background-repeat: no-repeat;
   font-size: 14px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .clients-header input:focus {
   border-color: var(--primary-green);
+  background-color: var(--light-green-bg);
   outline: none;
 }
 
 .clients-header select {
-  width: 120px;
+  width: 35%px;
   padding: 10px;
   border-radius: 12px;
   border: 1px solid var(--border-color);
   background-color: #fff;
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color 0.3s ease;
+}
+clients-header select:focus {
+  border-color: var(--primary-green);
+  outline: none;
 }
 
 .clients-header select:hover {
@@ -265,6 +270,8 @@ main {
   list-style: none;
   overflow-y: auto;
   flex-grow: 1;
+  padding-left: 0;
+  margin-left: 0;
 }
 
 .clients-list ul li {
@@ -272,10 +279,10 @@ main {
   align-items: center;
   gap: 12px;
   padding: 12px 15px;
-  margin: 6px 10px;
+  margin: 5px 8px;
   border-radius: 10px;
   background-color: #fff;
-  transition: all 0.25s ease;
+  transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
 
@@ -1051,6 +1058,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
