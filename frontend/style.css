@@ -443,11 +443,12 @@ clients-header select:focus {
 
 .chat-messages {
   flex-grow: 1;
-  padding: 20px;
+  padding: 24px 20px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 22px;
+  scroll-behavior: smooth;
 }
 
 .message {
@@ -1102,6 +1103,7 @@ clients-header select:focus {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
