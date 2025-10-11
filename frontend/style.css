@@ -505,44 +505,61 @@ clients-header select:focus {
 
 
 /* Chat Input */
-.chat-input i {
-  font-size: 18px;
-  color: var(--text-medium);
-  cursor: pointer;
-}
-.chat-input button i { color: #fff;}
 .chat-input {
-  padding: 14px 18px;
+  padding: 12px 18px;
   background-color: #FFFFFF;
   border-top: 1px solid #EAEAEA;
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
 }
 
-
-.chat-input textarea {
+/* الصندوق الجديد الذي يحتوي الأيقونات والنص */
+.input-wrapper {
   flex-grow: 1;
-  border: 1px solid #E0E0E0;
+  display: flex;
+  align-items: center;
   background: #FAFAFA;
-  font-size: 14px;
-  outline: none;
-  resize: none;
-  padding: 10px 16px;
+  border: 1px solid #E0E0E0;
   border-radius: 25px;
-  transition: all 0.2s ease;
+  padding: 8px 14px;
+  transition: all 0.3s ease;
 }
 
-.chat-input textarea:focus {
+.input-wrapper:focus-within {
   border-color: var(--primary-green);
-  background-color: #FFFFFF;
+  background-color: #fff;
   box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.15);
 }
 
+.input-wrapper i {
+  font-size: 18px;
+  color: var(--text-medium);
+  margin-right: 10px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.input-wrapper i:hover {
+  color: var(--primary-green);
+}
+
+.input-wrapper textarea {
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  outline: none;
+  resize: none;
+  padding: 8px 6px;
+  height: 38px;
+}
+
 .chat-input button {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   background-color: var(--primary-green);
   border: none;
   border-radius: 50%;
@@ -558,9 +575,7 @@ clients-header select:focus {
 .chat-input button:hover {
   background-color: #1ebe5d;
   transform: scale(1.05);
-}
-
-
+  }
 .translate-btn {
   background-color: transparent;
   border: none;
@@ -1105,6 +1120,7 @@ clients-header select:focus {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
