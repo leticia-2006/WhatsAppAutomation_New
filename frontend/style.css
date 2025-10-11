@@ -249,7 +249,7 @@ main {
 }
 
 .clients-header select {
-  width: 35%px;
+  width: 25%;
   padding: 10px;
   border-radius: 12px;
   border: 1px solid var(--border-color);
@@ -1058,6 +1058,7 @@ clients-header select:focus {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
