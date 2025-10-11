@@ -48,10 +48,13 @@ router.get('/', requireLogin, async (req, res) => {
     } else if (role === "agent") {
       result = await db.query(`
         SELECT c.*, 
-          (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
+          (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+       u.name AS agent_name, u.avatar_url AS agent_avatar
         FROM clients c
         JOIN sessions s ON s.client_id = c.id
-        WHERE s.assigned_agent_id = $1
+        WHERE wn.assigned_to= $1
+        JOIN wa_numbers wn ON wn.id = s.wa_number_id
+        JOIN users u ON u.id = wn.assigned_to
         ORDER BY c.id DESC
       `, [id]);
     } else {
@@ -96,7 +99,8 @@ router.get('/:client_id', requireLogin, async (req, res) => {
 });
 
 // ✅ إضافة ملاحظة للعميل (Agents/Admins/Supervisor)
-router.post("/:client_id/notes", requireLogin, async (req, res) => {
+router.post("/:client_id/notes", requireLogin, async (r
+                                                      eq, res) => {
   try {
     const { client_id } = req.params;
     const { note } = req.body;
@@ -165,6 +169,7 @@ router.delete("/:client_id", requireLogin, checkRole(["super_admin"]), async (re
 
 
 module.exports = router;
+
 
 
 
