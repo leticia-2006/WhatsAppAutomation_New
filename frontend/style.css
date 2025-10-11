@@ -360,6 +360,15 @@ main {
 .client-status.group {
   background-color: #2196f3; /* أزرق */
 }
+
+.clients-list ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.clients-list ul::-webkit-scrollbar-thumb {
+  background-color: var(--primary-green);
+  border-radius: 3px;
+}
 /* Chat */
 .chat-window {
   flex-grow: 1;
@@ -1042,6 +1051,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
