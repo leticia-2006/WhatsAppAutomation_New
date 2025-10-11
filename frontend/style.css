@@ -456,11 +456,12 @@ clients-header select:focus {
   gap: 12px;
 }
 
-.message .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  flex-shrink: 0;
+.message.other .avatar {
+  order: 1;
+}
+.message.me .avatar {
+  order: 2;
+  margin-left: 8px;
 }
 
 .msg-content {
@@ -485,6 +486,7 @@ clients-header select:focus {
 
 .message.me {
   justify-content: flex-end;
+  flex-direction: row-reverse;
 }
 .message.other .bubble {
   background-color: #FFFFFF;
@@ -1100,6 +1102,7 @@ clients-header select:focus {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
