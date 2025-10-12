@@ -153,7 +153,7 @@ router.post("/:client_id/notes", requireLogin, async (r
 router.put("/:client_id", requireLogin, checkRole(["admin", "super_admin"]), async (req, res) => {
   try {
     const { client_id } = req.params;
-    const { name, phone, tags } = req.body;
+    const { name, phone, tags, is_blacklisted, is_invalid} = req.body;
 
     const result = await db.query("SELECT id FROM clients WHERE id=$1", [client_id]);
     if (result.rows.length === 0) {
@@ -161,8 +161,15 @@ router.put("/:client_id", requireLogin, checkRole(["admin", "super_admin"]), asy
     }
 
     const updated = await db.query(
-      "UPDATE clients SET name=$1, phone=$2, tags=$3 WHERE id=$4 RETURNING *",
-      [name, phone, tags, client_id]
+      `UPDATE clients SET 
+    name = COALESCE($1, name),
+    phone = COALESCE($2, phone),
+    tags = COALESCE($3, tags),
+    is_blacklisted = COALESCE($4, is_blacklisted),
+    is_invalid = COALESCE($5, is_invalid),
+    updated_at = NOW() WHERE id=$6
+      RETURNING *`,
+      [name, phone, tags, is_is_blacklisted, is_invalid, client_id]
     );
 
     res.json(updated.rows[0]);
@@ -211,3 +218,4 @@ router.patch("/:client_id/blacklist", async (req, res) => {
   }
 });
 module.exports = router;
+
