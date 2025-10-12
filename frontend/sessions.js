@@ -38,6 +38,7 @@ async function loadSessions() {
   filtered = sessions; // ✅ المشرف يرى جميع الجلسات
     }
     renderSessions(filtered, currentTab);
+    updateSidebarCounts(sessions);
   } catch (err) {
     console.error("Error loading sessions:", err);
   }
@@ -99,6 +100,12 @@ function renderSessions(list = [], filterType = "all") {
           .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
           .join("")}
       </div>
+      <span class="client-status ${session.is_online ? "online" : "offline"}">
+  ${session.is_online ? "🟢 Online" : "⚫ Offline"}
+</span>
+<div class="client-labels">
+  ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
+</div>
     `;
 
     // زر الملاحظات
@@ -164,6 +171,11 @@ async function loadMessages(sessionId) {
   try {
     const res = await axios.get(`/messages/${sessionId}`, { withCredentials: true });
     const messages = res.data;
+    if (window.autoTranslateEnabled) {
+  messages.forEach(m => {
+    if (m.sender_type === "client") translateMessage(m.id);
+  });
+    }
     const chatBox = document.getElementById("chatMessages");
     if (!chatBox) return;
 
@@ -278,6 +290,7 @@ async function sendMessage(sessionId) {
 
     // تحديث المحادثة بعد الإرسال
   loadMessages(sessionId);
+  loadSessions(); // لتحديث قائمة الجلسات بآخر رسالة
 
   } catch (err) {
     console.error("Error sending message", err);
@@ -566,6 +579,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+function updateSidebarCounts(sessions) {
+  const unread = sessions.filter(s => s.status === "unread").length;
+  const unreplied = sessions.filter(s => s.status === "unreplied").length;
+  document.querySelector('[data-section="unread"] .count').innerText = unread;
+  document.querySelector('[data-section="unreplied"] .count').innerText = unreplied;
+}
 function rebindChatButtons() {
   // تأكد أن العناصر موجودة فعلاً في DOM
   if (document.getElementById("file-btn") && document.getElementById("emoji-btn")) {
