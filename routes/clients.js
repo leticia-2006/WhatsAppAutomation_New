@@ -62,7 +62,7 @@ router.get('/', requireLogin, async (req, res) => {
           (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
           (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
           (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
-          (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) AS sessions_count,
+          (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) AS sessions_count
         FROM clients c
         JOIN sessions s ON s.client_id = c.id 
         WHERE c.admin_id = $1
@@ -225,6 +225,7 @@ router.patch("/:client_id/blacklist", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
