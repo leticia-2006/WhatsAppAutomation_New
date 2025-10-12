@@ -17,14 +17,13 @@ router.get('/', requireLogin, async (req, res) => {
     c.*,
     (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
     (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
-    (SELECT COUNT(*) FROM clients cc WHERE cc.phone = c.phone) > 1 AS is_repeat,
     (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
     u.name AS agent_name,
     u.avatar_url AS agent_avatar
   FROM clients c
   LEFT JOIN sessions s ON s.client_id = c.id
   LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
-  LEFT JOIN users u ON u.id = wn.assigned_agent_id
+  LEFT JOIN users u ON u.id = s.assigned_agent_id 
   ORDER BY c.updated_at DESC
 `);
     } else if (role === "supervisor") {
@@ -34,14 +33,13 @@ router.get('/', requireLogin, async (req, res) => {
     c.*,
     (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
     (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
-    (SELECT COUNT(*) FROM clients cc WHERE cc.phone = c.phone) > 1 AS is_repeat,
     (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
     u.name AS agent_name,
     u.avatar_url AS agent_avatar
   FROM clients c
   LEFT JOIN sessions s ON s.client_id = c.id
   LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
-  LEFT JOIN users u ON u.id = wn.assigned_agent_id
+  LEFT JOIN users u ON u.id = s.assigned_agent_id 
   ORDER BY c.updated_at DESC
 `);
       } else {
@@ -57,7 +55,7 @@ router.get('/', requireLogin, async (req, res) => {
     } else if (role === "admin") {
       result = await db.query(`
         SELECT c.*, 
-          (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
+          (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
           (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
         FROM clients c
         JOIN sessions s ON s.client_id = c.id 
@@ -73,8 +71,8 @@ router.get('/', requireLogin, async (req, res) => {
         FROM clients c
         JOIN sessions s ON s.client_id = c.id
         JOIN wa_numbers wn ON wn.id = s.wa_number_id
-        JOIN users u ON u.id = wn.assigned_to
-        WHERE wn.assigned_to= $1
+        JOIN users u ON u.id = s.assigned_agent_id 
+        WHERE s.assigned_agent_id = $1
         ORDER BY c.id DESC
       `, [id]);
     } else {
@@ -102,7 +100,7 @@ router.get('/:client_id', requireLogin, async (req, res) => {
       FROM clients c
       LEFT JOIN sessions s ON s.client_id = c.id
       LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
-      LEFT JOIN users u ON u.id = wn.assigned_to
+      LEFT JOIN users u ON u.id = s.assigned_agent_id 
       WHERE c.id = $1
     `, [clientId]);
     
@@ -123,8 +121,7 @@ router.get('/:client_id', requireLogin, async (req, res) => {
 });
 
 // ✅ إضافة ملاحظة للعميل (Agents/Admins/Supervisor)
-router.post("/:client_id/notes", requireLogin, async (r
-                                                      eq, res) => {
+router.post("/:client_id/notes", requireLogin, async (req, res) => {
   try {
     const { client_id } = req.params;
     const { note } = req.body;
@@ -169,7 +166,7 @@ router.put("/:client_id", requireLogin, checkRole(["admin", "super_admin"]), asy
     is_invalid = COALESCE($5, is_invalid),
     updated_at = NOW() WHERE id=$6
       RETURNING *`,
-      [name, phone, tags, is_is_blacklisted, is_invalid, client_id]
+      [name, phone, tags, is_blacklisted, is_invalid, client_id]
     );
 
     res.json(updated.rows[0]);
@@ -218,4 +215,5 @@ router.patch("/:client_id/blacklist", async (req, res) => {
   }
 });
 module.exports = router;
+
 
