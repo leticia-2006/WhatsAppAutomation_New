@@ -14,7 +14,7 @@ router.get('/', requireLogin, async (req, res) => {
     if (role === "super_admin") {
       result = await db.query(`
   SELECT 
-    c.*,
+    c.*, c.is_online,
     (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
     (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
     (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
@@ -30,7 +30,7 @@ router.get('/', requireLogin, async (req, res) => {
       if (permissions.can_manage_users) {
         result = await db.query(`
   SELECT 
-    c.*,
+    c.*, c.is_online,
     (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
     (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
     (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
@@ -64,7 +64,7 @@ router.get('/', requireLogin, async (req, res) => {
       `, [id]);
     } else if (role === "agent") {
       result = await db.query(`
-        SELECT c.*, 
+        SELECT c.*, c.is_online,
           (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
           (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
        u.name AS agent_name, u.avatar_url AS agent_avatar
@@ -92,7 +92,7 @@ router.get('/:client_id', requireLogin, async (req, res) => {
     const clientId = req.params.client_id;
     const result = await db.query(`
       SELECT 
-        c.*,
+        c.*, c.is_online,
         (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
         (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
         (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
@@ -215,6 +215,7 @@ router.patch("/:client_id/blacklist", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
