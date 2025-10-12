@@ -13,7 +13,7 @@ router.get("/all", requireLogin, async (req, res) => {
        result = await db.query(`
       SELECT 
   s.*, 
-  c.name, c.phone, c.avatar_url,
+  c.name, c.phone, c.avatar_url, c.status,
   (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
   (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
   s.status, s.created_at, s.updated_at,
@@ -27,14 +27,15 @@ JOIN clients c ON c.id = s.client_id
 LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
 LEFT JOIN users u ON u.id = s.assigned_agent_id 
 WHERE c.is_blacklisted = false AND c.is_invalid = false
-ORDER BY s.updated_at DESC
+ORDER BY s.pinned DESC,
+ORDER BY s.updated_at DESC;
     `);
  } else if(role === "supervisor") {
    if (permissions.can_manage_numbers)
    { result = await db.query(`
       SELECT 
   s.*, 
-  c.name, c.phone, c.avatar_url,
+  c.name, c.phone, c.avatar_url, c.status,
   (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
   (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
   s.status, s.created_at, s.updated_at,
@@ -309,6 +310,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
