@@ -59,66 +59,70 @@ const searchBar = document.getElementById("search-clients");
   }
 });
 
+// بعد التعديل (نسخة محسّنة)
 function renderSessions(list = [], filterType = "all") {
   const container = document.getElementById("sessions-body");
   if (!container) return;
   container.innerHTML = "";
-  // 🔹 Sessions list
-  
+
   const ul = document.createElement("ul");
-  ul.className = "list-unstyled m-0";
+  ul.className = "clients-list";
+
   list.forEach((session) => {
+    // فلترة حسب التبويب
     if (filterType === "unread" && session.status !== "unread") return;
     if (filterType === "unreplied" && session.status !== "unreplied") return;
     if (filterType === "group" && !session.group_id) return;
-    const li = document.createElement("li");
 
-    // avatar
+    // إنشاء العنصر
+    const li = document.createElement("li");
+    li.className = `client-item ${session.status === "unread" ? "unread" : ""}`;
+
+    // الصورة الرمزية
     const avatar = document.createElement("img");
     avatar.src = session.avatar_url || "/default-avatar.png";
     avatar.className = "client-avatar";
 
-    // info
+    // المحتوى النصي
     const info = document.createElement("div");
     info.className = "client-info";
     info.innerHTML = `
-      <div class="top">
-        <span>${session.name || session.phone}</span>
-        <small>${session.last_time || ""}</small>
+      <div class="client-header">
+        <span class="client-name">${session.name || session.phone}</span>
+        <small class="client-time">${session.last_time || ""}</small>
       </div>
-      <div class="last-msg">${session.last_message || ""}</div>
+      <div class="client-message">${session.last_message || ""}</div>
       <div class="client-tags">
         ${session.repeat ? '<span class="tag tag-repeat">Repeat</span>' : ""}
-        ${Array.isArray(session.tags)
-          ? session.tags
-              .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
-              .join("")
-          : ""}
+        ${(session.tags || [])
+          .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
+          .join("")}
       </div>
     `;
 
-    // note button
-    const noteBtn = document.createElement("span");
+    // زر الملاحظات
+    const noteBtn = document.createElement("button");
     noteBtn.className = "note-btn";
+    noteBtn.title = "Add or view notes";
     noteBtn.innerHTML = "📝";
     noteBtn.onclick = (e) => {
       e.stopPropagation();
       openNoteModal(session.id);
     };
 
+    // تركيب العنصر
     li.appendChild(avatar);
     li.appendChild(info);
     li.appendChild(noteBtn);
 
-    // click = open chat
-    li.style.cursor = "pointer";
+    // حدث النقر لفتح الدردشة
     li.onclick = () => {
-  openChat(session);
-  selectClient(session.id, session.name, session.phone, session.tags); // ✅ تحديث عمود التفاصيل
-  loadNotes(session.client_id); // ✅ تحميل الملاحظات تلقائياً
-};
+      openChat(session);
+      selectClient(session.id, session.name, session.phone, session.tags);
+      loadNotes(session.client_id);
+    };
 
-    // right-click = context menu
+    // حدث النقر باليمين
     li.oncontextmenu = (e) => {
       e.preventDefault();
       showContextMenu(e, session);
@@ -129,7 +133,9 @@ function renderSessions(list = [], filterType = "all") {
 
   container.appendChild(ul);
 
-  document.getElementById("session-count").innerText = `${list.length} sessions found (${filterType})`;
+  const counter = document.getElementById("session-count");
+  if (counter)
+    counter.innerText = `${list.length} clients (${filterType})`;
 }
       
 // ====== فتح المحادثة ======
