@@ -197,7 +197,7 @@ router.delete("/:client_id", requireLogin, checkRole(["super_admin"]), async (re
     }
 
     await db.query("DELETE FROM clients WHERE id=$1", [client_id]);
-    res.json({ message: "Client deleted" });
+    res.json({ succes: true, message: "Client deleted successfully" });
   } catch (err) {
     console.error("Error deleting client:", err);
     res.status(500).json({ error: "Server error" });
@@ -225,6 +225,7 @@ router.patch("/:client_id/blacklist", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
