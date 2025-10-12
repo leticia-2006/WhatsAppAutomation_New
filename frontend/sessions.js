@@ -107,7 +107,11 @@ function renderSessions(list = [], filterType = "all") {
 
     // click = open chat
     li.style.cursor = "pointer";
-    li.onclick = () => openChat(session);
+    li.onclick = () => {
+  openChat(session);
+  selectClient(session.id, session.name, session.phone, session.tags); // ✅ تحديث عمود التفاصيل
+  loadNotes(session.client_id); // ✅ تحميل الملاحظات تلقائياً
+};
 
     // right-click = context menu
     li.oncontextmenu = (e) => {
@@ -120,7 +124,7 @@ function renderSessions(list = [], filterType = "all") {
 
   container.appendChild(ul);
 
-  document.getElementById("session-count").innerText = `${list.length} sessions found`;
+  document.getElementById("session-count").innerText = `${list.length} sessions found (${filterType})`;
 }
       
 // ====== فتح المحادثة ======
@@ -129,10 +133,11 @@ function openChat(session) {
   selectedSessionId = session.id;
   selectedClientId = session.client_id;
   document.getElementById("chatClient").innerText = session.name || session.phone;
-  document.getElementById("chatStatus").innerText = `Lang: ${
-    session.lang || "Unknown"
-  }`;
+  document.getElementById("chatStatus").innerText =
+  `Status: ${session.status || "Active"} | Lang: ${session.lang || "Unknown"}`;
 
+  await loadMessages(session.id);
+  await loadNotes(session.client_id); //
   loadMessages(session.id);
    // ✅ ربط زر الإرسال
   const sendBtn = document.getElementById("send-btn");
