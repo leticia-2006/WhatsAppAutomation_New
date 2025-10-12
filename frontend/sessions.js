@@ -133,7 +133,7 @@ function renderSessions(list = [], filterType = "all") {
 }
       
 // ====== فتح المحادثة ======
-function openChat(session) {
+async function openChat(session) {
   currentSession = session;
   selectedSessionId = session.id;
   selectedClientId = session.client_id;
@@ -143,7 +143,6 @@ function openChat(session) {
 
   await loadMessages(session.id);
   await loadNotes(session.client_id); //
-  loadMessages(session.id);
    // ✅ ربط زر الإرسال
   const sendBtn = document.getElementById("send-btn");
   if (sendBtn) {
