@@ -31,8 +31,11 @@ async function loadSessions() {
     // FIXED: دعم صلاحية الوكيل (Agent)
     sessions = res.data;
     let filtered = sessions;
-    if (window.currentUser && window.currentUser.role === "agent") {
-      filtered = sessions.filter((s) => s.agent_id === window.currentUser.id);}
+    if (window.currentUser?.role === "agent") {
+  filtered = sessions.filter((s) => s.agent_id === window.currentUser.id);
+} else if (window.currentUser?.role === "admin") {
+  filtered = sessions; // ✅ المشرف يرى جميع الجلسات
+    }
     renderSessions(filtered, currentTab);
   } catch (err) {
     console.error("Error loading sessions:", err);
@@ -46,9 +49,11 @@ const searchBar = document.getElementById("search-clients");
     searchBar.addEventListener("input", () => {
     const value = searchBar.value.toLowerCase();
       const filtered = sessions.filter((s) =>
-          (s.name || "").toLowerCase().includes(value) ||
-          (s.phone || "").includes(value)
-      );
+  (s.name || "").toLowerCase().includes(value) ||
+  (s.phone || "").includes(value) ||
+  (s.tags?.join(" ") || "").toLowerCase().includes(value) ||
+  (s.last_message || "").toLowerCase().includes(value)
+);
       renderSessions(filtered);
     });
   }
