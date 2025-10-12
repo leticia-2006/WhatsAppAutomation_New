@@ -216,7 +216,7 @@ router.get("/:id/notes", requireLogin, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch notes" });
   }
 });
-router.patch('/:id/status', async (req, res) => {
+router.patch('/:id/status', requireLogin, async (req, res) => {
   const { id } = req.params;
   const { status } = req.body; // "unread" | "unreplied" | "human"
 
@@ -318,6 +318,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
