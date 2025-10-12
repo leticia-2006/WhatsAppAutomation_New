@@ -25,7 +25,8 @@ router.get("/all", requireLogin, async (req, res) => {
 FROM sessions s
 JOIN clients c ON c.id = s.client_id
 LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
-LEFT JOIN users u ON u.id = wn.assigned_to 
+LEFT JOIN users u ON u.id = s.assigned_agent_id 
+WHERE c.is_blacklisted = false AND c.is_invalid = false
 ORDER BY s.updated_at DESC
     `);
  } else if(role === "supervisor") {
@@ -45,7 +46,7 @@ ORDER BY s.updated_at DESC
 FROM sessions s
 JOIN clients c ON c.id = s.client_id
 LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
-LEFT JOIN users u ON u.id = wn.assigned_to
+LEFT JOIN users u ON u.id = s.assigned_agent_id 
 ORDER BY s.updated_at DESC
     `);
    } else { 
@@ -182,13 +183,12 @@ router.get('/qr/:number_id', async (req, res) => {
     }
 });
 
-router.post("/add-note", async (req, res) => {
+router.post("/add-note", requireLogin, async (req, res) => {
   const { clientId, note } = req.body;
   try {
-    await db.query(
-      "INSERT INTO notes (client_id, note, created_at) VALUES ($1, $2, NOW())",
-      [clientId, note]
-    );
+    await db.query("INSERT INTO notes (client_id, user_id, note, created_at) VALUES ($1, $2, $3, NOW())",
+  [clientId, req.session.user.id, note]
+);
     res.json({ success: true });
   } catch (err) {
     console.error("Error saving note:", err);
@@ -236,19 +236,32 @@ router.post("/:id/unpin", requireLogin, async (req, res) => {
   res.json({ success: true });
 });
 
-router.patch('/:id/mark', async (req, res) => {
+router.patch('/:id/mark', requireLogin, async (req, res) => {
   const { id } = req.params;
-  const { type } = req.body; // 'pinned' | 'invalid' | 'human' | 'blacklisted'
+  const { type, value } = req.body; // value = true | false
 
-  let field = null;
-  if (type === 'pinned') field = 'pinned';
-  if (type === 'invalid') field = 'is_invalid';
-  if (type === 'human') field = 'is_human';
-  if (type === 'blacklisted') field = 'is_blacklisted';
+  const validFields = {
+    pinned: 'pinned',
+    invalid: 'is_invalid',
+    human: 'is_human',
+    blacklisted: 'is_blacklisted'
+  };
+
+  const field = validFields[type];
   if (!field) return res.status(400).json({ error: 'Invalid mark type' });
 
-  await db.query(`UPDATE sessions SET ${field}=true WHERE id=$1`, [id]);
-  res.json({ success: true });
+  try {
+    const result = await db.query(
+      `UPDATE sessions SET ${field} = $1, updated_at = NOW() WHERE id = $2 RETURNING id, ${field}`,
+      [value ?? true, id]
+    );
+
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Session not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Error marking session:", err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 router.get("/", requireLogin, async (req, res) => {
@@ -293,6 +306,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
