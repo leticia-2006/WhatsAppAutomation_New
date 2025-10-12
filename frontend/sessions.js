@@ -35,7 +35,7 @@ async function loadSessions() {
   filtered = sessions.filter((s) => s.agent_id === window.currentUser.id);
 } else if (window.currentUser?.role === "admin") {
   filtered = sessions; // ✅ المشرف يرى جميع الجلسات
-    }
+    }axios.post
     renderSessions(filtered, currentTab);
   } catch (err) {
     console.error("Error loading sessions:", err);
@@ -183,9 +183,7 @@ async function loadMessages(sessionId) {
       </div>
     `;
   }
-
 // FIXED: دعم أنواع الميديا
-   // ✅ عرض الصور سواء من الإرسال أو من الاستقبال
 if (
   (msg.content_type === "image" && msg.media_url) ||
   (msg.content && msg.content.match(/\.(jpg|jpeg|png|gif|webp)$/i))
@@ -316,7 +314,11 @@ async function loadNotes(clientId) {
     const res = await axios.get(`/clients/${clientId}/notes`, { withCredentials: true });
     const textarea = document.getElementById("detail-notes");
     if (textarea) {
-      textarea.value = res.data.length > 0 ? res.data[res.data.length - 1].note : "";
+      if (res.data.length > 0) {
+  textarea.value = res.data.map(n => `🕓 ${new Date(n.created_at).toLocaleString()}:\n${n.note}`).join("\n\n");
+} else {
+  textarea.value = "";
+      }
       textarea.dataset.clientId = clientId;
     }
   } catch (err) {
@@ -332,7 +334,7 @@ async function saveNoteDirect() {
   const noteText = textarea.value;
 
   try {
-    await axios.post(`/clients/add-note`, { clientId, note: noteText }, { withCredentials: true });
+    await axios.post(`/clients/add-note`, { client_id: clientId, note: noteText }, { withCredentials: true });
     console.log("✅ Note saved!");
   } catch (err) {
     console.error("Error saving note:", err);
