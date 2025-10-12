@@ -35,7 +35,7 @@ async function loadSessions() {
   filtered = sessions.filter((s) => s.assigned_agent_id === window.currentUser.id);
 } else if (window.currentUser?.role === "admin") {
   filtered = sessions; // ✅ المشرف يرى جميع الجلسات
-    }axios.post
+    }
     renderSessions(filtered, currentTab);
   } catch (err) {
     console.error("Error loading sessions:", err);
@@ -227,7 +227,7 @@ if (
             }
             <span class="time">${time}</span>
             <div class="translate-btn">
-              <button onclick"translateMessage(${msg.id})">🌐</button>
+              <button onclick="translateMessage(${msg.id})">🌐</button>
             </div>
           </div>
         </div>
