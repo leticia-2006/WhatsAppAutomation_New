@@ -13,7 +13,7 @@ router.get("/all", requireLogin, async (req, res) => {
        result = await db.query(`
       SELECT 
   s.*, 
-  c.name, c.phone, c.avatar_url, 
+  c.name, c.phone, c.avatar_url, c.is_online,
   (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
   (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
   (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
@@ -35,7 +35,7 @@ ORDER BY s.pinned DESC, s.updated_at DESC;
    { result = await db.query(`
       SELECT 
   s.*, 
-  c.name, c.phone, c.avatar_url, 
+  c.name, c.phone, c.avatar_url, c.is_online,
   (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
   (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
   (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
@@ -64,7 +64,7 @@ ORDER BY s.pinned DESC, s.updated_at DESC;
     `, [id]);}
  } else if (role === "admin") {
    result = await db.query(`
-      SELECT s.*, c.name, c.phone,
+      SELECT s.*, c.name, c.phone, c.avatar_url, c.is_online,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
              (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
              s.status, s.created_at, s.updated_at,
@@ -76,7 +76,7 @@ ORDER BY s.pinned DESC, s.updated_at DESC;
     `, [id]);
  } else if (role === "agent") {
    result = await db.query(`
-      SELECT s.*,  c.name, c.phone,
+      SELECT s.*,  c.name, c.phone, c.avatar_url, c.is_online,
       c.avatar_url,
              u.name AS agent_name, u.avatar_url AS agent_avatar,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
@@ -141,7 +141,7 @@ router.get('/group/:group_id', async (req, res) => {
 router.get('/unread', requireLogin, async (req, res) => {
     try {
         const result = await db.query(`
-         SELECT s.id, s.client_id, c.name as client_name,
+         SELECT s.id, s.client_id, c.name as client_name, c.is_online,
             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
             s.status, s.created_at, s.updated_at
             FROM sessions s
@@ -160,7 +160,7 @@ router.get('/unread', requireLogin, async (req, res) => {
 router.get('/unreplied', requireLogin, async (req, res) => {
     try {
         const result = await db.query(`
-            SELECT s.id, s.client_id, c.name as client_name,
+            SELECT s.id, s.client_id, c.name as client_name, c.is_online,
             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
             s.status, s.created_at, s.updated_at
             FROM sessions s
@@ -282,7 +282,7 @@ router.get("/", requireLogin, async (req, res) => {
     let result;
     if (userRole === "agent") {
       result = await db.query(`
-      SELECT s.id, s.client_id, c.name AS name, c.phone AS phone,
+      SELECT s.id, s.client_id, c.name AS name, c.phone AS phone, c.is_online,
             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
             (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
             s.status, s.created_at, s.updated_at,
@@ -314,6 +314,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
