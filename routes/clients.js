@@ -60,7 +60,7 @@ router.get('/', requireLogin, async (req, res) => {
       result = await db.query(`
         SELECT c.*, 
           (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-          (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat
+          (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
           (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
           (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) AS sessions_count,
         FROM clients c
@@ -146,7 +146,7 @@ router.post("/:client_id/notes", requireLogin, async (req, res) => {
     }
 
     const newNote = await db.query(
-  "INSERT INTO notes (client_id, user_id, note, created_at) VALUES ($1, $2, $3, NOW())",
+  "INSERT INTO notes (client_id, user_id, note, created_at) VALUES ($1, $2, $3, NOW()) RETURNING *",
   [client_id, req.session.user.id, note]
 );
     res.json(newNote.rows[0]);
@@ -197,7 +197,7 @@ router.delete("/:client_id", requireLogin, checkRole(["super_admin"]), async (re
     }
 
     await db.query("DELETE FROM clients WHERE id=$1", [client_id]);
-    res.json({ succes: true, message: "Client deleted successfully" });
+    res.json({ success: true, message: "Client deleted successfully" });
   } catch (err) {
     console.error("Error deleting client:", err);
     res.status(500).json({ error: "Server error" });
@@ -225,6 +225,7 @@ router.patch("/:client_id/blacklist", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
