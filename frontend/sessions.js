@@ -32,7 +32,7 @@ async function loadSessions() {
     sessions = res.data;
     let filtered = sessions;
     if (window.currentUser?.role === "agent") {
-  filtered = sessions.filter((s) => s.agent_id === window.currentUser.id);
+  filtered = sessions.filter((s) => s.assigned_agent_id === window.currentUser.id);
 } else if (window.currentUser?.role === "admin") {
   filtered = sessions; // ✅ المشرف يرى جميع الجلسات
     }axios.post
