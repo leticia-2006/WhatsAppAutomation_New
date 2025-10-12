@@ -17,6 +17,7 @@ router.get("/all", requireLogin, async (req, res) => {
   (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
   (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
   (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
+  (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
   s.status, s.created_at, s.updated_at,
   u.name AS agent_name,
   u.avatar_url AS agent_avatar,
@@ -39,6 +40,7 @@ ORDER BY s.pinned DESC, s.updated_at DESC;
   (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
   (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
   (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
+  (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
   s.status, s.created_at, s.updated_at,
   u.name AS agent_name,
   u.avatar_url AS agent_avatar,
@@ -67,6 +69,7 @@ ORDER BY s.pinned DESC, s.updated_at DESC;
       SELECT s.*, c.name, c.phone, c.avatar_url, c.is_online,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
              (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
+             (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
              s.status, s.created_at, s.updated_at,
              c.is_blacklisted, c.is_invalid, c.tags
       FROM sessions s
@@ -81,6 +84,7 @@ ORDER BY s.pinned DESC, s.updated_at DESC;
              u.name AS agent_name, u.avatar_url AS agent_avatar,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
              (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
+             (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
              s.status, s.created_at, s.updated_at,
              c.is_blacklisted, c.is_invalid, c.tags
       FROM sessions s
@@ -285,6 +289,7 @@ router.get("/", requireLogin, async (req, res) => {
       SELECT s.id, s.client_id, c.name AS name, c.phone AS phone, c.is_online,
             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
             (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
+            (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
             s.status, s.created_at, s.updated_at,
             s.wa_number_id, s.jid
             FROM sessions s
@@ -314,6 +319,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
