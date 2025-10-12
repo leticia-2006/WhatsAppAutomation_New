@@ -25,7 +25,7 @@ router.get("/all", requireLogin, async (req, res) => {
 FROM sessions s
 JOIN clients c ON c.id = s.client_id
 LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
-LEFT JOIN users u ON u.id = wn.assigned_agent_id
+LEFT JOIN users u ON u.id = wn.assigned_to 
 ORDER BY s.updated_at DESC
     `);
  } else if(role === "supervisor") {
@@ -45,7 +45,7 @@ ORDER BY s.updated_at DESC
 FROM sessions s
 JOIN clients c ON c.id = s.client_id
 LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
-LEFT JOIN users u ON u.id = wn.assigned_agent_id
+LEFT JOIN users u ON u.id = wn.assigned_to
 ORDER BY s.updated_at DESC
     `);
    } else { 
@@ -269,7 +269,7 @@ router.get("/", requireLogin, async (req, res) => {
             FROM sessions s
             JOIN clients c ON c.id = s.client_id
             JOIN wa_numbers wn ON wn.id = s.wa_number_id 
-            WHERE assigned_agent_id = $1
+            WHERE wn.assigned_to = $1
             ORDER BY s.updated_at DESC `, [userId]
      );
     } else {
@@ -277,7 +277,7 @@ router.get("/", requireLogin, async (req, res) => {
         `SELECT s.id, s.client_id, c.name As name, c.phone AS phone, c.avatar_url, 
                 (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
                 s.status, s.created_at, s.updated_at,
-                wn.assigned_agent_id AS agent_id,
+                wn.assigned_to AS agent_id,
                 s.wa_number_id, s.jid       
          FROM sessions s
          JOIN clients c ON c.id = s.client_id
@@ -293,6 +293,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
