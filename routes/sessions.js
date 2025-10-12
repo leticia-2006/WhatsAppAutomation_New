@@ -53,7 +53,8 @@ ORDER BY s.updated_at DESC
      result = await db.query(`
       SELECT s.*, c.name, c.phone,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-             s.status, s.created_at, s.updated_at
+             s.status, s.created_at, s.updated_at,
+             c.is_blacklisted, c.is_invalid, c.tags
       FROM sessions s
       JOIN clients c ON c.id = s.client_id
       WHERE s.supervisor_id = $1
@@ -63,7 +64,8 @@ ORDER BY s.updated_at DESC
    result = await db.query(`
       SELECT s.*, c.name, c.phone,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-             s.status, s.created_at, s.updated_at
+             s.status, s.created_at, s.updated_at,
+             c.is_blacklisted, c.is_invalid, c.tags
       FROM sessions s
       JOIN clients c ON c.id = s.client_id
       WHERE s.admin_id = $1
@@ -75,7 +77,8 @@ ORDER BY s.updated_at DESC
       c.avatar_url,
              u.name AS agent_name, u.avatar_url AS agent_avatar,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-             s.status, s.created_at, s.updated_at
+             s.status, s.created_at, s.updated_at,
+             c.is_blacklisted, c.is_invalid, c.tags
       FROM sessions s
       JOIN clients c ON c.id = s.client_id
       JOIN wa_numbers wn ON wn.id = s.wa_number_id
@@ -306,6 +309,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
