@@ -21,6 +21,7 @@ async function loadSessions() {
   try {
     let url = `/sessions/all`;
     if (currentTab === "unread") { url = `/sessions/unread`;
+    } else if (currentTab === "unreplied") { url = `/sessions/unreplied`;
     } else if (currentTab === "groups") { 
     const groupId = selectedGroupId || "all"; // أو أي قيمة افتراضية
     url= `/sessions/group/${groupId}`;
@@ -88,7 +89,7 @@ function renderSessions(list = [], filterType = "all") {
     info.className = "client-info";
     info.innerHTML = `
       <div class="client-header">
-        <span class="client-name">${session.name || session.phone}</span>
+        <span class="client-name">${session.name || session.client_name || session.phone}</span>
         <small class="client-time">${session.last_time || ""}</small>
       </div>
       <div class="client-message">${session.last_message || ""}</div>
@@ -119,7 +120,6 @@ function renderSessions(list = [], filterType = "all") {
     li.onclick = () => {
       openChat(session);
       selectClient(session.id, session.name, session.phone, session.tags);
-      loadNotes(session.client_id);
     };
 
     // حدث النقر باليمين
@@ -152,14 +152,11 @@ async function openChat(session) {
    // ✅ ربط زر الإرسال
   const sendBtn = document.getElementById("send-btn");
   if (sendBtn) {
-    sendBtn.onclick = () => {
-      if (selectedSessionId) {
-        sendMessage(selectedSessionId);
+    sendBtn.replaceWith(sendBtn.cloneNode(true));
+document.getElementById("send-btn").onclick = () => sendMessage(selectedSessionId);
       } else {
         alert("⚠️ اختر محادثة أولاً");
       }
-    };
-  }
 }
 
 // ====== تحميل الرسائل ======
@@ -178,8 +175,8 @@ async function loadMessages(sessionId) {
     if (msg.is_deleted) {
     content = `
       <div class="deleted-msg">
-        <div class="deleted-label">🗑 Deleted Message</div>
-        <div class="deleted-content">${msg.content}</div>
+  <strong>🗑 Deleted by ${msg.deleted_by || "system"}</strong>
+  <div class="deleted-content">${msg.content || "(no content)"}</div>
       </div>
     `;
   }
@@ -216,8 +213,8 @@ if (
 
       const div = `
         <div class="message ${msg.sender_type === "client" ? "client" : "agent"} ${msg.is_deleted ? "deleted" : ""}" data-id="${msg.id}">
-         <img src="${msg.sender_avatar || "/default-avatar.png"}"
-               style="width:28px; height:28px; border-radius:50%; vertical-align:middle;">
+         <img src="${msg.sender_avatar || msg.agent_avatar || "/default-avatar.png"}" 
+     title="${msg.agent_name || msg.sender_name || ''}"    style="width:28px; height:28px; border-radius:50%; vertical-align:middle;">
           <div class="bubble">
             ${content}
             ${
@@ -334,7 +331,7 @@ async function saveNoteDirect() {
   const noteText = textarea.value;
 
   try {
-    await axios.post(`/clients/add-note`, { client_id: clientId, note: noteText }, { withCredentials: true });
+    await axios.post(`/clients/${clientId}/notes`, { note: noteText }, { withCredentials: true });
     console.log("✅ Note saved!");
   } catch (err) {
     console.error("Error saving note:", err);
