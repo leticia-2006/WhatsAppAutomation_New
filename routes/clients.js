@@ -18,6 +18,7 @@ router.get('/', requireLogin, async (req, res) => {
     (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
     (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
     (SELECT COUNT(*) FROM clients cc WHERE cc.phone = c.phone) > 1 AS is_repeat,
+    (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
     u.name AS agent_name,
     u.avatar_url AS agent_avatar
   FROM clients c
@@ -34,6 +35,7 @@ router.get('/', requireLogin, async (req, res) => {
     (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
     (SELECT is_deleted FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS is_deleted,
     (SELECT COUNT(*) FROM clients cc WHERE cc.phone = c.phone) > 1 AS is_repeat,
+    (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
     u.name AS agent_name,
     u.avatar_url AS agent_avatar
   FROM clients c
@@ -56,6 +58,7 @@ router.get('/', requireLogin, async (req, res) => {
       result = await db.query(`
         SELECT c.*, 
           (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message
+          (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
         FROM clients c
         JOIN sessions s ON s.client_id = c.id 
         WHERE c.admin_id = $1
@@ -65,12 +68,13 @@ router.get('/', requireLogin, async (req, res) => {
       result = await db.query(`
         SELECT c.*, 
           (SELECT content FROM messages m WHERE m.client_id=c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+          (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
        u.name AS agent_name, u.avatar_url AS agent_avatar
         FROM clients c
         JOIN sessions s ON s.client_id = c.id
-        WHERE wn.assigned_to= $1
         JOIN wa_numbers wn ON wn.id = s.wa_number_id
         JOIN users u ON u.id = wn.assigned_to
+        WHERE wn.assigned_to= $1
         ORDER BY c.id DESC
       `, [id]);
     } else {
@@ -186,19 +190,24 @@ router.delete("/:client_id", requireLogin, checkRole(["super_admin"]), async (re
   }
 });
 
+// ✅ Toggle Blacklist (حظر أو إلغاء الحظر)
+router.patch("/:client_id/blacklist", async (req, res) => {
+  try {
+    const { client_id } = req.params;
+    const { block } = req.body; // true أو false
 
+    const result = await db.query(`
+      UPDATE clients 
+      SET is_blacklisted = $1, updated_at = NOW() 
+      WHERE id = $2 RETURNING id, is_blacklisted
+    `, [block, client_id]);
+
+    if (result.rowCount === 0) return res.status(404).json({ error: "Client not found" });
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Error toggling blacklist:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
