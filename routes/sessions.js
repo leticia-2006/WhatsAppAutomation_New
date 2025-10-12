@@ -282,7 +282,7 @@ router.get("/", requireLogin, async (req, res) => {
             FROM sessions s
             JOIN clients c ON c.id = s.client_id
             JOIN wa_numbers wn ON wn.id = s.wa_number_id 
-            WHERE wn.assigned_to = $1
+            WHERE s.assigned_agent_id = $1
             ORDER BY s.updated_at DESC `, [userId]
      );
     } else {
@@ -306,6 +306,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
