@@ -93,7 +93,7 @@ function renderSessions(list = [], filterType = "all") {
       </div>
       <div class="client-message">${session.last_message || ""}</div>
       <div class="client-tags">
-        ${session.repeat ? '<span class="tag tag-repeat">Repeat</span>' : ""}
+        ${session.is_repeat ? '<span class="tag tag-repeat">Repeat</span>' : ""}
         ${(session.tags || [])
           .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
           .join("")}
@@ -229,7 +229,7 @@ if (
             }
             <span class="time">${time}</span>
             <div class="translate-btn">
-              <button onclick="translateMessage(${msg.id})">🌐</button>
+              <button onclick"translateMessage(${msg.id})">🌐</button>
             </div>
           </div>
         </div>
