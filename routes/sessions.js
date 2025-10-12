@@ -90,7 +90,7 @@ ORDER BY s.pinned DESC, s.updated_at DESC;
       FROM sessions s
       JOIN clients c ON c.id = s.client_id
       JOIN wa_numbers wn ON wn.id = s.wa_number_id
-      JOIN users u ON u.id = wn.assigned_to
+      LEFT JOIN users u ON u.id = wn.assigned_to
       WHERE wn.assigned_to = $1
       ORDER BY s.pinned DESC, s.updated_at DESC;
     `, [id]);
@@ -145,8 +145,8 @@ router.get('/group/:group_id', async (req, res) => {
 router.get('/unread', requireLogin, async (req, res) => {
     try {
         const result = await db.query(`
-         SELECT s.id, s.client_id, c.name as client_name, c.is_online,
-            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+         SELECT s.id, s.client_id, c.name AS client_name, c.phone, c.avatar_url, c.is_online,
+            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
             s.status, s.created_at, s.updated_at
             FROM sessions s
             JOIN clients c ON c.id = s.client_id
@@ -164,7 +164,7 @@ router.get('/unread', requireLogin, async (req, res) => {
 router.get('/unreplied', requireLogin, async (req, res) => {
     try {
         const result = await db.query(`
-            SELECT s.id, s.client_id, c.name as client_name, c.is_online,
+            SELECT s.id, s.client_id, c.name as client_name, c.phone, c.avatar_url, c.is_online,
             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
             s.status, s.created_at, s.updated_at
             FROM sessions s
@@ -319,6 +319,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
