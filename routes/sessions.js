@@ -13,9 +13,10 @@ router.get("/all", requireLogin, async (req, res) => {
        result = await db.query(`
       SELECT 
   s.*, 
-  c.name, c.phone, c.avatar_url, c.status,
+  c.name, c.phone, c.avatar_url, 
   (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
   (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
+  (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
   s.status, s.created_at, s.updated_at,
   u.name AS agent_name,
   u.avatar_url AS agent_avatar,
@@ -27,17 +28,17 @@ JOIN clients c ON c.id = s.client_id
 LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
 LEFT JOIN users u ON u.id = s.assigned_agent_id 
 WHERE c.is_blacklisted = false AND c.is_invalid = false
-ORDER BY s.pinned DESC,
-ORDER BY s.updated_at DESC;
-    `);
+ORDER BY s.pinned DESC, s.updated_at DESC;
+`);
  } else if(role === "supervisor") {
    if (permissions.can_manage_numbers)
    { result = await db.query(`
       SELECT 
   s.*, 
-  c.name, c.phone, c.avatar_url, c.status,
+  c.name, c.phone, c.avatar_url, 
   (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
   (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
+  (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
   s.status, s.created_at, s.updated_at,
   u.name AS agent_name,
   u.avatar_url AS agent_avatar,
@@ -48,7 +49,7 @@ FROM sessions s
 JOIN clients c ON c.id = s.client_id
 LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
 LEFT JOIN users u ON u.id = s.assigned_agent_id 
-ORDER BY s.updated_at DESC
+ORDER BY s.pinned DESC, s.updated_at DESC;
     `);
    } else { 
      result = await db.query(`
@@ -65,12 +66,13 @@ ORDER BY s.updated_at DESC
    result = await db.query(`
       SELECT s.*, c.name, c.phone,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+             (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
              s.status, s.created_at, s.updated_at,
              c.is_blacklisted, c.is_invalid, c.tags
       FROM sessions s
       JOIN clients c ON c.id = s.client_id
       WHERE s.admin_id = $1
-      ORDER BY s.updated_at DESC
+      ORDER BY s.pinned DESC, s.updated_at DESC;
     `, [id]);
  } else if (role === "agent") {
    result = await db.query(`
@@ -78,6 +80,7 @@ ORDER BY s.updated_at DESC
       c.avatar_url,
              u.name AS agent_name, u.avatar_url AS agent_avatar,
              (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+             (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
              s.status, s.created_at, s.updated_at,
              c.is_blacklisted, c.is_invalid, c.tags
       FROM sessions s
@@ -85,7 +88,7 @@ ORDER BY s.updated_at DESC
       JOIN wa_numbers wn ON wn.id = s.wa_number_id
       JOIN users u ON u.id = wn.assigned_to
       WHERE wn.assigned_to = $1
-      ORDER BY s.updated_at DESC
+      ORDER BY s.pinned DESC, s.updated_at DESC;
     `, [id]);
  } else {
   return res.status(403).json({ error: "Not allowed" });
@@ -281,6 +284,7 @@ router.get("/", requireLogin, async (req, res) => {
       result = await db.query(`
       SELECT s.id, s.client_id, c.name AS name, c.phone AS phone,
             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+            (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
             s.status, s.created_at, s.updated_at,
             s.wa_number_id, s.jid
             FROM sessions s
@@ -310,6 +314,7 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
