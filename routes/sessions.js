@@ -96,7 +96,14 @@ ORDER BY s.pinned DESC, s.updated_at DESC;
  } else {
   return res.status(403).json({ error: "Not allowed" });
  }
- res.json(result.rows);
+ // 🧹 تنظيف الـ jid قبل الإرسال للواجهة
+const cleanedRows = result.rows.map(row => {
+  if (row.jid) {
+    row.phone = row.jid.replace(/@s\.whatsapp\.net$/, ""); // نحذف @s.whatsapp.net
+  }
+  return row;
+});
+res.json(cleanedRows);
   } catch (err) {
     console.error("Error fetching all sessions:", err);
     res.status(500).json({ message: "Server error" });
@@ -311,13 +318,21 @@ router.get("/", requireLogin, async (req, res) => {
       );
     }
 
-    res.json(result.rows);
+    // 🧹 تنظيف الـ jid قبل الإرسال للواجهة
+const cleanedRows = result.rows.map(row => {
+  if (row.jid) {
+    row.phone = row.jid.replace(/@s\.whatsapp\.net$/, ""); // نحذف @s.whatsapp.net
+  }
+  return row;
+});
+res.json(cleanedRows);
   } catch (err) {
     console.error("Error fetching sessions:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 module.exports = router;
+
 
 
 
