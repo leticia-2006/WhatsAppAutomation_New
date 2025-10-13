@@ -362,6 +362,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (saveBtn) {
     saveBtn.addEventListener("click", saveNoteDirect);
   }
+const blockBtn = document.getElementById("block-client");
+if (blockBtn) blockBtn.onclick = () => blockCustomer(selectedClientId);
 });
 
 
@@ -519,6 +521,8 @@ function selectClient(sessionId, name, phone, tags) {
   document.getElementById("detailTags").innerHTML = (tags || [])
   .map(t => `<span class="tag">${t}</span>`)
   .join("");
+  document.getElementById("detailRepeat").style.display = session.is_repeat ? "inline" : "none";
+document.getElementById("detailInvalid").style.display = session.is_invalid ? "inline" : "none";
 // Load messages of this session
   loadMessages(sessionId);
 }
