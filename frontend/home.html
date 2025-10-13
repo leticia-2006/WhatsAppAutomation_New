@@ -51,8 +51,9 @@
     <aside class="client-details" id="client-details">
   <!-- صورة واسم -->
   <div class="profile">
-    <img src="assets/avatar.png" alt="Client Avatar" class="avatar">
-    <h3 id="ChatClient"></h3>
+    <img src="assets/avatar.png" alt="Client Avatar" class="avatar" id="detailAvatar">
+    <h3 id="detailName"></h3>
+    <span id="detailRepeat" class="tag tag-repeat" style="display:none;">Repeat Customer</span>
     <p id="detailPhone" class="phone"></p>
   </div>
 
@@ -87,5 +88,9 @@
       <i class="fa-regular fa-floppy-disk"></i> Save
     </button>
   </div>
+    
+    <div class="actions-section">
+        <button id="block-client"><i class="fa-solid fa-ban"></i> Blacklist</button>   
+    </div>
     </aside>
 
