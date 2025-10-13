@@ -127,7 +127,7 @@ function renderSessions(list = [], filterType = "all") {
     // حدث النقر لفتح الدردشة
     li.onclick = () => {
       openChat(session);
-      selectClient(session.id, session.name, session.phone, session.tags);
+      selectClient(session);
     };
 
     // حدث النقر باليمين
@@ -323,12 +323,13 @@ window.translateMessage = async function(messageId) {
 async function loadNotes(clientId) {
   try {
     const res = await axios.get(`/clients/${clientId}/notes`, { withCredentials: true });
+    const data = Array.isArray(res.data) ? res.data : res.data.notes || [];
     const textarea = document.getElementById("detail-notes");
     if (textarea) {
-      if (res.data.length > 0) {
-  textarea.value = res.data.map(n => `🕓 ${new Date(n.created_at).toLocaleString()}:\n${n.note}`).join("\n\n");
-} else {
-  textarea.value = "No notes yet...";
+      if (data.length > 0) {
+        textarea.value = data.map(n => `🕓 ${new Date(n.created_at).toLocaleString()}:\n${n.note}`).join("\n\n");
+      } else {
+        textarea.value = "No notes yet...";
       }
       textarea.dataset.clientId = clientId;
     }
@@ -513,18 +514,18 @@ window.addEventListener("load", () => {
     if (toggle) toggle.checked = true;
   }
 });
-function selectClient(sessionId, name, phone, tags) {
-  document.getElementById("detailName").innerText = name;
-  document.getElementById("detailPhone").innerText = phone;
+function selectClient(session) {
+  document.getElementById("detailName").innerText = session.name;
+  document.getElementById("detailPhone").innerText = session.phone;
   document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
   document.getElementById("detailStatus").innerText = session.is_online ? "🟢 Online" : "⚫ Offline";
-  document.getElementById("detailTags").innerHTML = (tags || [])
-  .map(t => `<span class="tag">${t}</span>`)
-  .join("");
+  document.getElementById("detailTags").innerHTML = (session.tags || [])
+    .map(t => `<span class="tag">${t}</span>`)
+    .join("");
   document.getElementById("detailRepeat").style.display = session.is_repeat ? "inline" : "none";
-document.getElementById("detailInvalid").style.display = session.is_invalid ? "inline" : "none";
-// Load messages of this session
-  loadMessages(sessionId);
+  document.getElementById("detailInvalid").style.display = session.is_invalid ? "inline" : "none";
+
+  loadMessages(session.id);
 }
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
