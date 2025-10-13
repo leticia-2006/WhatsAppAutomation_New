@@ -8,8 +8,7 @@
           <option value="month">This Month</option>
         </select>
       </div>
-      <div id="session-count"
-        class="session-count">0 sessions found</div>
+      <div id="session-count" class="session-count">Sessions: <span id="sessionCountValue">0</span></div>
       <ul id="sessions-body">
         <!-- Populated dynamically from sessions.js -->
       </ul>
@@ -53,7 +52,7 @@
   <!-- صورة واسم -->
   <div class="profile">
     <img src="assets/avatar.png" alt="Client Avatar" class="avatar">
-    <h3 id="detailName"></h3>
+    <h3 id="ChatClient"></h3>
     <p id="detailPhone" class="phone"></p>
   </div>
 
@@ -63,7 +62,7 @@
       <i class="fa-solid fa-signal"></i>
       <div>
         <span class="label">Status</span>
-        <span id="detailStatus" class="value active">Online</span>
+        <span id="detailStatus" class="value active">--</span>
       </div>
     </div>
 
