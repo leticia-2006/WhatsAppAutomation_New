@@ -599,3 +599,4 @@ function rebindChatButtons() {
 }
 rebindChatButtons();
 
+setInterval(loadSessions, 60000);
