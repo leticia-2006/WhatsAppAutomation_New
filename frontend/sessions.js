@@ -91,6 +91,7 @@ function renderSessions(list = [], filterType = "all") {
     info.innerHTML = `
       <div class="client-header">
         <span class="client-name">${session.name || session.client_name || session.phone}</span>
+        <small class="client-phone">${session.phone || ""}</small>
         <small class="client-time">${session.last_time || ""}</small>
       </div>
       <div class="client-message">${session.last_message || ""}</div>
@@ -327,7 +328,7 @@ async function loadNotes(clientId) {
       if (res.data.length > 0) {
   textarea.value = res.data.map(n => `🕓 ${new Date(n.created_at).toLocaleString()}:\n${n.note}`).join("\n\n");
 } else {
-  textarea.value = "";
+  textarea.value = "No notes yet...";
       }
       textarea.dataset.clientId = clientId;
     }
@@ -513,6 +514,8 @@ window.addEventListener("load", () => {
 function selectClient(sessionId, name, phone, tags) {
   document.getElementById("detailName").innerText = name;
   document.getElementById("detailPhone").innerText = phone;
+  document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
+  document.getElementById("detailStatus").innerText = session.is_online ? "🟢 Online" : "⚫ Offline";
   document.getElementById("detailTags").innerHTML = (tags || [])
   .map(t => `<span class="tag">${t}</span>`)
   .join("");
