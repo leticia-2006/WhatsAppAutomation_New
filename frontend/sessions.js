@@ -183,9 +183,7 @@ function renderSessions(list = [], filterType = "all") {
   return `Active ${days} day${days > 1 ? "s" : ""} ago`;
 }
 
-// داخل دالة openChat أو عند عرض تفاصيل العميل:
-document.getElementById("detailStatus").innerText = client.is_online ? "Online" : "Offline";
-document.getElementById("lastActive").innerText = timeAgoEN(client.updated_at || client.last_active);     
+     
 
 // ====== فتح المحادثة ======
 async function openChat(session) {
@@ -559,7 +557,11 @@ function selectClient(session) {
   document.getElementById("detailName").innerText = session.name;
   document.getElementById("detailPhone").innerText = session.phone;
   document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
-  document.getElementById("detailStatus").innerText = session.is_online ? "🟢 Online" : "⚫ Offline";
+  const statusEl = document.getElementById("detailStatus");
+  const lastActiveEl = document.getElementById("lastActive");
+  statusEL.innerText = session.is_online ? "🟢 Online" : "⚫ Offline"; 
+  lastActiveEl.innerText = timeAgoEN(session.updated_at || session.last_active);
+  
   document.getElementById("detailTags").innerHTML = (session.tags || [])
     .map(t => `<span class="tag">${t}</span>`)
     .join("");
