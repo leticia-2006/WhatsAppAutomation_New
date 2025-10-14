@@ -170,7 +170,23 @@ function renderSessions(list = [], filterType = "all") {
   if (counter)
     counter.innerText = `${list.length} clients (${filterType})`;
 }
-      
+ function timeAgoEN(dateString) {
+  const date = new Date(dateString);
+  const seconds = Math.floor((new Date() - date) / 1000);
+
+  if (seconds < 60) return "Active now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `Active ${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `Active ${hours} hour${hours > 1 ? "s" : ""} ago`;
+  const days = Math.floor(hours / 24);
+  return `Active ${days} day${days > 1 ? "s" : ""} ago`;
+}
+
+// داخل دالة openChat أو عند عرض تفاصيل العميل:
+document.getElementById("detailStatus").innerText = client.is_online ? "Online" : "Offline";
+document.getElementById("lastActive").innerText = timeAgoEN(client.updated_at || client.last_active);     
+
 // ====== فتح المحادثة ======
 async function openChat(session) {
   currentSession = session;
