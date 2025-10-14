@@ -377,58 +377,7 @@ clients-header select:focus {
   border-radius: 3px;
 }
 
-.clients-header {
-  background-color: #fff;
-  border-bottom: 1px solid #E5E7EB;
-  padding: 12px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.clients-header input {
-  flex: 1;
-  border: 1px solid #E5E7EB;
-  background: #FAFAFA;
-  border-radius: 10px;
-  padding: 10px 12px 10px 36px;
-  font-size: 14px;
-  color: #333;
-}
-
-.client-item {
-  background: #fff;
-  border-radius: 12px;
-  margin: 6px 10px;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
-}
-.client-item:hover {
-  transform: translateX(4px);
-  border: 1px solid #D1E7DD;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-.status-dot.online { background-color: #22C55E; }
-.status-dot.offline { background-color: #9CA3AF; }
-
-.tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 8px;
-  font-size: 11px;
-  color: #fff;
-}
-.tag-repeat { background-color: #60A5FA; }
-.tag-vip { background-color: #F59E0B; }
+ 
 /* Chat */
 .chat-window {
   flex-grow: 1;
@@ -1199,6 +1148,7 @@ clients-header select:focus {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
