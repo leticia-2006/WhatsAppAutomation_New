@@ -282,106 +282,61 @@ router.patch('/:id/mark', requireLogin, async (req, res) => {
 });
 
 router.get("/", requireLogin, async (req, res) => {
- if (!req.session.user) {
-   return res.status(401).json({ message: "Unauthorized" });
- }
-  const userRole = req.session.user.role;
-  const userId = req.session.user.id;
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const { role, id: userId } = req.session.user;
+  const { filter } = req.query; // ← إضافة الفلتر الجديد
 
   try {
-    let result;
-    if (userRole === "agent") {
-      result = await db.query(`
-      SELECT s.id, s.client_id, c.name AS name, c.phone AS phone, c.is_online,
-            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-            (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
-            (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
-            s.status, s.created_at, s.updated_at,
-            s.wa_number_id, s.jid
-            FROM sessions s
-            JOIN clients c ON c.id = s.client_id
-            JOIN wa_numbers wn ON wn.id = s.wa_number_id 
-            WHERE s.assigned_agent_id = $1
-            ORDER BY s.updated_at DESC `, [userId]
-     );
-    } else {
-      result = await db.query(
-        `SELECT s.id, s.client_id, c.name As name, c.phone AS phone, c.avatar_url, 
-                (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-                s.status, s.created_at, s.updated_at,
-                wn.assigned_to AS agent_id,
-                s.wa_number_id, s.jid       
-         FROM sessions s
-         JOIN clients c ON c.id = s.client_id
-         JOIN wa_numbers wn ON wn.id = s.wa_number_id
-         ORDER BY s.updated_at DESC`
-      );
+    let baseQuery = `
+      SELECT s.*, c.name, c.phone, c.avatar_url, c.is_online,
+             (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+             (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
+             (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
+             s.status, s.created_at, s.updated_at,
+             c.is_blacklisted, c.is_invalid, c.tags
+      FROM sessions s
+      JOIN clients c ON c.id = s.client_id
+      LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
+      WHERE 1=1
+    `;
+
+    // فلترة حسب نوع العميل
+    if (filter === "vip") {
+      baseQuery += ` AND c.tags ILIKE '%VIP%'`;
+    } else if (filter === "repeat") {
+      baseQuery += ` AND (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1`;
+    } else if (filter === "deal") {
+      baseQuery += ` AND c.tags ILIKE '%Deal%'`;
+    } else if (filter === "new") {
+      baseQuery += ` AND c.created_at >= NOW() - INTERVAL '7 days'`;
+    } else if (filter === "blacklist") {
+      baseQuery += ` AND c.is_blacklisted = true`;
+    } else if (filter === "invalid") {
+      baseQuery += ` AND c.is_invalid = true`;
     }
 
-    // 🧹 تنظيف الـ jid قبل الإرسال للواجهة
-const cleanedRows = result.rows.map(row => {
-  if (row.jid) {
-    row.phone = row.jid.replace(/@s\.whatsapp\.net$/, ""); // نحذف @s.whatsapp.net
-  }
-  return row;
-});
-res.json(cleanedRows);
+    // فلترة حسب الدور (العميل أو المشرف)
+    if (role === "agent") {
+      baseQuery += ` AND s.assigned_agent_id = $1 ORDER BY s.updated_at DESC`;
+    } else {
+      baseQuery += ` ORDER BY s.updated_at DESC`;
+    }
+
+    const result = await db.query(baseQuery, role === "agent" ? [userId] : []);
+
+    // تنظيف jid
+    const cleanedRows = result.rows.map(row => {
+      if (row.jid) row.phone = row.jid.replace(/@s\.whatsapp\.net$/, "");
+      return row;
+    });
+
+    res.json(cleanedRows);
   } catch (err) {
-    console.error("Error fetching sessions:", err);
+    console.error("Error fetching sessions with filter:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
