@@ -2,10 +2,15 @@
     <section class="clients-list">
     <div class="clients-header">
         <input type="text" id="search-clients" placeholder="Search..." />
-        <select id="filter-period">
-          <option value="today">Today</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
+        <select id="filter-tag">
+  <option value="all">All Clients</option>
+  <option value="vip">VIP</option>
+  <option value="new">New</option>
+  <option value="old">Old</option>
+  <option value="deal">Deal</option>
+  <option value="repeat">Repeat</option>
+  <option value="invalid">Invalid</option>
+  <option value="blacklisted">Blacklisted</option>
         </select>
       </div>
       <div id="session-count" class="session-count">Sessions: <span id="sessionCountValue">0</span></div>
