@@ -46,17 +46,42 @@ async function loadSessions() {
 
 // 🔹 Search bar
 document.addEventListener("DOMContentLoaded", () => { 
-const searchBar = document.getElementById("search-clients");
+  const searchBar = document.getElementById("search-clients");
+  const tagFilter = document.getElementById("filter-tag");
+
+  // 🔍 البحث
   if (searchBar) {
     searchBar.addEventListener("input", () => {
-    const value = searchBar.value.toLowerCase();
+      const value = searchBar.value.toLowerCase();
       const filtered = sessions.filter((s) =>
-  (s.name || "").toLowerCase().includes(value) ||
-  (s.phone || "").includes(value) ||
-  (s.tags?.join(" ") || "").toLowerCase().includes(value) ||
-  (s.last_message || "").toLowerCase().includes(value)
-);
+        (s.name || "").toLowerCase().includes(value) ||
+        (s.phone || "").includes(value) ||
+        (s.tags?.join(" ") || "").toLowerCase().includes(value) ||
+        (s.last_message || "").toLowerCase().includes(value)
+      );
       renderSessions(filtered);
+    });
+  }
+
+  // 🏷️ الفلترة بالوسوم
+  if (tagFilter) {
+    tagFilter.addEventListener("change", async () => {
+      const tag = tagFilter.value;
+
+      try {
+        let res;
+        if (tag === "all") {
+         res = await axios.get(`/sessions?filter=all`, { withCredentials: true }); 
+        } else {
+         res = await axios.get(`/sessions?filter=${tag}`, { withCredentials: true });
+        }
+
+        sessions = res.data;
+        renderSessions(sessions, tag);
+        updateSidebarCounts(sessions);
+      } catch (err) {
+        console.error("Error filtering by tag:", err);
+      }
     });
   }
 });
