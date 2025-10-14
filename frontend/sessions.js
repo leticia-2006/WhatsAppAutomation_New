@@ -126,9 +126,7 @@ function renderSessions(list = [], filterType = "all") {
           .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
           .join("")}
       </div>
-      <span class="client-status ${session.is_online ? "online" : "offline"}">
-  ${session.is_online ? "🟢 Online" : "⚫ Offline"}
-</span>
+      <span class="client-status ${session.is_online ? "online" : "offline"}"></span>
 <div class="client-labels">
   ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
 </div>
