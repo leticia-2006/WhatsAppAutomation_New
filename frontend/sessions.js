@@ -559,7 +559,7 @@ function selectClient(session) {
   document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
   const statusEl = document.getElementById("detailStatus");
   const lastActiveEl = document.getElementById("lastActive");
-  statusEL.innerText = session.is_online ? "🟢 Online" : "⚫ Offline"; 
+  statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline"; 
   lastActiveEl.innerText = timeAgoEN(session.updated_at || session.last_active);
   
   document.getElementById("detailTags").innerHTML = (session.tags || [])
