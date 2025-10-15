@@ -377,6 +377,69 @@ main {
   border-radius: 3px;
 }
 
+
+.client-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 0.6fr;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.client-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.client-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.client-info img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+.client-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 15px;
+}
+.client-number {
+  color: #777;
+  font-size: 13px;
+}
+.client-status {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+.status-online {
+  background: #e6f8e9;
+  color: #2e8b57;
+}
+.status-offline {
+  background: #fde7e7;
+  color: #c0392b;
+}
+.client-actions button {
+  border: none;
+  background: #eef1f5;
+  padding: 7px 9px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.client-actions button:hover {
+  background: #007bff;
+  color: white;
+}
 /* Chat */
 .chat-window {
   flex-grow: 1;
@@ -1147,6 +1210,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
