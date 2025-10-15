@@ -258,7 +258,7 @@ main {
   cursor: pointer;
   transition: border-color 0.3s ease;
 }
-clients-header select:focus {
+.clients-header select:focus {
   border-color: var(--primary-green);
   outline: none;
 }
@@ -377,162 +377,6 @@ clients-header select:focus {
   border-radius: 3px;
 }
 
-
-
-
-.clients-list {
-  width: 320px;
-  background: #fff;
-  border-right: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-}
-
-.clients-header {
-  display: flex;
-  gap: 8px;
-  padding: 12px;
-  background: var(--light-green-bg);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.clients-header input, .clients-header select {
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  padding: 8px 12px;
-  font-size: 14px;
-  transition: 0.3s;
-}
-
-.clients-header input:focus {
-  border-color: var(--primary-green);
-  background: #f7fff9;
-}
-
-.session-count {
-  font-size: 13px;
-  color: #555;
-  padding: 8px 14px;
-  background: #f1f3f4;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.clients-items {
-  list-style: none;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.client-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-bottom: 1px solid #f0f0f0;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.client-item:hover {
-  background: #f9fdfa;
-  transform: translateX(2px);
-}
-
-.client-avatar-wrap {
-  position: relative;
-}
-
-.client-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.status-dot {
-  position: absolute;
-  bottom: 2px;
-  right: 3px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-}
-
-.status-dot.online { background: #4caf50; }
-.status-dot.offline { background: #9e9e9e; }
-
-.client-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.info-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.client-name {
-  font-weight: 600;
-  color: #333;
-  font-size: 15px;
-}
-
-.client-time {
-  font-size: 12px;
-  color: #888;
-}
-
-.client-message {
-  font-size: 13px;
-  color: #666;
-  margin-top: 2px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.client-tags {
-  margin-top: 4px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.tag {
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 8px;
-  background: #e6f5ea;
-  color: #2e7d32;
-  font-weight: 500;
-}
-
-.tag.vip { background: #fff3e0; color: #ff9800; }
-.tag.deal { background: #e3f2fd; color: #1976d2; }
-.tag.repeat { background: #fce4ec; color: #c2185b; }
-.tag.invalid { background: #f8d7da; color: #b71c1c; }
-
-.client-menu-btn {
-  background: none;
-  border: none;
-  color: #aaa;
-  font-size: 16px;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.client-menu-btn:hover {
-  color: var(--primary-green);
-}
- 
 /* Chat */
 .chat-window {
   flex-grow: 1;
@@ -1303,6 +1147,7 @@ clients-header select:focus {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
