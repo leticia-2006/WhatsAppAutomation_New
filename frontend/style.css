@@ -475,8 +475,8 @@ client-top {
 }
 .status-dot {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
+  bottom: 0px;
+  right: 0px;
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -1276,6 +1276,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
