@@ -475,12 +475,13 @@ client-top {
 }
 .status-dot {
   position: absolute;
-  bottom: 3px;
-  right: 3px;
-  width: 10px;
-  height: 10px;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   border: 2px solid #fff;
+  box-shadow: 0 0 3px rgba(0,0,0,0.2); 
 }
 .status-dot.online { background: #2ecc71; }
 .status-dot.offline { background: #bbb; }
@@ -1275,6 +1276,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
