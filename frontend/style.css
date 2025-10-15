@@ -266,7 +266,7 @@ main {
 .clients-header select:hover {
   border-color: var(--primary-green);
 }
-/*.clients-list  ul {
+.clients-list  ul {
   list-style: none;
   overflow-y: auto;
   flex-grow: 1;
@@ -274,7 +274,7 @@ main {
   margin-left: 0;
 }
 
-.clients-list ul li {
+/*.clients-list ul li {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1235,6 +1235,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
