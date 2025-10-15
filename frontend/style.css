@@ -382,14 +382,13 @@ main {
   background: white;
   border-radius: 12px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  padding: 12px 14px;
+  padding: 10px 14px;
   display: flex;
   align-items: flex-start;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
   justify-content: space-between;
-  margin-bottom: 10px;
-  margin-left: 0px;
+  margin-bottom: 6px 10px;
 }
 .client-card:hover {
   transform: translateY(-3px);
@@ -397,27 +396,29 @@ main {
 }
 .client-info {
   display: flex;
-  align-items: center;
-  gap: 12px;
   flex-direction: column;
+flex-grow: 1;
+  min-width: 0;
 }
-.client-info img {
-  width: 42px;
-  height: 42px;
+.avatar-wrapper img {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #ddd;
 }
 .client-name {
   font-weight: 600;
-  color: #333;
+  color: #222;
   font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .client-phone {
-  color: #777;
+  color: #222;
   font-size: 13px;
-  
-}
+ }
 .client-status {
   padding: 4px 10px;
   border-radius: 8px;
@@ -447,12 +448,12 @@ main {
 }
 .avatar-wrapper {
   position: relative;
-  display: inline-block;
+  flex-shrink: 0;
 }
 .status-dot {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
+  bottom: 3px;
+  right: 3px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -462,9 +463,11 @@ main {
 .status-dot.offline { background: #bbb; }
 .client-time {
   font-size: 12px;
-  color: #999;
-  margin-left: auto;
+  color: #888;
+  margin-left: 10px;
+  white-space: nowrap;
 }
+
 /* Chat */
 .chat-window {
   flex-grow: 1;
@@ -1235,6 +1238,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
