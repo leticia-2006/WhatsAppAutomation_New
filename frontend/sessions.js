@@ -132,15 +132,6 @@ function renderSessions(list = [], filterType = "all") {
           .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
           .join("")}
       </div>
-      <div class="client-actions">
-    <button title="Add Note" onclick="openNoteModal(${session.id}); event.stopPropagation();">
-      <i class="fa fa-sticky-note"></i>
-    </button>
-    <button title="Open Chat" onclick="openChat(${session.id}); event.stopPropagation();">
-      <i class="fa fa-comments"></i>
-    </button>
-  </div>
-
 <div class="client-labels">
   ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
 </div>
