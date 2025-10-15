@@ -470,7 +470,7 @@ client-top {
   width: 50px;
   height: 50px;
   display: flex;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 50%;
 }
 .status-dot {
@@ -1276,6 +1276,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
