@@ -127,9 +127,9 @@ function renderSessions(list = [], filterType = "all") {
         <small class="client-time">${session.last_time || ""}</small>
       </div>
       <div class="client-status ${session.is_online ? "online" : "offline"}"></div>
-      <div class="client-last-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
+      <div class="client-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
       <div class="client-tags">
-        ${session.is_repeat ? '<span class="tag tag-repeat">Repeat</span>' : ""}
+        ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
         ${(session.tags || [])
           .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
           .join("")}
