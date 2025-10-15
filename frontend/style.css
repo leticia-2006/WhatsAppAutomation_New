@@ -419,6 +419,15 @@ flex-grow: 1;
   color: #222;
   font-size: 13px;
  }
+.client-message {
+  font-size: 13px;
+  color: #555;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .client-status {
   padding: 4px 10px;
   border-radius: 8px;
@@ -466,6 +475,20 @@ flex-grow: 1;
   color: #888;
   margin-left: 10px;
   white-space: nowrap;
+}
+.client-tags {
+  margin-top: 4px;
+}
+
+.client-tags .tag {
+  display: inline-block;
+  background: #e9f5ff;
+  color: #007bff;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-right: 4px;
 }
 
 /* Chat */
@@ -1238,6 +1261,7 @@ flex-grow: 1;
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
