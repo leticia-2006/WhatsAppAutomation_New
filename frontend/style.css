@@ -384,7 +384,7 @@ main {
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   padding: 12px 14px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
   justify-content: space-between;
@@ -398,6 +398,7 @@ main {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-direction: column;
 }
 .client-info img {
   width: 42px;
@@ -414,6 +415,7 @@ main {
 .client-phone {
   color: #777;
   font-size: 13px;
+  
 }
 .client-status {
   padding: 4px 10px;
@@ -1232,6 +1234,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
