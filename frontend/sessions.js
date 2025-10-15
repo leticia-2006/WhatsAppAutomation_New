@@ -121,12 +121,12 @@ function renderSessions(list = [], filterType = "all") {
         <div class="client-info">
         <div class="client-top">
         <div class="client-name">${session.name || session.client_name || session.phone}</div>
-        <div class="client-phone">${session.phone || ""}</div>
-        </div>
+        <div class="client-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
+       </div>
         <small class="client-time">${session.last_time || ""}</small>
       </div>
       <div class="client-status ${session.is_online ? "online" : "offline"}"></div>
-      <div class="client-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
+      
       <div class="client-tags">
         ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
         ${(session.tags || [])
