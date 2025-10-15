@@ -144,9 +144,9 @@ function renderSessions(list = [], filterType = "all") {
 <div class="client-labels">
   ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
 </div>
-    `;
+    `;}
 
-    // زر الملاحظات
+    /* زر الملاحظات
     const noteBtn = document.createElement("button");
     noteBtn.className = "note-btn";
     noteBtn.title = "Add or view notes";
@@ -154,9 +154,9 @@ function renderSessions(list = [], filterType = "all") {
     noteBtn.onclick = (e) => {
       e.stopPropagation();
       openNoteModal(session.id);
-    };
+    }; 
 
-    /* تركيب العنصر
+     تركيب العنصر
     li.appendChild(avatar);
     li.appendChild(info);
     li.appendChild(noteBtn);*/
@@ -181,6 +181,7 @@ function renderSessions(list = [], filterType = "all") {
   if (counter)
     counter.innerText = `${list.length} clients (${filterType})`;
 }
+};
  function timeAgoEN(dateString) {
   const date = new Date(dateString);
   const seconds = Math.floor((new Date() - date) / 1000);
