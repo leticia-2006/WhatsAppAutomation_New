@@ -102,8 +102,8 @@ function renderSessions(list = [], filterType = "all") {
     if (filterType === "group" && !session.group_id) return;
 
     // إنشاء العنصر
-    const li = document.createElement("li");
-    li.className = `client-item ${session.status === "unread" ? "unread" : ""}`;
+    const card = document.createElement("div");
+    card.className = `client-card ${session.status === "unread" ? "unread" : ""}`;
 
     // الصورة الرمزية
     const avatar = document.createElement("img");
@@ -113,20 +113,34 @@ function renderSessions(list = [], filterType = "all") {
     // المحتوى النصي
     const info = document.createElement("div");
     info.className = "client-info";
-    info.innerHTML = `
-      <div class="client-header">
-        <span class="client-name">${session.name || session.client_name || session.phone}</span>
-        <small class="client-phone">${session.phone || ""}</small>
+    card.innerHTML = `
+      <div class="client-top">
+      <div class="client-info">
+        <img src="${session.avatar_url || '/default-avatar.png'}" class="client-avatar" alt="avatar">
+      <div>
+        <div class="client-name">${session.name || session.client_name || session.phone}</div>
+        <div class="client-phone">${session.phone || ""}</div>
+        </div
+        </div>
         <small class="client-time">${session.last_time || ""}</small>
       </div>
-      <div class="client-message">${session.last_message || ""}</div>
+      <div class="client-status ${session.is_online ? "online" : "offline"}"></div>
+      <div class="client-last-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
       <div class="client-tags">
         ${session.is_repeat ? '<span class="tag tag-repeat">Repeat</span>' : ""}
         ${(session.tags || [])
           .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
           .join("")}
       </div>
-      <span class="client-status ${session.is_online ? "online" : "offline"}"></span>
+      <div class="client-actions">
+    <button title="Add Note" onclick="openNoteModal(${session.id}); event.stopPropagation();">
+      <i class="fa fa-sticky-note"></i>
+    </button>
+    <button title="Open Chat" onclick="openChat(${session.id}); event.stopPropagation();">
+      <i class="fa fa-comments"></i>
+    </button>
+  </div>
+
 <div class="client-labels">
   ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
 </div>
