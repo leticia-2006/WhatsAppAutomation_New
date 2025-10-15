@@ -411,7 +411,7 @@ main {
   color: #333;
   font-size: 15px;
 }
-.client-number {
+.client-phone {
   color: #777;
   font-size: 13px;
 }
@@ -441,6 +441,26 @@ main {
 .client-actions button:hover {
   background: #007bff;
   color: white;
+}
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.status-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+.status-dot.online { background: #2ecc71; }
+.status-dot.offline { background: #bbb; }
+.client-time {
+  font-size: 12px;
+  color: #999;
+  margin-left: auto;
 }
 /* Chat */
 .chat-window {
@@ -1212,6 +1232,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
