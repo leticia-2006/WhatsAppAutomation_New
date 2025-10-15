@@ -408,8 +408,8 @@ client-top {
   align-items: center;
 }
 .avatar-wrapper img {
-  width: 48px;
-  height: 48px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #ddd;
@@ -467,6 +467,11 @@ client-top {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  overflow: hidden;
+  border-radius: 50%;
 }
 .status-dot {
   position: absolute;
@@ -1270,6 +1275,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
