@@ -144,7 +144,7 @@ function renderSessions(list = [], filterType = "all") {
 <div class="client-labels">
   ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
 </div>
-    `;}
+    `;
 
     /* زر الملاحظات
     const noteBtn = document.createElement("button");
@@ -180,7 +180,7 @@ function renderSessions(list = [], filterType = "all") {
   const counter = document.getElementById("session-count");
   if (counter)
     counter.innerText = `${list.length} clients (${filterType})`;
-}
+});
 };
  function timeAgoEN(dateString) {
   const date = new Date(dateString);
