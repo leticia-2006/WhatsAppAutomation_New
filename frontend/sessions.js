@@ -105,10 +105,10 @@ function renderSessions(list = [], filterType = "all") {
     const card = document.createElement("div");
     card.className = `client-card ${session.status === "unread" ? "unread" : ""}`;
 
-    // الصورة الرمزية
+    /*الصورة الرمزية
     const avatar = document.createElement("img");
     avatar.src = session.avatar_url || "/default-avatar.png";
-    avatar.className = "client-avatar";
+    avatar.className = "client-avatar";*/
 
     // المحتوى النصي
     const info = document.createElement("div");
@@ -156,27 +156,26 @@ function renderSessions(list = [], filterType = "all") {
       openNoteModal(session.id);
     };
 
-    // تركيب العنصر
+    /* تركيب العنصر
     li.appendChild(avatar);
     li.appendChild(info);
-    li.appendChild(noteBtn);
+    li.appendChild(noteBtn);*/
 
     // حدث النقر لفتح الدردشة
-    li.onclick = () => {
+    card.onclick = () => {
       openChat(session);
       selectClient(session);
     };
 
     // حدث النقر باليمين
-    li.oncontextmenu = (e) => {
+    card.oncontextmenu = (e) => {
       e.preventDefault();
       showContextMenu(e, session);
     };
 
-    ul.appendChild(li);
-  });
+    
 
-  container.appendChild(ul);
+  container.appendChild(card);
 
   const counter = document.getElementById("session-count");
   if (counter)
