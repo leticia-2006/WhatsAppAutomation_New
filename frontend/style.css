@@ -389,6 +389,7 @@ main {
   cursor: pointer;
   justify-content: space-between;
   margin-bottom: 10px;
+  margin-left: 0px;
 }
 .client-card:hover {
   transform: translateY(-3px);
@@ -1234,6 +1235,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
