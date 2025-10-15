@@ -384,11 +384,13 @@ main {
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   padding: 10px 14px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
   justify-content: space-between;
-  margin-bottom: 6px 10px;
+  margin: 6px 10px;
+  gap: 10px;
+  height: auto;
 }
 .client-card:hover {
   transform: translateY(-3px);
@@ -463,6 +465,8 @@ client-top {
 .avatar-wrapper {
   position: relative;
   flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
 }
 .status-dot {
   position: absolute;
@@ -1266,6 +1270,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
