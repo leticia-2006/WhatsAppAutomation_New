@@ -266,7 +266,7 @@ main {
 .clients-header select:hover {
   border-color: var(--primary-green);
 }
-.clients-list  ul {
+/*.clients-list  ul {
   list-style: none;
   overflow-y: auto;
   flex-grow: 1;
@@ -327,7 +327,7 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.3;
-}
+}*/
 .session-count {
   font-size: 14px;
   color: var(--text-medium);
@@ -352,22 +352,22 @@ main {
   margin-right: 8px;
 }
 
-.client-status.online {
-  background-color: #4caf50; /* أخضر */
+/*.client-status.online {
+  background-color: #4caf50;  أخضر 
 }
 
 .client-status.offline {
-  background-color: #9e9e9e; /* رمادي */
+  background-color: #9e9e9e;  رمادي 
 }
 
 .client-status.unread {
-  background-color: #ff9800; /* برتقالي */
+  background-color: #ff9800;  برتقالي 
 }
 
 .client-status.group {
-  background-color: #2196f3; /* أزرق */
+  background-color: #2196f3;  أزرق 
 }
-
+*/
 .clients-list ul::-webkit-scrollbar {
   width: 6px;
 }
@@ -1234,6 +1234,7 @@ main {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
