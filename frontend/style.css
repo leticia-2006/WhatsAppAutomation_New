@@ -397,8 +397,13 @@ main {
 .client-info {
   display: flex;
   flex-direction: column;
-flex-grow: 1;
+  flex-grow: 1;
   min-width: 0;
+}
+client-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .avatar-wrapper img {
   width: 48px;
@@ -1261,6 +1266,7 @@ flex-grow: 1;
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
