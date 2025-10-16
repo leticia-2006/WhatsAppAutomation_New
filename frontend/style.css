@@ -728,7 +728,7 @@ client-top {
   color: var(--text-medium);
   margin-top: 3px;
 }
-/* Client Details */
+/* Client Details 
 .client-details {
   width: 300px;
   padding: 20px;
@@ -747,7 +747,7 @@ client-top {
   margin-top: 3px;
 }
 
-/* صورة + اسم */
+/* صورة + اسم 
 .profile {
   display: flex;
   flex-direction: column;
@@ -773,10 +773,10 @@ client-top {
 .profile .phone {
   font-size: 14px;
   font-weight: 400;
-  color: var(--text-medium); /* أفتح من الاسم */
-  margin-bottom: 15px; /* ترك فراغ قبل البطاقات */
+  color: var(--text-medium); /* أفتح من الاسم 
+  margin-bottom: 15px; /*ترك فراغ قبل البطاقات 
 }
-/* بطاقات */
+/* بطاقات 
 .info-cards {
   display: flex;
   flex-direction: column;
@@ -814,17 +814,17 @@ client-top {
 }
 
 .value.active {
-  color: #22c55e; /* أخضر */
+  color: #22c55e; /* أخضر *
 }
 .value.offline {
-  color: #ef4444; /* أحمر */
+  color: #ef4444; /* أحمر 
 }
 .info-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Tags */
+/* Tags *
 .tags {
   display: flex;
   gap: 8px;
@@ -842,9 +842,9 @@ client-top {
 }
 
 
-/* Notes */
+/* Notes *
 .notes-section {
-  margin-top: auto; /* تخليها تنزل تحت */
+  margin-top: auto; /* تخليها تنزل تحت *
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -871,7 +871,7 @@ client-top {
   border-left: 4px solid var(--primary-green);
 }
 
-/* Notes Textarea بتصميم بطاقة */
+/* Notes Textarea بتصميم بطاقة 
 .notes-section textarea {
   width: 100%;
   min-height: 90px;
@@ -912,6 +912,271 @@ client-top {
 .notes-section button:hover {
   background-color: #1ebe5d;
   transform: scale(1.03);
+}*/
+/* ===== قسم العميل ===== */
+.client-details {
+  width: 300px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: linear-gradient(to bottom, #ffffff, #f7faf9);
+  border-left: 1px solid #e2e8f0;
+  box-shadow: -3px 0 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+/* ===== الملف الشخصي ===== */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+}
+
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e6f8eb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+}
+.status-dot.online { background: #22c55e; }
+.status-dot.offline { background: #ccc; }
+
+.client-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.client-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.client-number {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.client-tags {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.client-tags .tag {
+  background: #e6f4ff;
+  color: #0369a1;
+  padding: 4px 9px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.client-labels {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.client-labels .label {
+  background: #f3f4f6;
+  color: #4b5563;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-size: 11.5px;
+}
+
+.client-time {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+/* ===== بطاقات إضافية (Status, Tags...) ===== */
+.client-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.client-card-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #edf2f7;
+  padding: 10px 14px;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.client-card-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.client-card-item i {
+  font-size: 18px;
+  color: var(--primary-green);
+  background: #e6f8eb;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.client-card-item .client-label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.client-status {
+  font-size: 13px;
+  font-weight: 600;
+}
+.client-status.online { color: #22c55e; }
+.client-status.offline { color: #ef4444; }
+
+/* ===== الملاحظات ===== */
+.notes-section {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notes-header h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-item {
+  background: #f9fafb;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #374151;
+  border-left: 3px solid var(--primary-green);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.note-input {
+  width: 100%;
+  min-height: 90px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  background: #fafafa;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.note-input:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.15);
+  background: #fff;
+}
+
+.save-note {
+  background-color: var(--primary-green);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s, transform 0.1s ease;
+}
+
+.save-note:hover {
+  background-color: #1ebe5d;
+  transform: scale(1.03);
+}
+
+/* ===== الأزرار السفلية ===== */
+.actions-section {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.client-action {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.client-action:hover {
+  background: #22c55e;
+  color: white;
+  transform: scale(1.03);
+}
+
+.client-action.danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.client-action.danger:hover {
+  background: #ef4444;
+  color: #fff;
 }
 
 
@@ -1283,6 +1548,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
