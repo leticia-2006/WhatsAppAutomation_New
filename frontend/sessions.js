@@ -113,7 +113,7 @@ function renderSessions(list = [], filterType = "all") {
     // المحتوى النصي
     const info = document.createElement("div");
     info.className = "client-info";
-    card.innerHTML = `
+    /*card.innerHTML = `
       <div class="avatar-wrapper">
         <img src="${session.avatar_url || '/default-avatar.png'}" class="client-avatar" alt="avatar">
         <span class="status-dot ${session.is_online ? "online" : "offline"}"></span>
@@ -137,10 +137,37 @@ function renderSessions(list = [], filterType = "all") {
   ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
 </div>
 </div>
-    `;
+    `; */
+    card.innerHTML = `
+  <div class="avatar-wrapper">
+    <img src="${session.avatar_url || '/default-avatar.png'}" class="client-avatar" alt="avatar">
+    <span class="status-dot ${session.is_online ? "online" : "offline"}"></span>
+  </div>
 
-    /* زر الملاحظات
-    const noteBtn = document.createElement("button");
+  <div class="client-info">
+    <div class="client-top">
+      <div class="client-name">${session.name || session.client_name || session.phone}</div>
+      <small class="client-time">${session.last_time || ""}</small>
+    </div>
+
+    <div class="client-bottom">
+      <div class="client-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
+      <div class="client-tags">
+        ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
+        ${(session.tags || [])
+          .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
+          .join("")}
+      </div>
+    </div>
+
+    <div class="client-labels">
+      ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
+    </div>
+  </div>
+`;
+
+    // زر الملاحظات//
+ /*   const noteBtn = document.createElement("button");
     noteBtn.className = "note-btn";
     noteBtn.title = "Add or view notes";
     noteBtn.innerHTML = "📝";
