@@ -933,14 +933,14 @@ client-top {
   gap: 16px;
 }
 
-.avatar-wrapper {
+.avatar {
   position: relative;
   flex-shrink: 0;
   width: 80px;
   height: 80px;
 }
 
-.avatar-wrapper img {
+.avatar img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -1548,6 +1548,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
