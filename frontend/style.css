@@ -487,9 +487,9 @@ client-top {
 .status-dot.offline { background: #bbb; }
 .client-time {
   font-size: 12px;
-  color: #888;
+  color: #999;
   margin-left: 10px;
-  white-space: nowrap;
+  flex shrink: 0;
 }
 .client-tags {
   margin-top: 4px;
@@ -1276,6 +1276,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
