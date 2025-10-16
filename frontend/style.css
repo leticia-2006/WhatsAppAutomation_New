@@ -391,6 +391,7 @@ main {
   margin: 6px 10px;
   gap: 10px;
   height: auto;
+  position: relative;
 }
 .client-card:hover {
   transform: translateY(-3px);
@@ -485,7 +486,7 @@ client-top {
 }
 .status-dot.online { background: #2ecc71; }
 .status-dot.offline { background: #bbb; }
-.client-time {
+/*.client-time {
   font-size: 11px;
   color: #9b9b9b;
   flex-shrink: 0;
@@ -493,10 +494,22 @@ client-top {
   align-self:  flex-start;
   margin-left: 8px;
   font-weight: 500;
-}
+}*/
 .client-tags {
   margin-top: 4px;
 }
+.client-time {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 11px;
+  color: #888;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
 
 .client-tags .tag {
   display: inline-block;
@@ -1279,6 +1292,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
