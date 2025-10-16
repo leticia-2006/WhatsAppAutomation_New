@@ -674,7 +674,7 @@ client-top {
   margin-top: 3px;
 }
  /*Client Details */
-/* ===== قسم العميل ===== */
+/* ===== قسم العميل ===== 
 .client-details {
   width: 300px;
   padding: 20px;
@@ -709,7 +709,7 @@ client-top {
   border: 3px solid #e6f8eb;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
-*/
+
 .status-dot {
   position: absolute;
   bottom: 5px;
@@ -779,7 +779,7 @@ client-top {
   font-weight: 400;
 }
 
-/* ===== بطاقات إضافية (Status, Tags...) ===== */
+ ===== بطاقات إضافية (Status, Tags...) ===== *
 .client-extra {
   display: flex;
   flex-direction: column;
@@ -823,7 +823,7 @@ client-top {
 .client-status.online { color: #22c55e; }
 .client-status.offline { color: #ef4444; }
 
-/* ===== الملاحظات ===== */
+/* ===== الملاحظات ===== 
 .notes-section {
   margin-top: auto;
   display: flex;
@@ -899,7 +899,7 @@ client-top {
   transform: scale(1.03);
 }
 
-/* ===== الأزرار السفلية ===== */
+/* ===== الأزرار السفلية ===== *
 .actions-section {
   display: flex;
   gap: 10px;
@@ -939,7 +939,7 @@ client-top {
   background: #ef4444;
   color: #fff;
 }
-
+*/
 .client-details {
   width: 320px;
   padding: 20px;
@@ -1427,6 +1427,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
