@@ -379,6 +379,7 @@ main {
 
 
 .client-card {
+  position: relative;
   background: white;
   border-radius: 12px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
@@ -495,7 +496,11 @@ client-top {
   font-weight: 500;
 }
 .client-tags {
-  margin-top: 4px;
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
 }
 .client-tags .tag {
   display: inline-block;
@@ -1278,6 +1283,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
