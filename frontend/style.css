@@ -718,8 +718,8 @@ client-top {
 .profile .phone {
   font-size: 14px;
   font-weight: 400;
-  color: var(--text-medium); /* أفتح من الاسم 
-  margin-bottom: 15px; /*ترك فراغ قبل البطاقات 
+  color: var(--text-medium);  
+  margin-bottom: 15px; 
 }
 /* بطاقات 
 .info-cards {
@@ -1495,6 +1495,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
