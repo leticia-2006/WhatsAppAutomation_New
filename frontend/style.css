@@ -490,6 +490,8 @@ client-top {
   color: #999;
   margin-left: 10px;
   flex-shrink: 0;
+  white-space: nowrap;
+  align-self:  flex-start;
 }
 .client-tags {
   margin-top: 4px;
@@ -1276,6 +1278,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
