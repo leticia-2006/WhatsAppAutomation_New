@@ -673,7 +673,7 @@ client-top {
   color: var(--text-medium);
   margin-top: 3px;
 }
-/* Client Details 
+ /*Client Details */
 .client-details {
   width: 300px;
   padding: 20px;
@@ -685,7 +685,7 @@ client-top {
   box-shadow: -3px 0 8px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
 }
-.last-active {
+/*.last-active {
   display: block;
   font-size: 12px;
   color: #888;
@@ -961,7 +961,7 @@ client-top {
 .client-time {
   font-size: 12px;
   color: #888;
-  margin-top: 4px;
+  margin-top: 25px;
   font-weight: 400;
 }
 
@@ -1495,6 +1495,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
