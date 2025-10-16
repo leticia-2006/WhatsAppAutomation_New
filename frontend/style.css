@@ -1182,10 +1182,22 @@ client-top {
   justify-content: center;
   gap: 6px;
 }
-
-.client-action:hover {
-  background: #e6f8eb;
-  color: var(--primary-green);
+.client-action i {
+  font-size: 18px;
+}
+client-action span {
+  display: none;
+}
+.client-action:hover span {
+  display: inline;
+  position: absolute;
+  bottom: 110%;
+  background: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .client-action.danger {
@@ -1565,6 +1577,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
