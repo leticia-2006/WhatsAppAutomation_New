@@ -127,18 +127,19 @@ function renderSessions(list = [], filterType = "all") {
         
         <div class="client-status ${session.is_online ? "online" : "offline"}"></div>
       
-      <div class="client-tags">
-        ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
-        ${(session.tags || [])
-          .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
-          .join("")}
-      </div>
+      
 <div class="client-labels">
   ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
 </div>
 </div>
 <small class="client-time">${timeAgoEN(session.updated_at || session.last_active)}</small>
-    `; 
+  <div class="client-tags">
+        ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
+        ${(session.tags || [])
+          .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
+          .join("")}
+      </div>
+      `; 
     
 
     
