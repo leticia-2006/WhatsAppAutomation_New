@@ -113,6 +113,7 @@ function renderSessions(list = [], filterType = "all") {
     // المحتوى النصي
     const info = document.createElement("div");
     info.className = "client-info";
+    console.log("Last time for", session.name, "=>", session.last_time);  
     card.innerHTML = `
       <div class="avatar-wrapper">
         <img src="${session.avatar_url || '/default-avatar.png'}" class="client-avatar" alt="avatar">
