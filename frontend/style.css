@@ -1166,6 +1166,7 @@ client-top {
 }
 
 .client-action {
+  position: relative;
   flex: 1;
   text-align: center;
   background: #f1f5f9;
@@ -1577,6 +1578,7 @@ client-action span {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
