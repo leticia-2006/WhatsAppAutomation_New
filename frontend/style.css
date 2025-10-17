@@ -962,13 +962,13 @@ client-top {
   gap: 10px;
 }
 
-.detail-avatar {
+.avatar-wrapper {
   position: relative;
   width: 90px;
   height: 90px;
 }
 
-.detail-avatar img {
+.avatar-wrapper img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -1566,6 +1566,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
