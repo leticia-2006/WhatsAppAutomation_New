@@ -1,3 +1,5 @@
+require('dotenv').config(); // ← أضف هذا السطر أولاً
+
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
@@ -137,6 +139,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
