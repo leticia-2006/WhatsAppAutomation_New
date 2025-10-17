@@ -75,7 +75,7 @@ main {
   object-fit: cover !important;
   background-color: #fff !important;
   transition: transform 0.3s ease !important;
-}
+  display: block;}
 
 .sidebar-header .profile img.avatar:hover {
   transform: scale(1.08);
@@ -1569,6 +1569,7 @@ client-top {
   transform: translateY(-1px);
 }
 /* إصلاح أولوية تنسيق الصورة داخل تفاصيل العميل */
+
 
 
 
