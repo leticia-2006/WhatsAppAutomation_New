@@ -1,4 +1,4 @@
-require('dotenv').config(); // ← أضف هذا السطر أولاً
+/*require('dotenv').config(); // ← أضف هذا السطر أولاً*/
 
 const express = require('express');
 const cors = require('cors');
@@ -23,7 +23,7 @@ console.log("Server file started running...");
 
 // Middleware
 app.use(cors({
-  origin: [ "https://chat.ohgo.site", "http://localhost:3000" ],
+  origin: [ "https://whatsappautomation-new-8jme.onrender.com", "http://localhost:3000" ],
   credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -139,6 +139,7 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
