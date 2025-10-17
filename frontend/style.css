@@ -43,7 +43,7 @@ main {
 /* Sidebar */
 
 .sidebar {
-  width: 80px;
+  width: 80px !important;
   background: linear-gradient(180deg, #ffffff 0%, #f7f9f9 100%);
   border-right: 1px solid var(--border-color);
   display: flex;
@@ -55,7 +55,7 @@ main {
 }
 
 .sidebar:hover {
-  width: 200px;
+  width: 200px !important;
 }
 
 .sidebar-header {
@@ -91,8 +91,8 @@ main {
 }
 
 .sidebar-header h3 {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 15px !important;
+  font-weight: 600 !important;
   color: var(--text-dark);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -974,8 +974,6 @@ client-top {
   width: 90px;
   height: 90px;
   flex-shrink: 0;
-  overflow: hidden;
-  
 }
 
 .details-avatar-wrapper img {
@@ -1578,6 +1576,7 @@ client-top {
   transform: translateY(-1px);
 }
 /* إصلاح أولوية تنسيق الصورة داخل تفاصيل العميل */
+
 
 
 
