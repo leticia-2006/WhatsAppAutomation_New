@@ -1565,14 +1565,7 @@ client-top {
   transform: translateY(-1px);
 }
 /* إصلاح أولوية تنسيق الصورة داخل تفاصيل العميل */
-.details-avatar-wrapper .client-avatar {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 50% !important;
-  object-fit: cover !important;
-  border: 3px solid #e6f8eb !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
-}
+
 
 
 
