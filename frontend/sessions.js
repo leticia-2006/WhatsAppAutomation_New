@@ -114,7 +114,7 @@ function renderSessions(list = [], filterType = "all") {
     const info = document.createElement("div");
     info.className = "client-info";
    card.innerHTML = `
-      <div class="details-avatar-wrapper">
+      <div class="list-avatar-wrapper">
         <img src="${session.avatar_url || '/default-avatar.png'}" class="client-avatar" alt="avatar">
         <span class="status-dot ${session.is_online ? "online" : "offline"}"></span>
       </div>
