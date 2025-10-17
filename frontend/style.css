@@ -353,7 +353,7 @@ client-top {
   justify-content: space-between;
   align-items: center;
 }
-.list-avatar-wrapper img {
+.avatar-wrapper img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -408,7 +408,7 @@ client-top {
   background: #007bff;
   color: white;
 }
-.list-avatar-wrapper {
+.avatar-wrapper {
   position: relative;
   flex-shrink: 0;
   align-items: center;
@@ -1564,74 +1564,3 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
