@@ -598,7 +598,7 @@ window.addEventListener("load", () => {
 function selectClient(session) {
   document.getElementById("detailName").innerText = session.name;
   document.getElementById("detailPhone").innerText = session.phone;
-//  document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
+  document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
   const statusEl = document.getElementById("detailStatus");
   const lastActiveEl = document.getElementById("lastActive");
   statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline"; 
