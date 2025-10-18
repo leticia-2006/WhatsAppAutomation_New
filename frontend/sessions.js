@@ -603,10 +603,24 @@ function selectClient(session) {
   const lastActiveEl = document.getElementById("lastActive");
   statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline"; 
   lastActiveEl.innerText = timeAgoEN(session.updated_at || session.last_active);
-  
-  document.getElementById("detailTags").innerHTML = (session.tags || [])
-    .map(t => `<span class="tag">${t}</span>`)
-    .join("");
+  const tagIconsEl = document.getElementById("tagIcons");
+  if (tagIconsEl) {
+  const tags = session.tags || [];
+  const iconMap = {
+    VIP: "👑",
+    Deal: "💼",
+    New: "🆕",
+    Old: "📞",
+    Repeat: "🔁",
+    Blacklist: "🚫",
+    Invalid: "❌",
+  };
+
+  tagIconsEl.innerHTML = tags.map(t => {
+    const icon = iconMap[t] || "🏷️"; // افتراضي إذا لم يوجد أيقونة مخصصة
+    return `<span class="tag-icon" title="${t}">${icon}</span>`;
+  }).join("");
+}
   document.getElementById("detailRepeat").style.display = session.is_repeat ? "inline" : "none";
   document.getElementById("detailInvalid").style.display = session.is_invalid ? "inline" : "none";
 
