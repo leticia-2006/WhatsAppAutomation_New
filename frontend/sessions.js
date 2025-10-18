@@ -608,7 +608,6 @@ function selectClient(session) {
 
     // نحذف التكرارات باستخدام Set
     const uniqueTags = [...new Set(tags)];
-
     // خريطة الأيقونات لكل تاغ
     const iconMap = {
       VIP: "👑",
@@ -629,6 +628,7 @@ function selectClient(session) {
     // 🏷️ عرض الكلمات داخل بطاقة Tags بالأسفل
     detailLabelsEl.innerHTML = uniqueTags.map(t => `<span class="label">${t}</span>`).join("");
 
+    console.log("Rendering extraTags:", uniqueTags);
     // ✅ تحديث extraTags ليعرض التاغات الحقيقية بدلاً من VIP الثابت
     extraTagsEl.innerHTML = uniqueTags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("");
   }
