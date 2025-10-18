@@ -607,7 +607,8 @@ function selectClient(session) {
 const tagIconsEl = document.getElementById("tagIcons");
 const detailLabelsEl = document.getElementById("detailLabels");
 if (tagIconsEl && detailLabelsEl) {
-  const tags = new Set(session.tags || []); // مصفوفة التاغات الأصلية
+  const tags = new Set(
+  Array.isArray(session.tags) ? session.tags : (typeof session.tags === "string" && session.tags.trim() !== "" ? session.tags.split(",").map(t => t.trim()) : []));
   if (session.is_repeat) tags.add("Repeat");
   if (session.is_invalid) tags.add("Invalid");
   if (session.is_blacklisted) tags.add("Blacklist");
