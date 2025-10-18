@@ -578,6 +578,9 @@ window.addEventListener("load", () => {
   }
 });
 function selectClient(session) {
+  console.log("Session inside selectClient:", session);
+  console.log("Session.tags:", session.tags);
+  
   document.getElementById("detailName").innerText = session.name || "";
   document.getElementById("detailPhone").innerText = session.phone || "";
   document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
