@@ -596,41 +596,59 @@ window.addEventListener("load", () => {
   }
 });
 function selectClient(session) {
-  document.getElementById("detailName").innerText = session.name;
-  document.getElementById("detailPhone").innerText = session.phone;
+  document.getElementById("detailName").innerText = session.name || "";
+  document.getElementById("detailPhone").innerText = session.phone || "";
   document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
+
   const statusEl = document.getElementById("detailStatus");
   const lastActiveEl = document.getElementById("lastActive");
-  statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline"; 
+  statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline";
   lastActiveEl.innerText = timeAgoEN(session.updated_at || session.last_active);
+
   // ====== عرض الأيقونات + التاغات ======
-const tagIconsEl = document.getElementById("tagIcons");
-const detailLabelsEl = document.getElementById("detailLabels");
-if (tagIconsEl && detailLabelsEl) {
-  const tags = new Set(
-  Array.isArray(session.tags) ? session.tags : (typeof session.tags === "string" && session.tags.trim() !== "" ? session.tags.split(",").map(t => t.trim()) : []));
-  if (session.is_repeat) tags.add("Repeat");
-  if (session.is_invalid) tags.add("Invalid");
-  if (session.is_blacklisted) tags.add("Blacklist");
-  // خريطة الأيقونات حسب التاغ
-  const iconMap = {
-    VIP: "👑",
-    Deal: "💼",
-    New: "🆕",
-    Old: "📞",
-    Repeat: "🔁",
-    Blacklist: "🚫",
-    Invalid: "❌",
-  };
- // 🟢 الأيقونات الصغيرة بجانب الاسم (title = اسم التاغ)
-  tagIconsEl.innerHTML = Array.from(tags).map(t => {
-    const icon = iconMap[t] || "🏷️";
-    return `<span class="tag-icon" title="${t}">${icon}</span>`;
-  }).join("");
- // 🏷️ عرض الكلمات في بطاقة Tags بالأسفل
-  detailLabelsEl.innerHTML = Array.from(tags).map(t => `<span class="label">${t}</span>`).join("");
-}
- loadMessages(session.id);
+  const tagIconsEl = document.getElementById("tagIcons");
+  const detailLabelsEl = document.getElementById("detailLabels");
+
+  if (tagIconsEl && detailLabelsEl) {
+
+    // 🧩 نحول tags من نص إلى مصفوفة بشكل آمن
+    let tags = [];
+    if (Array.isArray(session.tags)) {
+      tags = session.tags;
+    } else if (typeof session.tags === "string" && session.tags.trim() !== "") {
+      tags = session.tags.split(",").map(t => t.trim());
+    }
+
+    // نضيف الحقول boolean لو كانت true
+    if (session.is_repeat) tags.push("Repeat");
+    if (session.is_invalid) tags.push("Invalid");
+    if (session.is_blacklisted) tags.push("Blacklist");
+
+    // نحذف التكرارات باستخدام Set
+    const uniqueTags = [...new Set(tags)];
+
+    // خريطة الأيقونات لكل تاغ
+    const iconMap = {
+      VIP: "👑",
+      Deal: "💼",
+      New: "🆕",
+      Old: "📞",
+      Repeat: "🔁",
+      Blacklist: "🚫",
+      Invalid: "❌",
+    };
+
+    // 🎯 الأيقونات الصغيرة بجانب الاسم
+    tagIconsEl.innerHTML = uniqueTags.map(t => {
+      const icon = iconMap[t] || "🏷️";
+      return `<span class="tag-icon" title="${t}">${icon}</span>`;
+    }).join("");
+
+    // 🏷️ عرض الكلمات داخل بطاقة Tags
+    detailLabelsEl.innerHTML = uniqueTags.map(t => `<span class="label">${t}</span>`).join("");
+  }
+
+  loadMessages(session.id);
 }
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
