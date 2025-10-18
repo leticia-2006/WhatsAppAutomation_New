@@ -603,7 +603,6 @@ function selectClient(session) {
   const lastActiveEl = document.getElementById("lastActive");
   statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline"; 
   lastActiveEl.innerText = timeAgoEN(session.updated_at || session.last_active);
-  const tagIconsEl = document.getElementById("tagIcons");
   // ====== عرض الأيقونات + التاغات ======
 const tagIconsEl = document.getElementById("tagIcons");
 const detailLabelsEl = document.getElementById("detailLabels");
