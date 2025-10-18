@@ -105,11 +105,6 @@ function renderSessions(list = [], filterType = "all") {
     const card = document.createElement("div");
     card.className = `client-card ${session.status === "unread" ? "unread" : ""}`;
 
-    /*الصورة الرمزية
-    const avatar = document.createElement("img");
-    avatar.src = session.avatar_url || "/default-avatar.png";
-    avatar.className = "client-avatar";*/
-
     // المحتوى النصي
     const info = document.createElement("div");
     info.className = "client-info";
@@ -146,38 +141,19 @@ function renderSessions(list = [], filterType = "all") {
 <small class="client-time">${timeAgoEN(session.updated_at || session.last_active)}</small>
 `; 
     
-
-    
-    // زر الملاحظات//
- /*   const noteBtn = document.createElement("button");
-    noteBtn.className = "note-btn";
-    noteBtn.title = "Add or view notes";
-    noteBtn.innerHTML = "📝";
-    noteBtn.onclick = (e) => {
-      e.stopPropagation();
-      openNoteModal(session.id);
-    }; 
-
-     تركيب العنصر
-    li.appendChild(avatar);
-    li.appendChild(info);
-    li.appendChild(noteBtn);*/
-
-    // حدث النقر لفتح الدردشة
+  // حدث النقر لفتح الدردشة
     card.onclick = () => {
       openChat(session);
       selectClient(session);
     };
 
-    // حدث النقر باليمين
+  // حدث النقر باليمين
     card.oncontextmenu = (e) => {
       e.preventDefault();
       showContextMenu(e, session);
     };
 
-    
-
-  container.appendChild(card);
+    container.appendChild(card);
 
   const counter = document.getElementById("session-count");
   if (counter)
@@ -614,9 +590,9 @@ function selectClient(session) {
   // ====== عرض الأيقونات + التاغات ======
   const tagIconsEl = document.getElementById("tagIcons");
   const detailLabelsEl = document.getElementById("detailLabels");
+  const extraTagsEl = document.getElementById("extraTags"); // ✅ البطاقة في الأسفل
 
-  if (tagIconsEl && detailLabelsEl) {
-
+  if (tagIconsEl && detailLabelsEl && extraTagsEl) {
     // 🧩 نحول tags من نص إلى مصفوفة بشكل آمن
     let tags = [];
     if (Array.isArray(session.tags)) {
@@ -650,8 +626,11 @@ function selectClient(session) {
       return `<span class="tag-icon" title="${t}">${icon}</span>`;
     }).join("");
 
-    // 🏷️ عرض الكلمات داخل بطاقة Tags
+    // 🏷️ عرض الكلمات داخل بطاقة Tags بالأسفل
     detailLabelsEl.innerHTML = uniqueTags.map(t => `<span class="label">${t}</span>`).join("");
+
+    // ✅ تحديث extraTags ليعرض التاغات الحقيقية بدلاً من VIP الثابت
+    extraTagsEl.innerHTML = uniqueTags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("");
   }
 
   loadMessages(session.id);
