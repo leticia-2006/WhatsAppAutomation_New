@@ -791,6 +791,25 @@ client-top {
   background: #f1f5f9;
   color: #374151;
 }
+/* ====== أيقونات التاغ بجانب الاسم ====== */
+.tag-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+}
+
+.tag-icon {
+  font-size: 14px;
+  cursor: default;
+  color: #555;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.tag-icon:hover {
+  color: var(--primary-green);
+  transform: scale(1.2);
+}
 
 /* ====== بطاقات المعلومات (Status - Tags...) ====== */
 .client-extra {
@@ -1318,3 +1337,4 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
