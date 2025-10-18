@@ -133,9 +133,15 @@ function renderSessions(list = [], filterType = "all") {
 </div>
 <div class="client-tags">
         ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
-        ${(session.tags || [])
-          .map((t) => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
-          .join("")}
+        ${(
+  Array.isArray(session.tags)
+    ? session.tags
+    : typeof session.tags === "string" && session.tags.trim() !== ""
+    ? session.tags.split(",").map(t => t.trim())
+    : []
+)
+  .map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
+  .join("")}
       </div>
 <small class="client-time">${timeAgoEN(session.updated_at || session.last_active)}</small>
 `; 
