@@ -43,9 +43,9 @@ main {
 /* Sidebar */
 
 .sidebar {
-  width: 80px !important;
-  background: linear-gradient(180deg, #ffffff 0%, #f7f9f9 100%);
-  border-right: 1px solid var(--border-color);
+  width: 80px;
+  background: linear-gradient(134deg, #ffffff 0%, #f7f9f9 100%);
+  border-right: 1px solid #ddefd0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -55,7 +55,7 @@ main {
 }
 
 .sidebar:hover {
-  width: 200px !important;
+  width: 180px;
 }
 
 .sidebar-header {
@@ -91,8 +91,8 @@ main {
 }
 
 .sidebar-header h3 {
-  font-size: 15px !important;
-  font-weight: 600 !important;
+  font-size: 20px;
+  font-weight: 600;
   color: var(--text-dark);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -554,6 +554,7 @@ client-top {
   height: 40px;
   border-radius: 50%;
   flex-shrink: 0;
+  margin-block-start: 23.5px;
 }
 .msg-content {
   display: flex;
@@ -589,7 +590,7 @@ client-top {
 .message.me .bubble {
   background-color: #E6F8EB;
   border-radius: 18px 18px 4px 18px;
-  color: #212529;
+  color: #78b672;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   border: 1px solid #D9F2E0;
 }
@@ -598,7 +599,7 @@ client-top {
 /* Chat Input */
 .chat-input {
   padding: 12px 18px;
-  background-color: #FFFFFF;
+  background-color: transparent;
   border-top: 1px solid #EAEAEA;
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
   display: flex;
@@ -615,8 +616,8 @@ client-top {
   background: #FAFAFA;
   border: 1px solid #E0E0E0;
   border-radius: 25px;
-  padding: 8px 14px;
-  transition: all 0.3s ease;
+  padding: 6.5px 14px;
+  transition: all 0.1s ease;
 }
 
 .input-wrapper:focus-within {
@@ -683,284 +684,25 @@ client-top {
   margin-top: 3px;
 }
  /*Client Details */
-/* ===== قسم العميل ===== 
 .client-details {
-  width: 300px;
+  width: 290px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   background: linear-gradient(to bottom, #ffffff, #f7faf9);
   border-left: 1px solid #e2e8f0;
-  box-shadow: -3px 0 8px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
-}
-
-/* ===== الملف الشخصي ===== 
-.profile-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.avatar {
-  position: relative;
-  flex-shrink: 0;
-  width: 80px;
-  height: 80px;
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #e6f8eb;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-}
-
-.status-dot {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-}
-.status-dot.online { background: #22c55e; }
-.status-dot.offline { background: #ccc; }
-
-.client-info {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.client-name {
-  font-size: 17px;
-  font-weight: 600;
-  color: #1f2937;
-}
-
-.client-number {
-  font-size: 13px;
-  color: #6b7280;
-  margin-top: 2px;
-}
-
-.client-tags {
-  margin-top: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.client-tags .tag {
-  background: #e6f4ff;
-  color: #0369a1;
-  padding: 4px 9px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.client-labels {
-  margin-top: 4px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.client-labels .label {
-  background: #f3f4f6;
-  color: #4b5563;
-  padding: 3px 8px;
-  border-radius: 8px;
-  font-size: 11.5px;
-}
-
-.client-time {
-  font-size: 12px;
-  color: #888;
-  margin-top: 25px;
-  font-weight: 400;
-}
-
- ===== بطاقات إضافية (Status, Tags...) ===== *
-.client-extra {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.client-card-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #ffffff;
-  border: 1px solid #edf2f7;
-  padding: 10px 14px;
-  border-radius: 14px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.client-card-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-}
-
-.client-card-item i {
-  font-size: 18px;
-  color: var(--primary-green);
-  background: #e6f8eb;
-  padding: 8px;
-  border-radius: 50%;
-}
-
-.client-card-item .client-label {
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.client-status {
-  font-size: 13px;
-  font-weight: 600;
-}
-.client-status.online { color: #22c55e; }
-.client-status.offline { color: #ef4444; }
-
-/* ===== الملاحظات ===== 
-.notes-section {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.notes-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.notes-header h4 {
-  font-size: 15px;
-  font-weight: 600;
-  color: #333;
-}
-
-.notes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.note-item {
-  background: #f9fafb;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 13px;
-  color: #374151;
-  border-left: 3px solid var(--primary-green);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-}
-
-.note-input {
-  width: 100%;
-  min-height: 90px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 12px 14px;
-  font-size: 14px;
-  resize: none;
-  outline: none;
-  background: #fafafa;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.note-input:focus {
-  border-color: var(--primary-green);
-  box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.15);
-  background: #fff;
-}
-
-.save-note {
-  background-color: var(--primary-green);
-  border: none;
-  color: white;
-  border-radius: 8px;
-  padding: 8px 14px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.2s, transform 0.1s ease;
-}
-
-.save-note:hover {
-  background-color: #1ebe5d;
-  transform: scale(1.03);
-}
-
-/* ===== الأزرار السفلية ===== *
-.actions-section {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.client-action {
-  flex: 1;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 10px;
-  background: #f3f4f6;
-  color: #374151;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.client-action:hover {
-  background: #22c55e;
-  color: white;
-  transform: scale(1.03);
-}
-
-.client-action.danger {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.client-action.danger:hover {
-  background: #ef4444;
-  color: #fff;
-}
-*/
-
-.client-details {
-  width: 320px;
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  background: linear-gradient(to bottom, #ffffff, #f7faf9);
-  border-left: 1px solid #e2e8f0;
   box-shadow: -3px 0 8px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-}
+  padding-bottom: 20px;
+  justify-content: space-between;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+} 
+
+.client-details:hover:-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.15);}
+
+
 
 /* ====== القسم العلوي: الصورة + الاسم + الرقم ====== */
 .profile-header {
@@ -1004,18 +746,19 @@ client-top {
   font-size: 18px;
   font-weight: 600;
   color: #212529;
+  margin-block-end: 0px;
+  margin-block-start: 10px;
 }
 
 .client-number {
-  font-size: 14px;
-  color: #555;
+  font-size: 13px;
+  color: #555555e0;
 }
 
 .client-time {
   font-size: 12px;
   color: #888;
 }
-
 /* ====== الـTags و Labels ====== */
 .client-tags,
 .client-labels {
@@ -1078,7 +821,7 @@ client-top {
 
 .client-card-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.19);
 }
 
 .client-label {
@@ -1098,12 +841,13 @@ client-top {
 .notes-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: auto;
+  gap: 14px;
+  margin-top: auto;;
   background: #ffffff;
   border-radius: 12px;
   padding: 14px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  flex-shrink: 0;
 }
 
 .notes-header {
@@ -1170,7 +914,7 @@ client-top {
 .actions-section {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 15px;
 }
 
@@ -1182,7 +926,7 @@ client-top {
   background: #f1f5f9;
   border: none;
   border-radius: 10px;
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
   transition: 0.2s ease;
   color: #333;
@@ -1206,7 +950,6 @@ client-top {
 .client-action.danger:hover {
   background: #fecaca;
 }
-
 
 .context-menu {
   position: absolute;
@@ -1575,15 +1318,3 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
-/* إصلاح أولوية تنسيق الصورة داخل تفاصيل العميل */
-
-
-
-
-
-
-
-
-
-
-
