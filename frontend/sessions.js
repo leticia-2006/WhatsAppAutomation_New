@@ -581,6 +581,7 @@ function selectClient(session) {
   console.log("Session inside selectClient:", session);
   console.log("Session.tags:", session.tags);
   
+  // ====== تعبئة المعلومات الأساسية ======
   document.getElementById("detailName").innerText = session.name || "";
   document.getElementById("detailPhone").innerText = session.phone || "";
   document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
@@ -593,9 +594,10 @@ function selectClient(session) {
   // ====== عرض الأيقونات + التاغات ======
   const tagIconsEl = document.getElementById("tagIcons");
   const detailLabelsEl = document.getElementById("detailLabels");
-  const extraTagsEl = document.getElementById("extraTags"); // ✅ البطاقة في الأسفل
+  const extraTagsEl = document.getElementById("extraTags");
+  const detailTagsEl = document.getElementById("detailTags"); // ✅ تمت إضافته
 
-  if (tagIconsEl && detailLabelsEl && extraTagsEl) {
+  if (tagIconsEl && detailLabelsEl && extraTagsEl && detailTagsEl) {
     // 🧩 نحول tags من نص إلى مصفوفة بشكل آمن
     let tags = [];
     if (Array.isArray(session.tags)) {
@@ -611,6 +613,7 @@ function selectClient(session) {
 
     // نحذف التكرارات باستخدام Set
     const uniqueTags = [...new Set(tags)];
+
     // خريطة الأيقونات لكل تاغ
     const iconMap = {
       VIP: "👑",
@@ -629,15 +632,20 @@ function selectClient(session) {
     }).join("");
 
     // 🏷️ عرض الكلمات داخل بطاقة Tags بالأسفل
+    extraTagsEl.innerHTML = uniqueTags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("");
+
+    // ✅ عرض التاغات العلوية (بجانب Repeat)
+    detailTagsEl.innerHTML = uniqueTags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("");
+
+    // يمكنك أيضًا عرضها داخل detailLabels إذا أردت
     detailLabelsEl.innerHTML = uniqueTags.map(t => `<span class="label">${t}</span>`).join("");
 
-    console.log("Rendering extraTags:", uniqueTags);
-    // ✅ تحديث extraTags ليعرض التاغات الحقيقية بدلاً من VIP الثابت
-    extraTagsEl.innerHTML = uniqueTags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("");
+    console.log("Rendering Tags:", uniqueTags);
   }
 
+  // ====== تحميل الرسائل الخاصة بالعميل ======
   loadMessages(session.id);
-}
+  }
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
   const emojiBtn = document.getElementById("emoji-btn");
