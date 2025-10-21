@@ -644,6 +644,9 @@ function selectClient(session) {
     console.log("Rendered uniqueTags:", uniqueTags);
     console.log("extraTagsEl.innerHTML:", extraTagsEl.innerHTML);
   }
+  setTimeout(() => {
+  console.log("After 1s extraTagsEl.innerHTML:", document.getElementById("extraTags").innerHTML);
+}, 1000);
 
   // ====== تحميل الرسائل الخاصة بالعميل ======
   loadMessages(session.id);
