@@ -595,6 +595,7 @@ function selectClient(session) {
   const tagIconsEl = document.getElementById("tagIcons");
   const detailLabelsEl = document.getElementById("detailLabels");
   const extraTagsEl = document.getElementById("extraTags");
+  console.log("extraTagsEl found?", !!extraTagsEl, "content:", extraTagsEl);
   const detailTagsEl = document.getElementById("detailTags"); // ✅ تمت إضافته
 
   if (tagIconsEl && detailLabelsEl && extraTagsEl && detailTagsEl) {
