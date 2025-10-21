@@ -582,7 +582,6 @@ function selectClient(session) {
 
   // 🕓 إذا لم تكن عناصر الواجهة جاهزة، نعيد المحاولة بعد قليل
   const tagIconsEl = document.getElementById("tagIcons");
-  const detailLabelsEl = document.getElementById("detailLabels");
   const extraTagsEl = document.getElementById("extraTags");
   const detailTagsEl = document.getElementById("detailTags");
 
@@ -645,12 +644,7 @@ function selectClient(session) {
     .map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
     .join("");
 
-  // ====== عرض التاغات في قسم الملصقات ======
-  detailLabelsEl.innerHTML = uniqueTags
-    .map(t => `<span class="label">${t}</span>`)
-    .join("");
-
-  console.log("✅ Rendered uniqueTags:", uniqueTags);
+ console.log("✅ Rendered uniqueTags:", uniqueTags);
 
   // ====== تحميل الرسائل الخاصة بالعميل ======
   loadMessages(session.id);
