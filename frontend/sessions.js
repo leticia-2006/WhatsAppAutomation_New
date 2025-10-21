@@ -580,7 +580,7 @@ window.addEventListener("load", () => {
 function selectClient(session) {
   console.log("Session inside selectClient:", session);
   console.log("Session.tags:", session.tags);
-  
+
   // ====== تعبئة المعلومات الأساسية ======
   document.getElementById("detailName").innerText = session.name || "";
   document.getElementById("detailPhone").innerText = session.phone || "";
@@ -588,17 +588,22 @@ function selectClient(session) {
 
   const statusEl = document.getElementById("detailStatus");
   const lastActiveEl = document.getElementById("lastActive");
-  statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline";
-  lastActiveEl.innerText = timeAgoEN(session.updated_at || session.last_active);
+  if (statusEl) statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline";
+  if (lastActiveEl) lastActiveEl.innerText = timeAgoEN(session.updated_at || session.last_active);
 
-  // ====== عرض الأيقونات + التاغات ======
-  const tagIconsEl = document.getElementById("tagIcons");
-  const detailLabelsEl = document.getElementById("detailLabels");
-  const extraTagsEl = document.getElementById("extraTags");
-  console.log("extraTagsEl found?", !!extraTagsEl, "content:", extraTagsEl);
-  const detailTagsEl = document.getElementById("detailTags"); // ✅ تمت إضافته
+  // ====== عرض التاغات + الأيقونات ======
+  function renderTags() {
+    const tagIconsEl = document.getElementById("tagIcons");
+    const detailLabelsEl = document.getElementById("detailLabels");
+    const extraTagsEl = document.getElementById("extraTags");
+    const detailTagsEl = document.getElementById("detailTags");
 
-  if (tagIconsEl && detailLabelsEl && extraTagsEl && detailTagsEl) {
+    if (!tagIconsEl || !extraTagsEl || !detailTagsEl || !detailLabelsEl) {
+      console.warn("⏳ عناصر التاغات غير جاهزة بعد، إعادة المحاولة...");
+      setTimeout(renderTags, 200); // إعادة المحاولة بعد 0.2 ثانية
+      return;
+    }
+
     // 🧩 نحول tags من نص إلى مصفوفة بشكل آمن
     let tags = [];
     if (Array.isArray(session.tags)) {
@@ -607,15 +612,14 @@ function selectClient(session) {
       tags = session.tags.split(",").map(t => t.trim());
     }
 
-    // نضيف الحقول boolean لو كانت true
+    // نضيف الحالات الخاصة
     if (session.is_repeat) tags.push("Repeat");
     if (session.is_invalid) tags.push("Invalid");
     if (session.is_blacklisted) tags.push("Blacklist");
 
-    // نحذف التكرارات باستخدام Set
-    const uniqueTags = [...new Set(tags)];
+    // نحذف التكرارات
+    const uniqueTags = [...new Set(tags.filter(t => t && t !== ""))];
 
-    // خريطة الأيقونات لكل تاغ
     const iconMap = {
       VIP: "👑",
       Deal: "💼",
@@ -626,27 +630,25 @@ function selectClient(session) {
       Invalid: "❌",
     };
 
-    // 🎯 الأيقونات الصغيرة بجانب الاسم
+    // 🎯 الأيقونات بجانب الاسم
     tagIconsEl.innerHTML = uniqueTags.map(t => {
       const icon = iconMap[t] || "🏷️";
       return `<span class="tag-icon" title="${t}">${icon}</span>`;
     }).join("");
 
-    // 🏷️ عرض الكلمات داخل بطاقة Tags بالأسفل
+    // 🏷️ التاغات في البطاقات
     extraTagsEl.innerHTML = uniqueTags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("");
-
-    // ✅ عرض التاغات العلوية (بجانب Repeat)
-    detailTagsEl.innerHTML = uniqueTags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("");
-
-    // يمكنك أيضًا عرضها داخل detailLabels إذا أردت
+    detailTagsEl.innerHTML = extraTagsEl.innerHTML;
     detailLabelsEl.innerHTML = uniqueTags.map(t => `<span class="label">${t}</span>`).join("");
 
-    console.log("Rendered uniqueTags:", uniqueTags);
-    console.log("extraTagsEl.innerHTML:", extraTagsEl.innerHTML);
+    console.log("✅ Rendered tags:", uniqueTags);
   }
-  setTimeout(() => {
-  console.log("After 1s extraTagsEl.innerHTML:", document.getElementById("extraTags").innerHTML);
-}, 1000);
+
+  // استدعاء التوليد مباشرة بعد تحميل التفاصيل
+  renderTags();
+
+  // استدعاء احتياطي بعد ثانية للتأكد من ثباتها في DOM
+  setTimeout(renderTags, 1000);
 
   // ====== تحميل الرسائل الخاصة بالعميل ======
   loadMessages(session.id);
