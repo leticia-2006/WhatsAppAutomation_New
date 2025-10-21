@@ -640,7 +640,8 @@ function selectClient(session) {
     // يمكنك أيضًا عرضها داخل detailLabels إذا أردت
     detailLabelsEl.innerHTML = uniqueTags.map(t => `<span class="label">${t}</span>`).join("");
 
-    console.log("Rendering Tags:", uniqueTags);
+    console.log("Rendered uniqueTags:", uniqueTags);
+    console.log("extraTagsEl.innerHTML:", extraTagsEl.innerHTML);
   }
 
   // ====== تحميل الرسائل الخاصة بالعميل ======
