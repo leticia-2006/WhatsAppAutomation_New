@@ -578,81 +578,83 @@ window.addEventListener("load", () => {
   }
 });
 function selectClient(session) {
-  console.log("Session inside selectClient:", session);
-  console.log("Session.tags:", session.tags);
+  console.log("🔹 selectClient called for:", session.name);
+
+  // 🕓 إذا لم تكن عناصر الواجهة جاهزة، نعيد المحاولة بعد قليل
+  const tagIconsEl = document.getElementById("tagIcons");
+  const detailLabelsEl = document.getElementById("detailLabels");
+  const extraTagsEl = document.getElementById("extraTags");
+  const detailTagsEl = document.getElementById("detailTags");
+
+  if (!tagIconsEl || !detailLabelsEl || !extraTagsEl || !detailTagsEl) {
+    console.warn("⏳ عناصر التاغات غير موجودة بعد، إعادة المحاولة...");
+    setTimeout(() => selectClient(session), 300);
+    return;
+  }
 
   // ====== تعبئة المعلومات الأساسية ======
   document.getElementById("detailName").innerText = session.name || "";
   document.getElementById("detailPhone").innerText = session.phone || "";
-  document.getElementById("detailAvatar").src = session.avatar_url || "/default-avatar.png";
+  document.getElementById("detailAvatar").src = session.avatar_url || "assets/avatar.png";
 
   const statusEl = document.getElementById("detailStatus");
   const lastActiveEl = document.getElementById("lastActive");
+
   if (statusEl) statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline";
   if (lastActiveEl) lastActiveEl.innerText = timeAgoEN(session.updated_at || session.last_active);
 
-  // ====== عرض التاغات + الأيقونات ======
-  function renderTags() {
-    const tagIconsEl = document.getElementById("tagIcons");
-    const detailLabelsEl = document.getElementById("detailLabels");
-    const extraTagsEl = document.getElementById("extraTags");
-    const detailTagsEl = document.getElementById("detailTags");
-
-    if (!tagIconsEl || !extraTagsEl || !detailTagsEl || !detailLabelsEl) {
-      console.warn("⏳ عناصر التاغات غير جاهزة بعد، إعادة المحاولة...");
-      setTimeout(renderTags, 200); // إعادة المحاولة بعد 0.2 ثانية
-      return;
-    }
-
-    // 🧩 نحول tags من نص إلى مصفوفة بشكل آمن
-    let tags = [];
-    if (Array.isArray(session.tags)) {
-      tags = session.tags;
-    } else if (typeof session.tags === "string" && session.tags.trim() !== "") {
-      tags = session.tags.split(",").map(t => t.trim());
-    }
-
-    // نضيف الحالات الخاصة
-    if (session.is_repeat) tags.push("Repeat");
-    if (session.is_invalid) tags.push("Invalid");
-    if (session.is_blacklisted) tags.push("Blacklist");
-
-    // نحذف التكرارات
-    const uniqueTags = [...new Set(tags.filter(t => t && t !== ""))];
-
-    const iconMap = {
-      VIP: "👑",
-      Deal: "💼",
-      New: "🆕",
-      Old: "📞",
-      Repeat: "🔁",
-      Blacklist: "🚫",
-      Invalid: "❌",
-    };
-
-    // 🎯 الأيقونات بجانب الاسم
-    tagIconsEl.innerHTML = uniqueTags.map(t => {
-      const icon = iconMap[t] || "🏷️";
-      return `<span class="tag-icon" title="${t}">${icon}</span>`;
-    }).join("");
-
-    // 🏷️ التاغات في البطاقات
-    extraTagsEl.innerHTML = uniqueTags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("");
-    detailTagsEl.innerHTML = extraTagsEl.innerHTML;
-    detailLabelsEl.innerHTML = uniqueTags.map(t => `<span class="label">${t}</span>`).join("");
-
-    console.log("✅ Rendered tags:", uniqueTags);
+  // ====== تحضير التاغات ======
+  let tags = [];
+  if (Array.isArray(session.tags)) {
+    tags = session.tags;
+  } else if (typeof session.tags === "string" && session.tags.trim() !== "") {
+    tags = session.tags.split(",").map(t => t.trim());
   }
 
-  // استدعاء التوليد مباشرة بعد تحميل التفاصيل
-  renderTags();
+  // إضافة القيم المنطقية كـ tags
+  if (session.is_repeat) tags.push("Repeat");
+  if (session.is_invalid) tags.push("Invalid");
+  if (session.is_blacklisted) tags.push("Blacklist");
 
-  // استدعاء احتياطي بعد ثانية للتأكد من ثباتها في DOM
-  setTimeout(renderTags, 1000);
+  // إزالة التكرارات
+  const uniqueTags = [...new Set(tags)];
+
+  // خريطة الأيقونات
+  const iconMap = {
+    VIP: "👑",
+    Deal: "💼",
+    New: "🆕",
+    Old: "📞",
+    Repeat: "🔁",
+    Blacklist: "🚫",
+    Invalid: "❌",
+  };
+
+  // ====== عرض الأيقونات الصغيرة بجانب الاسم ======
+  tagIconsEl.innerHTML = uniqueTags
+    .map(t => `<span class="tag-icon" title="${t}">${iconMap[t] || "🏷️"}</span>`)
+    .join("");
+
+  // ====== عرض التاغات في قسم التفاصيل ======
+  detailTagsEl.innerHTML = uniqueTags
+    .map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
+    .join("");
+
+  // ====== عرض التاغات أسفل البطاقات ======
+  extraTagsEl.innerHTML = uniqueTags
+    .map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
+    .join("");
+
+  // ====== عرض التاغات في قسم الملصقات ======
+  detailLabelsEl.innerHTML = uniqueTags
+    .map(t => `<span class="label">${t}</span>`)
+    .join("");
+
+  console.log("✅ Rendered uniqueTags:", uniqueTags);
 
   // ====== تحميل الرسائل الخاصة بالعميل ======
   loadMessages(session.id);
-  }
+}
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
   const emojiBtn = document.getElementById("emoji-btn");
