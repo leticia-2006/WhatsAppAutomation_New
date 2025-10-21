@@ -585,7 +585,7 @@ function selectClient(session) {
   const extraTagsEl = document.getElementById("extraTags");
   const detailTagsEl = document.getElementById("detailTags");
 
-  if (!tagIconsEl || !detailLabelsEl || !extraTagsEl || !detailTagsEl) {
+  if (!tagIconsEl || !extraTagsEl || !detailTagsEl) {
     console.warn("⏳ عناصر التاغات غير موجودة بعد، إعادة المحاولة...");
     setTimeout(() => selectClient(session), 300);
     return;
