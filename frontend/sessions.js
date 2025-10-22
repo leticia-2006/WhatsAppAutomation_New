@@ -109,10 +109,16 @@ function renderSessions(list = [], filterType = "all") {
     const info = document.createElement("div");
     info.className = "client-info";
    card.innerHTML = `
-      <div class="list-avatar-wrapper">
-        <img src="${session.avatar_url || '/default-avatar.png'}" class="list-client-avatar" alt="avatar">
-        <span class="list-status-dot ${session.is_online ? "online" : "offline"}"></span>
-      </div>
+               <div class="list-avatar-wrapper">
+    ${
+      session.avatar_url
+        ? `<img src="${session.avatar_url}" class="list-client-avatar" alt="avatar">`
+        : session.name
+        ? `<div class="avatar-placeholder">${session.name.charAt(0).toUpperCase()}</div>`
+        : `<img src="/default-avatar.png" class="list-client-avatar" alt="avatar">`
+    }
+    <span class="list-status-dot ${session.is_online ? "online" : "offline"}"></span>
+  </div>
         <div class="client-info">
         <div class="client-top">
         <div class="client-name">${session.name || session.client_name || session.phone}</div>
