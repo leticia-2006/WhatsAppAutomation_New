@@ -85,7 +85,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+// 🔹 دالة لإرجاع لون خلفية بناءً على أول حرف
+function getAvatarColor(char) {
+  if (!char) return "#888";
 
+  const c = char.toUpperCase();
+  if ("ABCDE".includes(c)) return "linear-gradient(135deg, #3b82f6, #2563eb)"; // أزرق
+  if ("FGHIJ".includes(c)) return "linear-gradient(135deg, #22c55e, #16a34a)"; // أخضر
+  if ("KLMNO".includes(c)) return "linear-gradient(135deg, #8b5cf6, #7c3aed)"; // بنفسجي
+  if ("PQRST".includes(c)) return "linear-gradient(135deg, #f97316, #ea580c)"; // برتقالي
+  if ("UVWXYZ".includes(c)) return "linear-gradient(135deg, #ef4444, #b91c1c)"; // أحمر
+
+  return "linear-gradient(135deg, #6b7280, #374151)"; // رمادي افتراضي
+}
 // بعد التعديل (نسخة محسّنة)
 function renderSessions(list = [], filterType = "all") {
   const container = document.getElementById("sessions-body");
@@ -114,7 +126,7 @@ function renderSessions(list = [], filterType = "all") {
       session.avatar_url
         ? `<img src="${session.avatar_url}" class="list-client-avatar" alt="avatar">`
         : session.name
-        ? `<div class="avatar-placeholder">${session.name.charAt(0).toUpperCase()}</div>`
+        ? `<div class="avatar-placeholder" style="background:${getAvatarColor(session.name.charAt(0))}">${session.name.charAt(0).toUpperCase()}</div>`
         : `<img src="/default-avatar.png" class="list-client-avatar" alt="avatar">`
     }
     <span class="list-status-dot ${session.is_online ? "online" : "offline"}"></span>
