@@ -582,9 +582,9 @@ function selectClient(session) {
 
   // 🕓 إذا لم تكن عناصر الواجهة جاهزة، نعيد المحاولة بعد قليل
   const tagIconsEl = document.getElementById("tagIcons");
-  const detailTagsEl = document.getElementById("detailTags");
+  const extraTagsEl = document.getElementById("extraTags");
 
-  if (!tagIconsEl || !detailTagsEl) {
+  if (!tagIconsEl || !extraTagsEl) {
     console.warn("⏳ عناصر التاغات غير موجودة بعد، إعادة المحاولة...");
     setTimeout(() => selectClient(session), 300);
     return;
@@ -633,13 +633,12 @@ function selectClient(session) {
     .map(t => `<span class="tag-icon" title="${t}">${iconMap[t] || "🏷️"}</span>`)
     .join("");
 
-  // ====== عرض التاغات في قسم التفاصيل ======
-  detailTagsEl.innerHTML = uniqueTags
+  // ====== عرض التاغات داخل البطاقة فقط ======
+  extraTagsEl.innerHTML = uniqueTags
     .map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
     .join("");
 
-
- console.log("✅ Rendered uniqueTags:", uniqueTags);
+  console.log("✅ Rendered uniqueTags:", uniqueTags);
 
   // ====== تحميل الرسائل الخاصة بالعميل ======
   loadMessages(session.id);
