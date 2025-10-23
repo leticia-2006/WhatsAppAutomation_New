@@ -86,16 +86,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 function getAvatarColor(char) {
-  if (!char) return "#888";
+  if (!char) return { bg: "#444", text: "#ddd" };
 
   const c = char.toUpperCase();
-  if ("ABCDE".includes(c)) return "#3b82f6"; // أزرق
-  if ("FGHIJ".includes(c)) return "#22c55e"; // أخضر
-  if ("KLMNO".includes(c)) return "#8b5cf6"; // بنفسجي
-  if ("PQRST".includes(c)) return "#f97316"; // برتقالي
-  if ("UVWXYZ".includes(c)) return "#ef4444"; // أحمر
+  const colorMap = {
+    A: "#3b82f6", B: "#2563eb", C: "#1d4ed8", // أزرقات
+    D: "#16a34a", E: "#15803d", F: "#22c55e", // خضر
+    G: "#9333ea", H: "#7e22ce", I: "#8b5cf6", // بنفسجيات
+    J: "#c2410c", K: "#ea580c", L: "#f97316", // برتقالي
+    M: "#b91c1c", N: "#dc2626", O: "#ef4444", // أحمر
+    P: "#78350f", Q: "#92400e", R: "#b45309", // بني ذهبي
+    S: "#0f766e", T: "#115e59", U: "#14b8a6", // فيروزي
+    V: "#1e40af", W: "#312e81", X: "#4c1d95", // أزرق بنفسجي
+    Y: "#52525b", Z: "#3f3f46" // رمادي غامق
+  };
 
-  return "#6b7280"; // رمادي
+  const bg = colorMap[c] || "#475569";
+  const text = lightenColor(bg, 40); // أفتح بنسبة 40%
+  return { bg, text };
+}
+
+function lightenColor(hex, percent) {
+  const num = parseInt(hex.replace("#", ""), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = (num >> 16) + amt;
+  const G = (num >> 8 & 0x00FF) + amt;
+  const B = (num & 0x0000FF) + amt;
+  return "#" + (
+    0x1000000 +
+    (R < 255 ? R : 255) * 0x10000 +
+    (G < 255 ? G : 255) * 0x100 +
+    (B < 255 ? B : 255)
+  ).toString(16).slice(1);
 }
 // بعد التعديل (نسخة محسّنة)
 function renderSessions(list = [], filterType = "all") {
@@ -125,7 +147,12 @@ function renderSessions(list = [], filterType = "all") {
       session.avatar_url
         ? `<img src="${session.avatar_url}" class="list-client-avatar" alt="avatar">`
         : session.name
-        ? `<div class="avatar-placeholder" style="--avatar-bg:${getAvatarColor(session.name.charAt(0))}; background:${getAvatarColor(session.name.charAt(0))}">${session.name.charAt(0).toUpperCase()}</div>`
+        : (() => {
+    const { bg, text } = getAvatarColor(session.name.charAt(0));
+    return `<div class="avatar-placeholder" style="--avatar-bg:${bg}; --avatar-text:${text}; background:${bg}; color:${text};">
+              ${session.name.charAt(0).toUpperCase()}
+            </div>`;
+  })()
         : `<img src="/default-avatar.png" class="list-client-avatar" alt="avatar">`
     }
     <span class="list-status-dot ${session.is_online ? "online" : "offline"}"></span>
