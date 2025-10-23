@@ -624,10 +624,9 @@ window.addEventListener("load", () => {
 function selectClient(session) {      
   console.log("🔹 selectClient called for:", session.name);      
 
-  // 🕓 إذا لم تكن عناصر الواجهة جاهزة، نعيد المحاولة بعد قليل      
   const tagIconsEl = document.getElementById("tagIcons");      
   const extraTagsEl = document.getElementById("extraTags");      
-  const avatarContainer = document.getElementById("detailAvatar"); // ← عنصر الصورة أو الحرف
+  const avatarContainer = document.getElementById("detailAvatar"); 
 
   if (!tagIconsEl || !extraTagsEl || !avatarContainer) {      
     console.warn("⏳ عناصر التاغات أو الصورة غير موجودة بعد، إعادة المحاولة...");      
@@ -635,18 +634,18 @@ function selectClient(session) {
     return;      
   }      
 
-  // ====== تعبئة المعلومات الأساسية ======
+  // ====== الاسم والرقم ======
   document.getElementById("detailName").innerText = session.name || "";
   document.getElementById("detailPhone").innerText = session.phone || "";
 
-  // 🔹 عرض الـ avatar بنفس أسلوب القائمة
+  // ====== عرض الـ avatar بنفس منطق القائمة ======
   if (session.avatar_url) {
     avatarContainer.innerHTML = `<img src="${session.avatar_url}" class="detail-avatar-img" alt="avatar">`;
   } else if (session.name) {
     const { bg, text } = getAvatarColor(session.name.charAt(0));
     avatarContainer.innerHTML = `
       <div class="avatar-placeholder detail-avatar" 
-           style="background:${bg}; color:${text};">
+           style="--avatar-bg:${bg}; --avatar-text:${text}; background:${bg}; color:${text};">
         ${session.name.charAt(0).toUpperCase()}
       </div>`;
   } else {
@@ -659,7 +658,7 @@ function selectClient(session) {
   if (statusEl) statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline";
   if (lastActiveEl) lastActiveEl.innerText = timeAgoEN(session.updated_at || session.last_active);
 
-  // ====== تحضير التاغات ======
+  // ====== إعداد التاغات ======
   let tags = [];
   if (Array.isArray(session.tags)) tags = session.tags;
   else if (typeof session.tags === "string" && session.tags.trim() !== "") 
@@ -671,32 +670,22 @@ function selectClient(session) {
 
   const uniqueTags = [...new Set(tags)];
 
-  // ====== خريطة الأيقونات ======
   const iconMap = {      
-    VIP: "👑",      
-    Deal: "💼",      
-    New: "🆕",      
-    Old: "📞",      
-    Repeat: "🔁",      
-    Blacklist: "🚫",      
-    Invalid: "❌",      
+    VIP: "👑", Deal: "💼", New: "🆕", Old: "📞", 
+    Repeat: "🔁", Blacklist: "🚫", Invalid: "❌",
   };      
 
-  // ====== عرض الأيقونات الصغيرة بجانب الاسم ======
   tagIconsEl.innerHTML = uniqueTags
     .map(t => `<span class="tag-icon" title="${t}">${iconMap[t] || "🏷️"}</span>`)
     .join("");
 
-  // ====== عرض التاغات أسفل التفاصيل ======
   extraTagsEl.innerHTML = uniqueTags
     .map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
     .join("");
 
   console.log("✅ Rendered uniqueTags:", uniqueTags);
-
-  // ====== تحميل الرسائل الخاصة بالعميل ======
   loadMessages(session.id);
-}
+}                                                    }
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
   const emojiBtn = document.getElementById("emoji-btn");
