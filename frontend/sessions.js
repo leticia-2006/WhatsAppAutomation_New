@@ -685,7 +685,7 @@ function selectClient(session) {
 
   console.log("✅ Rendered uniqueTags:", uniqueTags);
   loadMessages(session.id);
-}                                                    }
+}                                                    
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
   const emojiBtn = document.getElementById("emoji-btn");
