@@ -90,13 +90,13 @@ function getAvatarColor(char) {
   if (!char) return "#888";
 
   const c = char.toUpperCase();
-  if ("ABCDE".includes(c)) return "linear-gradient(135deg, #3b82f6, #2563eb)"; // أزرق
-  if ("FGHIJ".includes(c)) return "linear-gradient(135deg, #22c55e, #16a34a)"; // أخضر
-  if ("KLMNO".includes(c)) return "linear-gradient(135deg, #8b5cf6, #7c3aed)"; // بنفسجي
-  if ("PQRST".includes(c)) return "linear-gradient(135deg, #f97316, #ea580c)"; // برتقالي
-  if ("UVWXYZ".includes(c)) return "linear-gradient(135deg, #ef4444, #b91c1c)"; // أحمر
+  if ("ABCDE".includes(c)) return "linear-gradient(135deg, #60a5fa, #3b82f6)"; // أزرق فاتح
+  if ("FGHIJ".includes(c)) return "linear-gradient(135deg, #4ade80, #22c55e)"; // أخضر فاتح
+  if ("KLMNO".includes(c)) return "linear-gradient(135deg, #a78bfa, #8b5cf6)"; // بنفسجي فاتح
+  if ("PQRST".includes(c)) return "linear-gradient(135deg, #fb923c, #f97316)"; // برتقالي فاتح
+  if ("UVWXYZ".includes(c)) return "linear-gradient(135deg, #f87171, #ef4444)"; // أحمر فاتح
 
-  return "linear-gradient(135deg, #6b7280, #374151)"; // رمادي افتراضي
+  return "linear-gradient(135deg, #9ca3af, #6b7280)"; // رمادي
 }
 // بعد التعديل (نسخة محسّنة)
 function renderSessions(list = [], filterType = "all") {
