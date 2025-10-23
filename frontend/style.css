@@ -985,22 +985,24 @@ client-top {
   height: auto;
   overflow: visible;
 }
+/* الحرف البديل عند عدم وجود صورة */
 .avatar-placeholder {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  font-size: 18px;
-  font-weight: 700;
+  color: #fff;
+  font-weight: 720;
+  font-size: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.25); /* الحرف بنفس اللون لكن باهت */
-  text-shadow: 0 0 3px rgba(255, 255, 255, 0.5); /* يبرز قليلاً */
-  border: 2px solid rgba(255,255,255,0.3);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  user-select: none;
+  border: 2px solid #ddd;
+  box-shadow: 0 0px 4px rgba(0,0,0,0.15);
   text-transform: uppercase;
+  flex-shrink: 0;
 }
+
+
 
 .context-menu {
   position: absolute;
@@ -1369,6 +1371,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
