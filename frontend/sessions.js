@@ -85,18 +85,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-// 🔹 دالة لإرجاع لون خلفية بناءً على أول حرف
 function getAvatarColor(char) {
   if (!char) return "#888";
 
   const c = char.toUpperCase();
-  if ("ABCDE".includes(c)) return "linear-gradient(135deg, #60a5fa, #3b82f6)"; // أزرق فاتح
-  if ("FGHIJ".includes(c)) return "linear-gradient(135deg, #4ade80, #22c55e)"; // أخضر فاتح
-  if ("KLMNO".includes(c)) return "linear-gradient(135deg, #a78bfa, #8b5cf6)"; // بنفسجي فاتح
-  if ("PQRST".includes(c)) return "linear-gradient(135deg, #fb923c, #f97316)"; // برتقالي فاتح
-  if ("UVWXYZ".includes(c)) return "linear-gradient(135deg, #f87171, #ef4444)"; // أحمر فاتح
+  if ("ABCDE".includes(c)) return "#3b82f6"; // أزرق
+  if ("FGHIJ".includes(c)) return "#22c55e"; // أخضر
+  if ("KLMNO".includes(c)) return "#8b5cf6"; // بنفسجي
+  if ("PQRST".includes(c)) return "#f97316"; // برتقالي
+  if ("UVWXYZ".includes(c)) return "#ef4444"; // أحمر
 
-  return "linear-gradient(135deg, #9ca3af, #6b7280)"; // رمادي
+  return "#6b7280"; // رمادي
 }
 // بعد التعديل (نسخة محسّنة)
 function renderSessions(list = [], filterType = "all") {
@@ -126,7 +125,7 @@ function renderSessions(list = [], filterType = "all") {
       session.avatar_url
         ? `<img src="${session.avatar_url}" class="list-client-avatar" alt="avatar">`
         : session.name
-        ? `<div class="avatar-placeholder" style="background:${getAvatarColor(session.name.charAt(0))}">${session.name.charAt(0).toUpperCase()}</div>`
+        ? `<div class="avatar-placeholder" style="--avatar-bg:${getAvatarColor(session.name.charAt(0))}; background:${getAvatarColor(session.name.charAt(0))}">${session.name.charAt(0).toUpperCase()}</div>`
         : `<img src="/default-avatar.png" class="list-client-avatar" alt="avatar">`
     }
     <span class="list-status-dot ${session.is_online ? "online" : "offline"}"></span>
