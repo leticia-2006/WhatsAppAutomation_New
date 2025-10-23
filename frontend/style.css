@@ -989,17 +989,17 @@ client-top {
   width: 48px;
   height: 48px;
   border-radius: 50%;
+  font-size: 18px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  color: white;
-  font-weight: 600;
-  font-size: 18px;
+  color: rgba(255, 255, 255, 0.25); /* الحرف بنفس اللون لكن باهت */
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.5); /* يبرز قليلاً */
+  border: 2px solid rgba(255,255,255,0.3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  user-select: none;
   text-transform: uppercase;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-  border: 2px solid #ddd; /* يحافظ على نفس شكل إطار الصورة */
-  flex-shrink: 0;
 }
 
 .context-menu {
@@ -1369,6 +1369,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
