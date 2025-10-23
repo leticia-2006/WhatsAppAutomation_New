@@ -142,48 +142,48 @@ function renderSessions(list = [], filterType = "all") {
     const info = document.createElement("div");
     info.className = "client-info";
    card.innerHTML = `
-               <div class="list-avatar-wrapper">
+  <div class="list-avatar-wrapper">
     ${
       session.avatar_url
         ? `<img src="${session.avatar_url}" class="list-client-avatar" alt="avatar">`
         : session.name
-        : (() => {
-    const { bg, text } = getAvatarColor(session.name.charAt(0));
-    return `<div class="avatar-placeholder" style="--avatar-bg:${bg}; --avatar-text:${text}; background:${bg}; color:${text};">
-              ${session.name.charAt(0).toUpperCase()}
-            </div>`;
-  })()
+        ? (() => {
+            const { bg, text } = getAvatarColor(session.name.charAt(0));
+            return `<div class="avatar-placeholder" style="--avatar-bg:${bg}; --avatar-text:${text}; background:${bg}; color:${text};">
+                      ${session.name.charAt(0).toUpperCase()}
+                    </div>`;
+          })()
         : `<img src="/default-avatar.png" class="list-client-avatar" alt="avatar">`
     }
     <span class="list-status-dot ${session.is_online ? "online" : "offline"}"></span>
   </div>
-        <div class="client-info">
-        <div class="client-top">
-        <div class="client-name">${session.name || session.client_name || session.phone}</div>
-        <div class="client-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
-      </div>
-        
-        <div class="client-status ${session.is_online ? "online" : "offline"}"></div>
-      
-      
-<div class="client-labels">
-  ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
-</div>
-</div>
-<div class="client-tags">
-        ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
-        ${(
-  Array.isArray(session.tags)
-    ? session.tags
-    : typeof session.tags === "string" && session.tags.trim() !== ""
-    ? session.tags.split(",").map(t => t.trim())
-    : []
-)
-  .map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
-  .join("")}
-      </div>
-<small class="client-time">${timeAgoEN(session.updated_at || session.last_active)}</small>
-`; 
+
+  <div class="client-info">
+    <div class="client-top">
+      <div class="client-name">${session.name || session.client_name || session.phone}</div>
+      <div class="client-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
+    </div>
+    <div class="client-status ${session.is_online ? "online" : "offline"}"></div>
+    <div class="client-labels">
+      ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
+    </div>
+  </div>
+
+  <div class="client-tags">
+    ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
+    ${(
+      Array.isArray(session.tags)
+        ? session.tags
+        : typeof session.tags === "string" && session.tags.trim() !== ""
+        ? session.tags.split(",").map(t => t.trim())
+        : []
+    )
+      .map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
+      .join("")}
+  </div>
+
+  <small class="client-time">${timeAgoEN(session.updated_at || session.last_active)}</small>
+`;
     
   // حدث النقر لفتح الدردشة
     card.onclick = () => {
