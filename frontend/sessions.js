@@ -649,7 +649,10 @@ function selectClient(session) {
         ${session.name.charAt(0).toUpperCase()}
       </div>`;
   }
-  // ====== تفعيل التفاعل مع الصورة ======
+  else {
+    avatarContainer.innerHTML = `<img src="/default-avatar.png" class="detail-avatar-img" alt="avatar">`;
+  }
+// ====== تفعيل التفاعل مع الصورة ======
 const wrapper = document.querySelector(".details-avatar-wrapper");
 const overlay = document.getElementById("changeAvatarOverlay");
 const fileInput = document.getElementById("avatarInput");
@@ -677,11 +680,7 @@ fileInput.onchange = (e) => {
 
   uploadAvatarToServer(session.id, file);
 };
-  else {
-    avatarContainer.innerHTML = `<img src="/default-avatar.png" class="detail-avatar-img" alt="avatar">`;
-  }
-
-  // ====== الحالة والوقت ======
+// ====== الحالة والوقت ======
   const statusEl = document.getElementById("detailStatus");
   const lastActiveEl = document.getElementById("lastActive");
   if (statusEl) statusEl.innerText = session.is_online ? "🟢 Online" : "⚫ Offline";
