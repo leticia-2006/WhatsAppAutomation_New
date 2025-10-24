@@ -648,7 +648,36 @@ function selectClient(session) {
            style="--avatar-bg:${bg}; --avatar-text:${text}; background:${bg}; color:${text};">
         ${session.name.charAt(0).toUpperCase()}
       </div>`;
-  } else {
+  }
+  // ====== تفعيل التفاعل مع الصورة ======
+const wrapper = document.querySelector(".details-avatar-wrapper");
+const overlay = document.getElementById("changeAvatarOverlay");
+const fileInput = document.getElementById("avatarInput");
+
+wrapper.onclick = () => {
+  wrapper.classList.add("active");
+  setTimeout(() => wrapper.classList.remove("active"), 2500);
+};
+
+overlay.onclick = (e) => {
+  e.stopPropagation();
+  fileInput.click();
+};
+
+fileInput.onchange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const imgURL = ev.target.result;
+    avatarContainer.innerHTML = `<img src="${imgURL}" class="detail-avatar-img" alt="avatar">`;
+  };
+  reader.readAsDataURL(file);
+
+  uploadAvatarToServer(session.id, file);
+};
+  else {
     avatarContainer.innerHTML = `<img src="/default-avatar.png" class="detail-avatar-img" alt="avatar">`;
   }
 
