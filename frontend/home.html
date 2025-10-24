@@ -56,13 +56,17 @@
 <aside class="client-details" id="client-details">
 
   <!-- 🔹 الملف الشخصي -->
-  <div class="profile-header">
+<div class="profile-header">
     <div class="details-avatar-wrapper">
       <div id="detailAvatar" class="client-avatar"></div>
-      <span class="details-status-dot offline" id="detailStatusDot"></span>
-    </div>
-
-    <div class="client-info">
+      <input type="file" id="avatarInput" accept="image/*" hidden>
+  <div class="change-avatar-overlay" id="changeAvatarOverlay">
+    <button id="changeAvatarBtn">📷</button>
+  </div>
+  <span class="details-status-dot offline" id="detailStatusDot"></span>
+</div>
+        
+<div class="client-info">
       <h3 class="client-name" id="detailName">Client Name 
           <span class="tag-icons" id="tagIcons"></span>
       </h3>
@@ -78,7 +82,7 @@
 </div>
 
     <!-- 🔹 الأزرار -->
-  <div class="actions-section">
+<div class="actions-section">
     <button id="block-client" class="client-action danger" title="Blacklist">
       <i class="fa-solid fa-ban"></i>
     </button>
@@ -88,7 +92,7 @@
     <button id="refresh-avatar" class="client-action" title="Refresh Avatar">
       <i class="fa-solid fa-rotate"></i>
     </button>
-  </div>
+</div>
     
   <!-- 🔹 البطاقات -->
   <div class="client-extra">
