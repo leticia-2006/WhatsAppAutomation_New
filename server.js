@@ -11,7 +11,8 @@ const bcrypt = require('bcrypt'); // لتشفير الباسورد
 const messagesRouter = require('./routes/messages')
 const sessionsRouter = require('./routes/sessions');
 const usersRouter = require('./routes/users');
-const waNumbersRouter = require('./routes/waNumbers');                            
+const waNumbersRouter = require('./routes/waNumbers'); 
+const clientsRouter = require('./routes/clients');
 const { reconnectAllActive, getQRForNumber } = require('./waClient')
 const { requireLogin, checkRole, attachUser } = require('./middleware/auth.js');
 const multer = require('multer');
@@ -98,7 +99,7 @@ app.use('/sessions', requireLogin, sessionsRouter);
 app.use('/users', usersRouter);
 app.use('/messages', requireLogin, messagesRouter);
 app.use('/wa-numbers', requireLogin,waNumbersRouter);
-
+app.use('/clients', requireLogin,clientsRouter);
 // ===== Frontend =====
 const FRONTEND_PATH = path.join(__dirname,'frontend');
 app.use(express.static(FRONTEND_PATH));
@@ -139,3 +140,4 @@ process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
