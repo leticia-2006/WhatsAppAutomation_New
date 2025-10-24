@@ -689,39 +689,31 @@ async function uploadAvatarToServer(session, file) {
     const formData = new FormData();
     formData.append("avatar", file);
 
-    const res = await axios.post(`/upload-avatar/${session.id}`, formData, {
+    const res = await axios.post(`/clients/${session.id}/upload-avatar`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
       withCredentials: true
     });
 
-    const newUrl = res.data.url;
+    const newUrl = res.data.avatar_url;
     console.log("✅ Avatar uploaded:", newUrl);
 
-    // ✅ تحديث بيانات الجلسة الحالية في الذاكرة
+    // تحديث بيانات الجلسة في الذاكرة
     const currentSession = window.sessions.find(s => s.id === session.id);
-    if (currentSession) {
-      currentSession.avatar_url = newUrl;
-    }
+    if (currentSession) currentSession.avatar_url = newUrl;
 
-    // ✅ تحديث الواجهة في القسم الأيسر فقط للصورة
-    const listAvatar = document.querySelector(
-      `.client-card img.list-client-avatar[src="${session.avatar_url}"], 
-       .client-card .avatar-placeholder:has(:contains("${session.name?.charAt(0).toUpperCase()}"))`
-    );
+    // تحديث الصورة في القائمة
+    const listAvatar = document.querySelector(`.client-card[data-id="${session.id}"] img.list-client-avatar`);
+    if (listAvatar) listAvatar.src = newUrl;
 
-    if (listAvatar) {
-      listAvatar.outerHTML = `<img src="${newUrl}" class="list-client-avatar" alt="avatar">`;
-    }
-
-    // ✅ تحديث واجهة العميل الحالية
+    // تحديث الصورة في التفاصيل
     avatarContainer.innerHTML = `<img src="${newUrl}" class="detail-avatar-img" alt="avatar">`;
 
-    // ✅ تحديث الذاكرة لتظل بعد إعادة تحميل الصفحة
+    // تحديث الجلسة في الذاكرة
     session.avatar_url = newUrl;
 
   } catch (err) {
     console.error("❌ فشل رفع الصورة:", err);
-    alert("فشل رفع الصورة.");
+    alert("فشل رفع الصورة، تحقق من الاتصال بالسيرفر.");
   }
 }
 // ====== الحالة والوقت ======
