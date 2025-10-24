@@ -667,10 +667,11 @@ overlay.onclick = (e) => {
   fileInput.click();
 };
 
-fileInput.onchange = (e) => {
+fileInput.onchange = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
+  // ✅ عرض الصورة فوراً في الواجهة
   const reader = new FileReader();
   reader.onload = (ev) => {
     const imgURL = ev.target.result;
@@ -678,31 +679,39 @@ fileInput.onchange = (e) => {
   };
   reader.readAsDataURL(file);
 
-  uploadAvatarToServer(session.id, file) {
-  const formData = new FormData();
-  formData.append("avatar", file);
+  // ✅ رفع الصورة للسيرفر
+  await uploadAvatarToServer(session, file);
+};
 
-  axios.post(`/upload-avatar/${sessionId}`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-    withCredentials: true
-  })
-  .then(res => {
-    const newUrl = res.data.url; // رابط الصورة بعد الرفع
+// دالة رفع الصورة للسيرفر
+async function uploadAvatarToServer(session, file) {
+  try {
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    const res = await axios.post(`/upload-avatar/${session.id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true
+    });
+
+    const newUrl = res.data.url;
     console.log("✅ Avatar uploaded:", newUrl);
 
-    // تحديث الـ session الحالي
-    const currentSession = window.sessions.find(s => s.id === sessionId);
+    // ✅ تحديث بيانات الجلسة الحالية في الذاكرة
+    const currentSession = window.sessions.find(s => s.id === session.id);
     if (currentSession) {
       currentSession.avatar_url = newUrl;
-      renderSessions(window.sessions); // إعادة تحديث قائمة العملاء
-      selectClient(currentSession);    // تحديث تفاصيل العميل الحالي
     }
-  })
-  .catch(err => {
+
+    // ✅ تحديث الواجهة
+    renderSessions(window.sessions);
+    selectClient(currentSession);
+
+  } catch (err) {
     console.error("❌ فشل رفع الصورة:", err);
-  });
+    alert("فشل رفع الصورة.");
   }
-};
+}
 // ====== الحالة والوقت ======
   const statusEl = document.getElementById("detailStatus");
   const lastActiveEl = document.getElementById("lastActive");
