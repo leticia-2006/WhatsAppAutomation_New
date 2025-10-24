@@ -224,7 +224,53 @@ router.patch("/:client_id/blacklist", requireLogin, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// في الأعلى مع بقية require
+const path = require("path");
+const multer = require("multer");
+
+// إعداد التخزين في مجلد uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "..", "uploads"));
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const uniqueName = `client_${Date.now()}${ext}`;
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.mimetype)) {
+      return cb(new Error("صيغة الصورة غير مدعومة"));
+    }
+    cb(null, true);
+  }
+});
+
+// 📤 رفع صورة العميل وتحديث avatar_url
+router.post("/:client_id/upload-avatar", requireLogin, upload.single("avatar"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: "لم يتم رفع أي صورة" });
+
+    const clientId = req.params.client_id;
+    const avatarUrl = `${process.env.BASE_URL || "https://whatsappautomation-new-4fec.onrender.com"}/uploads/${req.file.filename}`;
+
+    await db.query("UPDATE clients SET avatar_url=$1 WHERE id=$2", [avatarUrl, clientId]);
+
+    res.json({ success: true, avatar_url: avatarUrl });
+  } catch (err) {
+    console.error("❌ خطأ أثناء رفع الصورة:", err);
+    res.status(500).json({ error: "حدث خطأ أثناء رفع الصورة" });
+  }
+});
+
+
 module.exports = router;
+
 
 
 
