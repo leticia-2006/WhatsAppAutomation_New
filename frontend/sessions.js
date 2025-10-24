@@ -678,7 +678,30 @@ fileInput.onchange = (e) => {
   };
   reader.readAsDataURL(file);
 
-  uploadAvatarToServer(session.id, file);
+  uploadAvatarToServer(session.id, file) {
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  axios.post(`/upload-avatar/${sessionId}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+    withCredentials: true
+  })
+  .then(res => {
+    const newUrl = res.data.url; // رابط الصورة بعد الرفع
+    console.log("✅ Avatar uploaded:", newUrl);
+
+    // تحديث الـ session الحالي
+    const currentSession = window.sessions.find(s => s.id === sessionId);
+    if (currentSession) {
+      currentSession.avatar_url = newUrl;
+      renderSessions(window.sessions); // إعادة تحديث قائمة العملاء
+      selectClient(currentSession);    // تحديث تفاصيل العميل الحالي
+    }
+  })
+  .catch(err => {
+    console.error("❌ فشل رفع الصورة:", err);
+  });
+  }
 };
 // ====== الحالة والوقت ======
   const statusEl = document.getElementById("detailStatus");
