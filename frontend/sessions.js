@@ -698,7 +698,7 @@ async function uploadAvatarToServer(session, file) {
     console.log("✅ Avatar uploaded:", newUrl);
 
     // تحديث بيانات الجلسة في الذاكرة
-    const currentSession = window.sessions.find(s => s.id === session.id);
+    const currentSession = sessions.find(s => s.id === session.id);
     if (currentSession) currentSession.avatar_url = newUrl;
 
     // تحديث الصورة في القائمة
