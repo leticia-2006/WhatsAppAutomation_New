@@ -703,9 +703,21 @@ async function uploadAvatarToServer(session, file) {
       currentSession.avatar_url = newUrl;
     }
 
-    // ✅ تحديث الواجهة
-    renderSessions(window.sessions);
-    selectClient(currentSession);
+    // ✅ تحديث الواجهة في القسم الأيسر فقط للصورة
+    const listAvatar = document.querySelector(
+      `.client-card img.list-client-avatar[src="${session.avatar_url}"], 
+       .client-card .avatar-placeholder:has(:contains("${session.name?.charAt(0).toUpperCase()}"))`
+    );
+
+    if (listAvatar) {
+      listAvatar.outerHTML = `<img src="${newUrl}" class="list-client-avatar" alt="avatar">`;
+    }
+
+    // ✅ تحديث واجهة العميل الحالية
+    avatarContainer.innerHTML = `<img src="${newUrl}" class="detail-avatar-img" alt="avatar">`;
+
+    // ✅ تحديث الذاكرة لتظل بعد إعادة تحميل الصفحة
+    session.avatar_url = newUrl;
 
   } catch (err) {
     console.error("❌ فشل رفع الصورة:", err);
