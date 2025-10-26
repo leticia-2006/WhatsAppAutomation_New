@@ -689,31 +689,38 @@ async function uploadAvatarToServer(session, file) {
     const formData = new FormData();
     formData.append("avatar", file);
 
-    const res = await axios.post(`/clients/${session.id}/upload-avatar`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-      withCredentials: true
+    const response = await fetch(`/clients/${session.client_id}/upload-avatar`, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
     });
 
-    const newUrl = res.data.avatar_url;
-    console.log("✅ Avatar uploaded:", newUrl);
+    if (!response.ok) throw new Error("فشل رفع الصورة إلى السيرفر");
 
-    // تحديث بيانات الجلسة في الذاكرة
-    const currentSession = sessions.find(s => s.id === session.id);
-    if (currentSession) currentSession.avatar_url = newUrl;
+    const data = await response.json();
+    console.log("✅ avatar uploaded:", data);
 
-    // تحديث الصورة في القائمة
-    const listAvatar = document.querySelector(`.client-card[data-id="${session.id}"] img.list-client-avatar`);
-    if (listAvatar) listAvatar.src = newUrl;
+    if (data.success && data.avatar_url) {
+      // 🟢 تحديث الصورة فوراً في الجهة الأمامية
+      session.avatar_url = data.avatar_url;
 
-    // تحديث الصورة في التفاصيل
-    avatarContainer.innerHTML = `<img src="${newUrl}" class="detail-avatar-img" alt="avatar">`;
+      // تحديث الواجهة بالنتيجة الجديدة
+      const avatarContainer = document.getElementById("detailAvatar");
+      if (avatarContainer) {
+        avatarContainer.innerHTML = `<img src="${data.avatar_url}" class="detail-avatar-img" alt="avatar">`;
+      }
 
-    // تحديث الجلسة في الذاكرة
-    session.avatar_url = newUrl;
+      // ✅ تحديث الـ sessions في الذاكرة
+      const sIndex = sessions.findIndex(s => s.id === session.id);
+      if (sIndex !== -1) {
+        sessions[sIndex].avatar_url = data.avatar_url;
+      }
 
+      console.log("🟢 تم حفظ الرابط الجديد في الواجهة:", data.avatar_url);
+    }
   } catch (err) {
-    console.error("❌ فشل رفع الصورة:", err);
-    alert("فشل رفع الصورة، تحقق من الاتصال بالسيرفر.");
+    console.error("❌ خطأ أثناء رفع الصورة:", err);
+    alert("حدث خطأ أثناء رفع الصورة");
   }
 }
 // ====== الحالة والوقت ======
