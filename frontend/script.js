@@ -144,6 +144,32 @@ document.addEventListener("click", async (e) => {
 // Load initial data
 window.addEventListener("load", fetchUser);
 
+// ✅ وضع ليلي / نهاري
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleBtn = document.getElementById("darkModeToggle");
+  const body = document.body;
+
+  // استرجاع آخر وضع تم حفظه
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    body.classList.add("dark-mode");
+    toggleBtn.innerHTML = `<i class="fa-solid fa-sun"></i>`;
+  }
+
+  // عند الضغط على الزر
+  toggleBtn.addEventListener("click", () => {
+    body.classList.toggle("dark-mode");
+    const isDark = body.classList.contains("dark-mode");
+
+    if (isDark) {
+      toggleBtn.innerHTML = `<i class="fa-solid fa-sun"></i>`;
+      localStorage.setItem("theme", "dark");
+    } else {
+      toggleBtn.innerHTML = `<i class="fa-solid fa-moon"></i>`;
+      localStorage.setItem("theme", "light");
+    }
+  });
+});
 
 
 
