@@ -1063,6 +1063,115 @@ client-top {
 .change-avatar-overlay button:hover {
   transform: scale(1.1);
 }
+/* 🌙 الوضع الليلي */
+body.dark-mode {
+  --container-bg: #1e1e1e;
+  --sidebar-bg: #2a2a2a;
+  --text-dark: #f5f5f5;
+  --text-medium: #cccccc;
+  --text-light: #999999;
+  --border-color: #444;
+  --light-green-bg: #303d35;
+  --other-message-bg: #2f2f2f;
+  --my-message-bg: #3a3a3a;
+  background-color: #181818;
+  color: var(--text-dark);
+}
+
+/* الشريط الجانبي */
+body.dark-mode .sidebar {
+  background: linear-gradient(134deg, #232323 0%, #1c1c1c 100%);
+  border-right: 1px solid #333;
+  box-shadow: none;
+}
+
+body.dark-mode .sidebar-menu ul li a {
+  color: #ddd;
+}
+
+body.dark-mode .sidebar-menu ul li a:hover {
+  background-color: #2e2e2e;
+}
+
+body.dark-mode .sidebar-menu ul li a i {
+  background-color: #333;
+  color: var(--primary-green);
+}
+
+body.dark-mode .sidebar-footer button {
+  border: 1px solid #333;
+  color: var(--primary-green);
+  background-color: #1e1e1e;
+}
+
+body.dark-mode .sidebar-footer button:hover {
+  background-color: var(--primary-green);
+  color: #fff;
+}
+
+/* القوائم والبطاقات */
+body.dark-mode .clients-list,
+body.dark-mode .chat-window,
+body.dark-mode .client-details {
+  background-color: #202020;
+  border-color: #333;
+}
+
+body.dark-mode .clients-header {
+  background-color: #2a2a2a;
+}
+
+body.dark-mode .client-card {
+  background-color: #292929;
+  color: #f0f0f0;
+  box-shadow: 0 0 0 transparent;
+}
+
+body.dark-mode .client-card:hover {
+  background-color: #333;
+}
+
+body.dark-mode .client-name,
+body.dark-mode .client-phone,
+body.dark-mode .client-message {
+  color: #eee;
+}
+
+/* الفقاعات */
+body.dark-mode .message.other .bubble {
+  background-color: var(--other-message-bg);
+  color: #f1f1f1;
+}
+
+body.dark-mode .message.me .bubble {
+  background-color: var(--my-message-bg);
+  color: #fff;
+}
+
+/* الإدخالات */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #2b2b2b;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #aaa;
+}
+
+/* تفاصيل العميل */
+body.dark-mode .client-extra,
+body.dark-mode .notes-section {
+  background-color: #252525;
+  border-color: #333;
+}
+
+body.dark-mode .save-note {
+  color: #25D366;
+}
 .context-menu {
   position: absolute;
   display: none;
@@ -1430,6 +1539,7 @@ client-top {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
