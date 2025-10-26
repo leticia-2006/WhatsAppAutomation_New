@@ -257,7 +257,7 @@ router.post("/:client_id/upload-avatar", requireLogin, upload.single("avatar"), 
     if (!req.file) return res.status(400).json({ error: "لم يتم رفع أي صورة" });
 
     const clientId = req.params.client_id;
-    const avatarUrl = `${process.env.BASE_URL || "https://whatsappautomation-new-4fec.onrender.com"}/uploads/${req.file.filename}`;
+    const avatarUrl = `${process.env.BASE_URL || "https://whatsappautomation-new-8jme.onrender.com"}/uploads/${req.file.filename}`;
 
     await db.query("UPDATE clients SET avatar_url=$1 WHERE id=$2", [avatarUrl, clientId]);
 
@@ -270,6 +270,7 @@ router.post("/:client_id/upload-avatar", requireLogin, upload.single("avatar"), 
 
 
 module.exports = router;
+
 
 
 
