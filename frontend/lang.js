@@ -116,4 +116,46 @@ if (searchClients) searchClients.placeholder = t.searchClients;
   if (document.querySelector("#search-numbers")) {
     document.querySelector("#search-numbers").placeholder = t.searchNumbers;
   }
-    }
+  
+ if (document.querySelector("#search-clients")) {
+  document.querySelector("#search-clients").placeholder = t.searchClients;
+ }
+ if (document.querySelector("#filter-tag option[value='all']")) {
+  document.querySelector("#filter-tag option[value='all']").textContent = t.all;
+ }
+ if (document.querySelector("#filter-tag option[value='vip']")) {
+  document.querySelector("#filter-tag option[value='vip']").textContent = t.vip;
+ }
+ if (document.querySelector("#filter-tag option[value='new']")) {
+  document.querySelector("#filter-tag option[value='new']").textContent = t.new;
+ }
+ if (document.querySelector("#chatClient")) {
+  document.querySelector("#chatClient").textContent = t.conversation;
+ }
+ if (document.querySelector("#chatStatus")) {
+  document.querySelector("#chatStatus").textContent = "Offline"; // يمكن لاحقاً ترجمتها
+ }
+ if (document.querySelector("#msgInput")) {
+  document.querySelector("#msgInput").placeholder = "Type a message...";
+ }
+ if (document.querySelector("#send-btn")) {
+  document.querySelector("#send-btn").title = t.translate;
+ }  
+}
+// 🌍 زر تبديل اللغة
+document.addEventListener("DOMContentLoaded", () => {
+  // تحميل اللغة المحفوظة
+  const savedLang = localStorage.getItem("language") || "en";
+  setLanguage(savedLang);
+
+  const langSwitch = document.getElementById("lang-switch");
+  if (langSwitch) {
+    langSwitch.addEventListener("click", () => {
+      const langs = ["en", "ar", "es"];
+      const current = localStorage.getItem("language") || "en";
+      const next = langs[(langs.indexOf(current) + 1) % langs.length];
+      localStorage.setItem("language", next);
+      setLanguage(next);
+    });
+  }
+});
