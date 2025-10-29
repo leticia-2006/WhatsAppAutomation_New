@@ -97,7 +97,7 @@ function setLanguage(lang) {
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
 
   // ===== Sidebar =====
-  document.querySelector('[data-section="groups"] .label')?.textContent = t.group;
+  document.querySelector('[data-section="groups"] .label')?.textContent = t.groups;
   document.querySelector('[data-section="unread"] .label')?.textContent = t.unread;
   document.querySelector('[data-section="numbers"] .label')?.textContent = t.numbers;
   document.querySelector('[data-section="users"] .label')?.textContent = t.users;
