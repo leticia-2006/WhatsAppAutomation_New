@@ -122,27 +122,46 @@ const msgInput = document.getElementById("msgInput");
 if (msgInput) msgInput.placeholder = "Type a message...";
 
   // ===== Clients List =====
-  const searchClients = document.getElementById("search-clients");
-  if (searchClients) searchClients.placeholder = t.searchClients;
-  const filter = document.getElementById("filter-tag");
-  if (filter) {
-    filter.querySelector('option[value="all"]')?.textContent = t.all;
-    filter.querySelector('option[value="vip"]')?.textContent = t.vip;
-    filter.querySelector('option[value="new"]')?.textContent = t.new;
-  }
+const searchClients = document.getElementById("search-clients");
+if (searchClients) searchClients.placeholder = t.searchClients;
 
-  // ===== Client Details =====
-  document.querySelector('.client-label')?.textContent = t.status;
-  document.querySelector('.client-card-item:nth-child(2) .client-label')?.textContent = t.tags;
-  document.querySelector('.notes-header h4')?.textContent = t.notes;
-  document.getElementById("save-notes")?.setAttribute("title", t.save);
-  document.getElementById("detail-notes")?.setAttribute("placeholder", t.writeNote);
+const filter = document.getElementById("filter-tag");
+if (filter) {
+  const optAll = filter.querySelector('option[value="all"]');
+  if (optAll) optAll.textContent = t.all;
 
-  // ===== Buttons in details =====
-  document.getElementById("block-client")?.setAttribute("title", t.blacklist);
-  document.getElementById("transfer-client")?.setAttribute("title", t.transfer);
-  document.getElementById("refresh-avatar")?.setAttribute("title", t.refresh);
+  const optVip = filter.querySelector('option[value="vip"]');
+  if (optVip) optVip.textContent = t.vip;
+
+  const optNew = filter.querySelector('option[value="new"]');
+  if (optNew) optNew.textContent = t.new;
 }
+
+// ===== Client Details =====
+const clientLabel = document.querySelector('.client-label');
+if (clientLabel) clientLabel.textContent = t.status;
+
+const clientTagLabel = document.querySelector('.client-card-item:nth-child(2) .client-label');
+if (clientTagLabel) clientTagLabel.textContent = t.tags;
+
+const notesHeader = document.querySelector('.notes-header h4');
+if (notesHeader) notesHeader.textContent = t.notes;
+
+const saveNotesBtn = document.getElementById("save-notes");
+if (saveNotesBtn) saveNotesBtn.setAttribute("title", t.save);
+
+const detailNotes = document.getElementById("detail-notes");
+if (detailNotes) detailNotes.setAttribute("placeholder", t.writeNote);
+
+// ===== Buttons in details =====
+const blockClientBtn = document.getElementById("block-client");
+if (blockClientBtn) blockClientBtn.setAttribute("title", t.blacklist);
+
+const transferClientBtn = document.getElementById("transfer-client");
+if (transferClientBtn) transferClientBtn.setAttribute("title", t.transfer);
+
+const refreshAvatarBtn = document.getElementById("refresh-avatar");
+if (refreshAvatarBtn) refreshAvatarBtn.setAttribute("title", t.refresh);
 
 // 🌍 Language Switch
 document.addEventListener("DOMContentLoaded", () => {
