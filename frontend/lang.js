@@ -1,4 +1,3 @@
-// lang.js
 const translations = {
   en: {
     all: "All",
@@ -6,10 +5,6 @@ const translations = {
     unread: "Unread",
     unreplied: "Unreplied",
     linkWhatsapp: "Link WhatsApp",
-    clients: "Clients",
-    conversation: "Conversation",
-    searchClients: "🔍 Search clients...",
-    allTags: "All tags",
     vip: "VIP",
     new: "New",
     logout: "Logout",
@@ -27,18 +22,17 @@ const translations = {
     offline: "Offline",
     blacklist: "Blacklist",
     transfer: "Transfer",
-    refresh: "Refresh Avatar"
+    refresh: "Refresh Avatar",
+    conversation: "Conversation",
+    searchClients: "Search clients...",
+    allTags: "All tags"
   },
   ar: {
     all: "الكل",
     group: "المجموعات",
-    unread: "غير المقروء",
-    unreplied: "غير المردود",
+    unread: "غير مقروءة",
+    unreplied: "بدون رد",
     linkWhatsapp: "ربط واتساب",
-    clients: "العملاء",
-    conversation: "المحادثة",
-    searchClients: "🔍 بحث عن العملاء...",
-    allTags: "كل الوسوم",
     vip: "هام",
     new: "جديد",
     logout: "تسجيل خروج",
@@ -56,7 +50,10 @@ const translations = {
     offline: "غير متصل",
     blacklist: "حظر",
     transfer: "نقل",
-    refresh: "تحديث الصورة"
+    refresh: "تحديث الصورة",
+    conversation: "المحادثة",
+    searchClients: "بحث عن العملاء...",
+    allTags: "كل الوسوم"
   },
   es: {
     all: "Todos",
@@ -64,10 +61,6 @@ const translations = {
     unread: "No leído",
     unreplied: "Sin respuesta",
     linkWhatsapp: "Vincular WhatsApp",
-    clients: "Clientes",
-    conversation: "Conversación",
-    searchClients: "🔍 Buscar clientes...",
-    allTags: "Todas las etiquetas",
     vip: "VIP",
     new: "Nuevo",
     logout: "Cerrar sesión",
@@ -85,7 +78,10 @@ const translations = {
     offline: "Desconectado",
     blacklist: "Lista negra",
     transfer: "Transferir",
-    refresh: "Actualizar avatar"
+    refresh: "Actualizar avatar",
+    conversation: "Conversación",
+    searchClients: "Buscar clientes...",
+    allTags: "Todas las etiquetas"
   }
 };
 
@@ -97,18 +93,13 @@ function setLanguage(lang) {
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
 
   // ===== Sidebar =====
-const groupsLink = document.querySelector('[data-section="groups"] .label');
-if (groupsLink) groupsLink.textContent = t.group;
+  document.querySelector('[data-section="groups"] .label')?.textContent = t.group;
+  document.querySelector('[data-section="unread"] .label')?.textContent = t.unread;
+  document.querySelector('[data-section="numbers"] .label')?.textContent = t.numbers;
+  document.querySelector('[data-section="users"] .label')?.textContent = t.users;
+  document.getElementById("logout-btn")?.setAttribute("title", t.logout);
+  document.getElementById("lang-switch")?.setAttribute("title", t.translate);
 
-const unreadLink = document.querySelector('[data-section="unread"] .label');
-if (unreadLink) unreadLink.textContent = t.unread;
-
-const numbersLink = document.querySelector('[data-section="numbers"] .label');
-if (numbersLink) numbersLink.textContent = t.numbers;
-
-const usersLink = document.querySelector('[data-section="users"] .label');
-if (usersLink) usersLink.textContent = t.users || "Users";
-  
   // ===== Chat Section =====
   document.getElementById("chatClient")?.textContent = t.conversation;
   document.getElementById("chatStatus")?.textContent = t.offline;
