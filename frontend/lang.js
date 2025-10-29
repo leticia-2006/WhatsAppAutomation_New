@@ -2,7 +2,7 @@
 const translations = {
   en: {
     all: "All",
-    group: "Group",
+    group: "Groups",
     unread: "Unread",
     unreplied: "Unreplied",
     linkWhatsapp: "Link WhatsApp",
@@ -13,11 +13,21 @@ const translations = {
     vip: "VIP",
     new: "New",
     logout: "Logout",
-    numbers: "WhatsApp Numbers",
+    numbers: "Numbers",
     addNumber: "+ Add Number",
     searchNumbers: "🔍 Search numbers...",
     translate: "Translate",
-    autoTranslate: "Auto-translate"
+    autoTranslate: "Auto-translate",
+    users: "Users",
+    status: "Status",
+    tags: "Tags",
+    notes: "Notes",
+    save: "Save",
+    writeNote: "Write a note...",
+    offline: "Offline",
+    blacklist: "Blacklist",
+    transfer: "Transfer",
+    refresh: "Refresh Avatar"
   },
   ar: {
     all: "الكل",
@@ -32,15 +42,25 @@ const translations = {
     vip: "هام",
     new: "جديد",
     logout: "تسجيل خروج",
-    numbers: "أرقام واتساب",
+    numbers: "الأرقام",
     addNumber: "+ إضافة رقم",
     searchNumbers: "🔍 بحث عن الأرقام...",
     translate: "ترجمة",
-    autoTranslate: "ترجمة تلقائية"
+    autoTranslate: "ترجمة تلقائية",
+    users: "المستخدمون",
+    status: "الحالة",
+    tags: "الوسوم",
+    notes: "الملاحظات",
+    save: "حفظ",
+    writeNote: "أضف ملاحظة...",
+    offline: "غير متصل",
+    blacklist: "حظر",
+    transfer: "نقل",
+    refresh: "تحديث الصورة"
   },
   es: {
     all: "Todos",
-    group: "Grupo",
+    group: "Grupos",
     unread: "No leído",
     unreplied: "Sin respuesta",
     linkWhatsapp: "Vincular WhatsApp",
@@ -51,11 +71,21 @@ const translations = {
     vip: "VIP",
     new: "Nuevo",
     logout: "Cerrar sesión",
-    numbers: "Números de WhatsApp",
+    numbers: "Números",
     addNumber: "+ Agregar número",
     searchNumbers: "🔍 Buscar números...",
     translate: "Traducir",
-    autoTranslate: "Traducción automática"
+    autoTranslate: "Traducción automática",
+    users: "Usuarios",
+    status: "Estado",
+    tags: "Etiquetas",
+    notes: "Notas",
+    save: "Guardar",
+    writeNote: "Escribe una nota...",
+    offline: "Desconectado",
+    blacklist: "Lista negra",
+    transfer: "Transferir",
+    refresh: "Actualizar avatar"
   }
 };
 
@@ -64,83 +94,45 @@ let currentLang = "en";
 function setLanguage(lang) {
   currentLang = lang;
   const t = translations[lang];
-
-  // RTL if Arabic
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
 
- // Sidebar
-const groupsLink = document.querySelector('[data-section="groups"] .label');
-if (groupsLink) groupsLink.textContent = t.group;
+  // ===== Sidebar =====
+  document.querySelector('[data-section="groups"] .label')?.textContent = t.group;
+  document.querySelector('[data-section="unread"] .label')?.textContent = t.unread;
+  document.querySelector('[data-section="numbers"] .label')?.textContent = t.numbers;
+  document.querySelector('[data-section="users"] .label')?.textContent = t.users;
+  document.getElementById("logout-btn")?.setAttribute("title", t.logout);
+  document.getElementById("lang-switch")?.setAttribute("title", t.translate);
 
-const unreadLink = document.querySelector('[data-section="unread"] .label');
-if (unreadLink) unreadLink.textContent = t.unread;
+  // ===== Chat Section =====
+  document.getElementById("chatClient")?.textContent = t.conversation;
+  document.getElementById("chatStatus")?.textContent = t.offline;
+  const msgInput = document.getElementById("msgInput");
+  if (msgInput) msgInput.placeholder = "Type a message...";
 
-const numbersLink = document.querySelector('[data-section="numbers"] .label');
-if (numbersLink) numbersLink.textContent = t.numbers;
-
-const usersLink = document.querySelector('[data-section="users"] .label');
-if (usersLink) usersLink.textContent = t.users || "Users";
-/*const qrLink = document.querySelector('#qr-link a');
-if (qrLink) qrLink.textContent = t.linkWhatsapp;*/
-
-// Chat Header
-const chatClient = document.getElementById("chatClient");
-if (chatClient) chatClient.textContent = t.conversation;
-
-// Search input
-const searchClients = document.getElementById("search-clients");
-if (searchClients) searchClients.placeholder = t.searchClients;
-
-  // Inputs & buttons
-  if (document.querySelector("#search-clients")) {
-    document.querySelector("#search-clients").placeholder = t.searchClients;
-  }
-  if (document.querySelector("#tagFilterClients option[value='all']")) {
-    document.querySelector("#tagFilterClients option[value='all']").textContent = t.allTags;
-  }
-  if (document.querySelector("#tagFilterClients option[value='VIP']")) {
-    document.querySelector("#tagFilterClients option[value='VIP']").textContent = t.vip;
-  }
-  if (document.querySelector("#tagFilterClients option[value='New']")) {
-    document.querySelector("#tagFilterClients option[value='New']").textContent = t.new;
+  // ===== Clients List =====
+  const searchClients = document.getElementById("search-clients");
+  if (searchClients) searchClients.placeholder = t.searchClients;
+  const filter = document.getElementById("filter-tag");
+  if (filter) {
+    filter.querySelector('option[value="all"]')?.textContent = t.all;
+    filter.querySelector('option[value="vip"]')?.textContent = t.vip;
+    filter.querySelector('option[value="new"]')?.textContent = t.new;
   }
 
-  // Numbers section (لو عندك صفحة numbers.html)
-  if (document.querySelector("#numbers-section .card-title")) {
-    document.querySelector("#numbers-section .card-title").textContent = t.numbers;
-  }
-  if (document.querySelector("#addNumberBtn")) {
-    document.querySelector("#addNumberBtn").textContent = t.addNumber;
-  }
-  if (document.querySelector("#search-numbers")) {
-    document.querySelector("#search-numbers").placeholder = t.searchNumbers;
-  }
-  
- if (document.querySelector("#search-clients")) {
-  document.querySelector("#search-clients").placeholder = t.searchClients;
- }
- if (document.querySelector("#filter-tag option[value='all']")) {
-  document.querySelector("#filter-tag option[value='all']").textContent = t.all;
- }
- if (document.querySelector("#filter-tag option[value='vip']")) {
-  document.querySelector("#filter-tag option[value='vip']").textContent = t.vip;
- }
- if (document.querySelector("#filter-tag option[value='new']")) {
-  document.querySelector("#filter-tag option[value='new']").textContent = t.new;
- }
- if (document.querySelector("#chatClient")) {
-  document.querySelector("#chatClient").textContent = t.conversation;
- }
- if (document.querySelector("#chatStatus")) {
-  document.querySelector("#chatStatus").textContent = "Offline"; // يمكن لاحقاً ترجمتها
- }
- if (document.querySelector("#msgInput")) {
-  document.querySelector("#msgInput").placeholder = "Type a message...";
- }
- if (document.querySelector("#send-btn")) {
-  document.querySelector("#send-btn").title = t.translate;
- }  
+  // ===== Client Details =====
+  document.querySelector('.client-label')?.textContent = t.status;
+  document.querySelector('.client-card-item:nth-child(2) .client-label')?.textContent = t.tags;
+  document.querySelector('.notes-header h4')?.textContent = t.notes;
+  document.getElementById("save-notes")?.setAttribute("title", t.save);
+  document.getElementById("detail-notes")?.setAttribute("placeholder", t.writeNote);
+
+  // ===== Buttons in details =====
+  document.getElementById("block-client")?.setAttribute("title", t.blacklist);
+  document.getElementById("transfer-client")?.setAttribute("title", t.transfer);
+  document.getElementById("refresh-avatar")?.setAttribute("title", t.refresh);
 }
+
 // 🌍 زر تبديل اللغة
 document.addEventListener("DOMContentLoaded", () => {
   // تحميل اللغة المحفوظة
