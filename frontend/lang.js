@@ -93,18 +93,33 @@ function setLanguage(lang) {
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
 
   // ===== Sidebar =====
-  document.querySelector('[data-section="groups"] .label')?.textContent = t.group;
-  document.querySelector('[data-section="unread"] .label')?.textContent = t.unread;
-  document.querySelector('[data-section="numbers"] .label')?.textContent = t.numbers;
-  document.querySelector('[data-section="users"] .label')?.textContent = t.users;
-  document.getElementById("logout-btn")?.setAttribute("title", t.logout);
-  document.getElementById("lang-switch")?.setAttribute("title", t.translate);
+const groupsLabel = document.querySelector('[data-section="groups"] .label');
+if (groupsLabel) groupsLabel.textContent = t.group;
 
-  // ===== Chat Section =====
-  document.getElementById("chatClient")?.textContent = t.conversation;
-  document.getElementById("chatStatus")?.textContent = t.offline;
-  const msgInput = document.getElementById("msgInput");
-  if (msgInput) msgInput.placeholder = "Type a message...";
+const unreadLabel = document.querySelector('[data-section="unread"] .label');
+if (unreadLabel) unreadLabel.textContent = t.unread;
+
+const numbersLabel = document.querySelector('[data-section="numbers"] .label');
+if (numbersLabel) numbersLabel.textContent = t.numbers;
+
+const usersLabel = document.querySelector('[data-section="users"] .label');
+if (usersLabel) usersLabel.textContent = t.users;
+
+const logoutBtn = document.getElementById("logout-btn");
+if (logoutBtn) logoutBtn.setAttribute("title", t.logout);
+
+const langSwitch = document.getElementById("lang-switch");
+if (langSwitch) langSwitch.setAttribute("title", t.translate);
+
+// ===== Chat Section =====
+const chatClient = document.getElementById("chatClient");
+if (chatClient) chatClient.textContent = t.conversation;
+
+const chatStatus = document.getElementById("chatStatus");
+if (chatStatus) chatStatus.textContent = t.offline;
+
+const msgInput = document.getElementById("msgInput");
+if (msgInput) msgInput.placeholder = "Type a message...";
 
   // ===== Clients List =====
   const searchClients = document.getElementById("search-clients");
