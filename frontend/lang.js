@@ -133,9 +133,8 @@ function setLanguage(lang) {
   document.getElementById("refresh-avatar")?.setAttribute("title", t.refresh);
 }
 
-// 🌍 زر تبديل اللغة
+// 🌍 Language Switch
 document.addEventListener("DOMContentLoaded", () => {
-  // تحميل اللغة المحفوظة
   const savedLang = localStorage.getItem("language") || "en";
   setLanguage(savedLang);
 
