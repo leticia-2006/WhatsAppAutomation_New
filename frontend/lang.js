@@ -68,19 +68,18 @@ function setLanguage(lang) {
   // RTL if Arabic
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
 
-  // Sidebar
-const groupsLink = document.querySelector('[data-section="groups"]');
+ // Sidebar
+const groupsLink = document.querySelector('[data-section="groups"] .label');
 if (groupsLink) groupsLink.textContent = t.group;
 
-const unreadLink = document.querySelector('[data-section="unread"]');
+const unreadLink = document.querySelector('[data-section="unread"] .label');
 if (unreadLink) unreadLink.textContent = t.unread;
 
-const numbersLink = document.querySelector('[data-section="numbers"]');
+const numbersLink = document.querySelector('[data-section="numbers"] .label');
 if (numbersLink) numbersLink.textContent = t.numbers;
 
-const usersLink = document.querySelector('[data-section="users"]');
+const usersLink = document.querySelector('[data-section="users"] .label');
 if (usersLink) usersLink.textContent = t.users || "Users";
-
 /*const qrLink = document.querySelector('#qr-link a');
 if (qrLink) qrLink.textContent = t.linkWhatsapp;*/
 
