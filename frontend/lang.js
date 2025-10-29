@@ -91,7 +91,7 @@ function setLanguage(lang) {
   currentLang = lang;
   const t = translations[lang];
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
-
+}
   // ===== Sidebar =====
 const groupsLabel = document.querySelector('[data-section="groups"] .label');
 if (groupsLabel) groupsLabel.textContent = t.group;
