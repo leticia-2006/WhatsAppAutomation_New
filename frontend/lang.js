@@ -91,7 +91,7 @@ function setLanguage(lang) {
   currentLang = lang;
   const t = translations[lang];
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
-}
+
   // ===== Sidebar =====
 const groupsLabel = document.querySelector('[data-section="groups"] .label');
 if (groupsLabel) groupsLabel.textContent = t.group;
@@ -105,8 +105,8 @@ if (numbersLabel) numbersLabel.textContent = t.numbers;
 const usersLabel = document.querySelector('[data-section="users"] .label');
 if (usersLabel) usersLabel.textContent = t.users;
 
-const logoutBtn = document.getElementById("logout-btn");
-if (logoutBtn) logoutBtn.setAttribute("title", t.logout);
+const logoutButton = document.getElementById("logout-btn");
+if (logoutButton) logoutButton.setAttribute("title", t.logout);
 
 const langSwitch = document.getElementById("lang-switch");
 if (langSwitch) langSwitch.setAttribute("title", t.translate);
@@ -162,7 +162,7 @@ if (transferClientBtn) transferClientBtn.setAttribute("title", t.transfer);
 
 const refreshAvatarBtn = document.getElementById("refresh-avatar");
 if (refreshAvatarBtn) refreshAvatarBtn.setAttribute("title", t.refresh);
-
+}
 // 🌍 Language Switch
 document.addEventListener("DOMContentLoaded", () => {
   const savedLang = localStorage.getItem("language") || "en";
