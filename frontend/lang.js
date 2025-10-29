@@ -97,13 +97,18 @@ function setLanguage(lang) {
   document.body.dir = lang === "ar" ? "rtl" : "ltr";
 
   // ===== Sidebar =====
-  document.querySelector('[data-section="groups"] .label')?.textContent = t.groups;
-  document.querySelector('[data-section="unread"] .label')?.textContent = t.unread;
-  document.querySelector('[data-section="numbers"] .label')?.textContent = t.numbers;
-  document.querySelector('[data-section="users"] .label')?.textContent = t.users;
-  document.getElementById("logout-btn")?.setAttribute("title", t.logout);
-  document.getElementById("lang-switch")?.setAttribute("title", t.translate);
+const groupsLink = document.querySelector('[data-section="groups"] .label');
+if (groupsLink) groupsLink.textContent = t.group;
 
+const unreadLink = document.querySelector('[data-section="unread"] .label');
+if (unreadLink) unreadLink.textContent = t.unread;
+
+const numbersLink = document.querySelector('[data-section="numbers"] .label');
+if (numbersLink) numbersLink.textContent = t.numbers;
+
+const usersLink = document.querySelector('[data-section="users"] .label');
+if (usersLink) usersLink.textContent = t.users || "Users";
+  
   // ===== Chat Section =====
   document.getElementById("chatClient")?.textContent = t.conversation;
   document.getElementById("chatStatus")?.textContent = t.offline;
