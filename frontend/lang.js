@@ -7,6 +7,11 @@ const translations = {
     linkWhatsapp: "Link WhatsApp",
     vip: "VIP",
     new: "New",
+    old: "Old",
+    deal: "Deal",
+    repeat: "Repeat",
+    invalid: "Invalid",
+    blacklisted: "Blacklist",
     logout: "Logout",
     numbers: "Numbers",
     addNumber: "+ Add Number",
@@ -25,7 +30,8 @@ const translations = {
     refresh: "Refresh Avatar",
     conversation: "Conversation",
     searchClients: "Search clients...",
-    allTags: "All tags"
+    allTags: "All tags",
+    typeMessage: "Type a message..." 
   },
   ar: {
     all: "الكل",
@@ -35,6 +41,11 @@ const translations = {
     linkWhatsapp: "ربط واتساب",
     vip: "هام",
     new: "جديد",
+    old: "قديم",
+    deal: "صفقة",
+    repeat: "متكرر",
+    invalid: "غير صالح",
+    blacklisted: "محظور",
     logout: "تسجيل خروج",
     numbers: "الأرقام",
     addNumber: "+ إضافة رقم",
@@ -53,7 +64,8 @@ const translations = {
     refresh: "تحديث الصورة",
     conversation: "المحادثة",
     searchClients: "بحث عن العملاء...",
-    allTags: "كل الوسوم"
+    allTags: "كل الوسوم",
+    typeMessage: "اكتب رسالة..." 
   },
   es: {
     all: "Todos",
@@ -63,6 +75,11 @@ const translations = {
     linkWhatsapp: "Vincular WhatsApp",
     vip: "VIP",
     new: "Nuevo",
+    old: "Antiguo",
+    deal: "Acuerdo",
+    repeat: "Repetido",
+    invalid: "Inválido",
+    blacklisted: "Lista negra",
     logout: "Cerrar sesión",
     numbers: "Números",
     addNumber: "+ Agregar número",
@@ -81,7 +98,9 @@ const translations = {
     refresh: "Actualizar avatar",
     conversation: "Conversación",
     searchClients: "Buscar clientes...",
-    allTags: "Todas las etiquetas"
+    allTags: "Todas las etiquetas",
+    typeMessage: "Escribe un mensaje..." 
+
   }
 };
 
@@ -119,7 +138,8 @@ const chatStatus = document.getElementById("chatStatus");
 if (chatStatus) chatStatus.textContent = t.offline;
 
 const msgInput = document.getElementById("msgInput");
-if (msgInput) msgInput.placeholder = "Type a message...";
+if (msgInput) msgInput.placeholder = t.typeMessage;
+
 
   // ===== Clients List =====
 const searchClients = document.getElementById("search-clients");
@@ -135,6 +155,20 @@ if (filter) {
 
   const optNew = filter.querySelector('option[value="new"]');
   if (optNew) optNew.textContent = t.new;
+  const optOld = filter.querySelector('option[value="old"]');
+  if (optOld) optOld.textContent = t.old;
+
+  const optDeal = filter.querySelector('option[value="deal"]');
+  if (optDeal) optDeal.textContent = t.deal;
+
+  const optRepeat = filter.querySelector('option[value="repeat"]');
+  if (optRepeat) optRepeat.textContent = t.repeat;
+
+  const optInvalid = filter.querySelector('option[value="invalid"]');
+  if (optInvalid) optInvalid.textContent = t.invalid;
+
+  const optBlacklisted = filter.querySelector('option[value="blacklisted"]');
+  if (optBlacklisted) optBlacklisted.textContent = t.blacklisted;
 }
 
 // ===== Client Details =====
