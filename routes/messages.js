@@ -89,6 +89,7 @@ router.post("/:messageId/translate", requireLogin, async (req, res) => {
     await db.query("UPDATE messages SET translated_content=$1 WHERE id=$2", [result.text, req.params.messageId]);
     res.json({ translated: result.text });
   } catch (err) {
+    console.error("Error translating message:", err);
     res.status(500).json({ error: err.message });
   }
 });
