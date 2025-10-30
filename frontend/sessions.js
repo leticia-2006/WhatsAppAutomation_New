@@ -296,23 +296,20 @@ if (
       });
 
       const div = `
-        <div class="message ${msg.sender_type === "client" ? "client" : "agent"} ${msg.is_deleted ? "deleted" : ""}" data-id="${msg.id}">
-         <img src="${msg.sender_avatar || msg.agent_avatar || "/default-avatar.png"}" 
-     title="${msg.agent_name || msg.sender_name || ''}"    style="width:28px; height:28px; border-radius:50%; vertical-align:middle;">
-          <div class="bubble">
-            ${content}
-            ${
-              msg.translated_content
-                ? `<div class="translation">🌐 ${msg.translated_content}</div>`
-                : ""
-            }
-            <span class="time">${time}</span>
-            <div class="translate-btn">
-              <button onclick="translateMessage(${msg.id})">🌐</button>
-            </div>
-          </div>
-        </div>
-      `;
+  <div class="message ${msg.sender_type === "client" ? "other" : "me"}" data-id="${msg.id}">
+    <img src="${msg.sender_avatar || msg.agent_avatar || 'assets/avatar.png'}" class="avatar" />
+    <div class="msg-content">
+      <div class="meta">${msg.sender_name || 'User'}, ${time}</div>
+      <div class="bubble">${content}</div>
+      <button class="translate-btn" onclick="translateMessage(${msg.id})">Translate</button>
+      ${
+        msg.translated_content
+          ? `<em class="translated-text">🌐 ${msg.translated_content}</em>`
+          : `<em class="translated-text" style="display:none"></em>`
+      }
+    </div>
+  </div>
+`;
 
       chatBox.innerHTML += div;
     });
