@@ -1162,11 +1162,11 @@ body.dark-mode textarea::placeholder {
 }
 
 /* تفاصيل العميل */
-body.dark-mode .client-extra,
-body.dark-mode .notes-section {
-  background-color: #252525;
-  border-color: #333;
-}
+body.dark-mode .client-details { background: linear-gradient(to bottom right, #28a33b, #212529);}
+body.dark-mode .chat-window { background: linear-gradient(to bottom right, #333, #333);}
+body.dark-mode .chat-header { background: #21252921;}
+body.dark-mode .client-card-item { background: #ddd4d4;}
+body.dark-mode .notes-section {background: #ddd4d4;}
 
 body.dark-mode .save-note {
   color: #25D366;
@@ -1538,6 +1538,7 @@ body.dark-mode .save-note {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
