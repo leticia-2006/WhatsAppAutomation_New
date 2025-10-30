@@ -1171,6 +1171,10 @@ body.dark-mode .notes-section {background: #ddd4d4;}
 body.dark-mode .save-note {
   color: #25D36;
 }
+body.dark-mode #numbers-section, body.dark-mode #users-section, body.dark-mode .number-card  { background: #202020;}
+body.dark-mode .numbers-grid {background: #202020;}
+body.dark-mode .number-card {background: #2b2b2b;}
+body.dark-mode .numbers-table-header  {background: #363232; }
 .context-menu {
   position: absolute;
   display: none;
@@ -1538,6 +1542,7 @@ body.dark-mode .save-note {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
