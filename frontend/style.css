@@ -1169,7 +1169,7 @@ body.dark-mode .client-card-item { background: #ddd4d4;}
 body.dark-mode .notes-section {background: #ddd4d4;}
 
 body.dark-mode .save-note {
-  color: #25D366;
+  color: #25D36;
 }
 .context-menu {
   position: absolute;
@@ -1538,6 +1538,7 @@ body.dark-mode .save-note {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
