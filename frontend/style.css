@@ -154,6 +154,7 @@ main {
   padding-left: 20px; /* مسافة يسار ثابتة لكل الصفوف */
   background-color: transparent;
 }
+.sidebar:hover .sidebar-menu ul li a:hover  { background: #e6f8eb;}
 
 .sidebar:hover .sidebar-menu ul li a .label {
   opacity: 1;
@@ -1083,13 +1084,14 @@ body.dark-mode .sidebar {
 }
 
 body.dark-mode .sidebar-menu ul li a {
-  color: #ddd;
+  color: transparent;
 }
 
 body.dark-mode .sidebar-menu ul li a:hover {
   background-color: #2e2e2e;
 }
-
+body.dark-mode .sidebar:hover .sidebar-menu ul li a:hover { background: #198754;}
+body.dark-mode .sidebar:hover .sidebar-menu ul li a .label { background: transparent;}
 body.dark-mode .sidebar-menu ul li a i {
   background-color: #333;
   color: var(--primary-green);
@@ -1133,7 +1135,7 @@ body.dark-mode .client-phone,
 body.dark-mode .client-message {
   color: #eee;
 }
-
+body.dark-mode .session-count {background: #adb5bd29;}
 /* الفقاعات */
 body.dark-mode .message.other .bubble {
   background-color: var(--other-message-bg);
@@ -1147,13 +1149,13 @@ body.dark-mode .message.me .bubble {
 
 /* الإدخالات */
 body.dark-mode input,
-body.dark-mode textarea,
 body.dark-mode select {
   background-color: #2b2b2b;
   color: #fff;
   border: 1px solid #444;
 }
-
+body.dark-mode .input-wrapper { background: #2b2b2b};
+body.dark-mode .input-wrapper textera { };
 body.dark-mode input::placeholder,
 body.dark-mode textarea::placeholder {
   color: #aaa;
@@ -1536,6 +1538,7 @@ body.dark-mode .save-note {
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
