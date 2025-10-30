@@ -226,7 +226,7 @@ async function openChat(session) {
   selectedClientId = session.client_id;
   document.getElementById("chatClient").innerText = session.name || session.phone;
   document.getElementById("chatStatus").innerText =
-  `Status: ${session.status || "Active"} | Lang: ${session.lang || "Unknown"}`;
+  `Status: ${session.status || "Active"}`;
 
   await loadMessages(session.id);
   await loadNotes(session.client_id); //
@@ -375,11 +375,33 @@ async function sendMessage(sessionId) {
 
     
 // ====== ترجمة رسالة ======
+// ✅ التحكم في اللغة المختارة
+window.currentLang = localStorage.getItem("chat_lang") || "en";
+
+document.addEventListener("DOMContentLoaded", () => {
+  const langSelect = document.getElementById("langSelect");
+  if (langSelect) {
+    langSelect.value = window.currentLang;
+  }
+});
+
+// عند تغيير اللغة
+function setUserLanguage(lang) {
+  window.currentLang = lang;
+  localStorage.setItem("chat_lang", lang);
+
+  // تحديث اتجاه الصفحة إذا كانت عربية
+  document.documentElement.setAttribute("lang", lang);
+  document.body.style.direction = (lang === "ar") ? "rtl" : "ltr";
+
+  console.log("✅ Language set to:", lang);
+}
+
 window.translateMessage = async function(messageId) {
   try {
     const res = await axios.post(
       `/messages/${messageId}/translate`,
-      { lang: "en" },
+      { lang: window.currentLang || "en" },
       { withCredentials: true }
     );
 
