@@ -23,9 +23,20 @@
     <section class="chat-window">
       <div class="chat-header">
         <h3 id="chatClient">Select a conversation</h3>
+      <div class="chat-controls">
         <span id="chatStatus">Offline</span>
+      <div class="lang-selector" style="margin-left:10px;">
+      <label for="langSelect">🌐</label>
+      <select id="langSelect" onchange="setUserLanguage(this.value)" style="padding:4px; border-radius:6px;">
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
       </div>
-      <div class="chat-messages" id="chatMessages">
+      </div>
+        <div class="chat-messages" id="chatMessages">
         <!-- Messages loaded dynamically -->
         <!-- Example message -->
         
