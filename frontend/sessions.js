@@ -400,14 +400,24 @@ window.translateMessage = async function(messageId) {
       { withCredentials: true }
     );
 
-    const msgEl = document.querySelector(`.message[data-id="${messageId}"] .bubble`);
-    if (msgEl && res.data.translated) {
-      msgEl.innerHTML += `<div class="translation">🌐 ${res.data.translated}</div>`;
+    const messageEl = document.querySelector(`.message[data-id="${messageId}"]`);
+    if (!messageEl) return;
+
+    const translatedText = res.data.translated;
+    if (translatedText) {
+      let translatedEl = messageEl.querySelector(".translated-text");
+      if (!translatedEl) {
+        translatedEl = document.createElement("div");
+        translatedEl.className = "translated-text";
+        messageEl.querySelector(".msg-content").appendChild(translatedEl);
+      }
+      translatedEl.style.display = "block";
+      translatedEl.innerHTML = `🌐 ${translatedText}`;
     }
   } catch (err) {
     console.error("Error translating message:", err);
   }
-}
+};
 
 // ====== ملاحظات ======
 async function loadNotes(clientId) {
