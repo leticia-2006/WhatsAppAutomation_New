@@ -225,9 +225,7 @@ async function openChat(session) {
   selectedSessionId = session.id;
   selectedClientId = session.client_id;
   document.getElementById("chatClient").innerText = session.name || session.phone;
-  document.getElementById("chatStatus").innerText =
-  `Status: ${session.status || "Active"}`;
-
+  
   await loadMessages(session.id);
   await loadNotes(session.client_id); //
    // ✅ ربط زر الإرسال
