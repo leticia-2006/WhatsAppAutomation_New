@@ -5,10 +5,22 @@ const bcrypt = require('bcrypt');
 const { requireLogin, checkRole } = require('../middleware/auth')
 
 
+router.get('/me', requireLogin, async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT id, name, role, avatar_url FROM users WHERE id=$1",
+      [req.session.user.id]
+    );
 
-router.get('/me', requireLogin, (req, res) => {
-    res.json(req.session.user);
-    });
+    if (result.rows.length === 0) return res.status(404).json({ message: "User not found" });
+
+    const user = result.rows[0];
+    res.json(user);
+  } catch (err) {
+    console.error("❌ Error fetching /me user:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 // إضافة Agent
 router.post('/add-agent', requireLogin, checkRole(['super_admin']), async (req, res) => {
@@ -242,6 +254,7 @@ router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (
 });
 
 module.exports = router;
+
 
 
 
