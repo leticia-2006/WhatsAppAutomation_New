@@ -6,8 +6,7 @@ const { requireLogin, checkRole } = require('../middleware/auth')
 const path = require("path");
 const multer = require("multer");
 
-const express = require("express");
-const router = express.Router();
+
 
 // إعداد تخزين الصور
 const storage = multer.diskStorage({
@@ -293,3 +292,4 @@ router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (
 });
 
 module.exports = router;
+
