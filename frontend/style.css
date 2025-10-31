@@ -743,12 +743,43 @@ client-top {
 .details-status-dot.online { background: #22c55e; }
 .details-status-dot.offline { background: #9ca3af; }
 
-.client-name {
+.client-name-edit .editable-name {
   font-size: 18px;
   font-weight: 600;
   color: #212529;
   margin-block-end: 0px;
   margin-block-start: 10px;
+}
+.edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* يظهر الزر عند تمرير الماوس على الاسم */
+.client-name-edit .editable-name:hover .edit-btn,
+.editable-name:focus + .edit-btn {
+  opacity: 1;
+}
+
+/* تنسيق حقل الاسم */
+#editClientNameInput {
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 70%;
+}
+
+/* زر الحفظ 💾 */
+.save-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .client-number {
@@ -1543,6 +1574,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
