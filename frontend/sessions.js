@@ -47,7 +47,48 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error loading user profile:", err);
   }
 });
+const wrapper = document.getElementById("userAvatarWrapper");
+const fileInput = document.getElementById("userAvatarInput");
+const overlay = document.getElementById("userAvatarOverlay");
 
+wrapper.onclick = () => {
+  wrapper.classList.add("active");
+  setTimeout(() => wrapper.classList.remove("active"), 2500);
+};
+
+overlay.onclick = (e) => {
+  e.stopPropagation();
+  fileInput.click();
+};
+
+fileInput.onchange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    document.getElementById("userAvatar").innerHTML =
+      `<img src="${ev.target.result}" class="avatar" alt="User">`;
+  };
+  reader.readAsDataURL(file);
+
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  const res = await fetch("/users/upload-avatar", {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
+
+  const data = await res.json();
+  if (data.success && data.avatar_url) {
+    document.getElementById("userAvatar").innerHTML =
+      `<img src="${data.avatar_url}" class="avatar" alt="User">`;
+  } else {
+    alert("فشل رفع الصورة");
+  }
+};
 // ====== تحميل الجلسات من API ======
 async function loadSessions() {
   try {
