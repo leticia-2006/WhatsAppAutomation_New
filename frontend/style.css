@@ -749,6 +749,7 @@ client-top {
   color: #212529;
   margin-block-end: 0px;
   margin-block-start: 10px;
+  margin-left: 25px;
 }
 .edit-btn {
   background: none;
@@ -760,8 +761,8 @@ client-top {
 }
 
 /* يظهر الزر عند تمرير الماوس على الاسم */
-.client-name-edit .editable-name:hover .edit-btn,
-.editable-name:focus + .edit-btn {
+.client-name-edit:hover .edit-btn,
+.client-name-edit:focus + .edit-btn {
   opacity: 1;
 }
 
@@ -790,6 +791,7 @@ client-top {
 .client-time {
   font-size: 12px;
   color: #888;
+  margin-left: 20px;
 }
 /* ====== الـTags و Labels ====== */
 .client-tags,
@@ -1574,6 +1576,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
