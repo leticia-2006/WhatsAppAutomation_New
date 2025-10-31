@@ -859,7 +859,6 @@ async function uploadAvatarToServer(session, file) {
 
   console.log("✅ Rendered uniqueTags:", uniqueTags);
   loadMessages(session.id);
-}  
 // === تعديل اسم العميل ===
 const editBtn = document.getElementById("editClientNameBtn");
 const saveBtn = document.getElementById("saveClientNameBtn");
@@ -899,6 +898,8 @@ if (editBtn && saveBtn && nameInput) {
     }
   };
 }
+}  
+
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
   const emojiBtn = document.getElementById("emoji-btn");
