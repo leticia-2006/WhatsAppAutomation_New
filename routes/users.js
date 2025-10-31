@@ -3,8 +3,47 @@ const router = express.Router();
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const { requireLogin, checkRole } = require('../middleware/auth')
+const path = require("path");
+const multer = require("multer");
 
+const express = require("express");
+const router = express.Router();
 
+// إعداد تخزين الصور
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "..", "uploads"));
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `user_${Date.now()}${ext}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.mimetype)) {
+      return cb(new Error("صيغة الصورة غير مدعومة"));
+    }
+    cb(null, true);
+  },
+});
+// 📤 رفع صورة المستخدم وتحديث avatar_url
+router.post("/upload-avatar", requireLogin, upload.single("avatar"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: "لم يتم رفع أي صورة" });
+
+    const avatarUrl = `${process.env.BASE_URL || "https://whatsappautomation-new-8jme.onrender.com"}/uploads/${req.file.filename}`;
+    await db.query("UPDATE users SET avatar_url=$1 WHERE id=$2", [avatarUrl, req.session.user.id]);
+
+    res.json({ success: true, avatar_url: avatarUrl });
+  } catch (err) {
+    console.error("❌ خطأ أثناء رفع صورة المستخدم:", err);
+    res.status(500).json({ error: "حدث خطأ أثناء رفع الصورة" });
+  }
+});
 router.get('/me', requireLogin, async (req, res) => {
   try {
     const result = await db.query(
@@ -254,6 +293,7 @@ router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (
 });
 
 module.exports = router;
+
 
 
 
