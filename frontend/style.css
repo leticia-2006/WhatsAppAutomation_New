@@ -592,18 +592,19 @@ client-top {
   background-color: var(--other-message-bg);
 }
 
-.message.me {
+.message.other {
   justify-content: flex-end;
   flex-direction: row-reverse;
+  margin-left: auto;
 }
-.message.other .bubble {
+.message.me .bubble {
   background-color: #FFFFFF;
   border-radius: 18px 18px 18px 4px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   border: 1px solid #EAEAEA;
 }
 
-.message.me .bubble {
+.message.other .bubble {
   background-color: #E6F8EB;
   border-radius: 18px 18px 4px 18px;
   color: #78b672;
@@ -1542,6 +1543,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
