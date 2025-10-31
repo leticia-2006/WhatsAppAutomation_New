@@ -23,12 +23,19 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <div class="profile">
-        <div class="avatar-wrapper">
+        <div class="avatar-wrapper" id="userAvatarWrapper"> 
+          <div id="userAvatar">
           <img src="assets/avatar.png" alt="User" class="avatar"/>
         </div>
-          <h3 id="username">My Account</h3>
+        <div class="avatar-overlay" id="userAvatarOverlay">
+          <span>📷</span>
         </div>
       </div>
+      <input type="file" id="userAvatarInput" accept="image/*" hidden>
+      <h3 id="username">My Account</h3>
+        </div>
+      </div>
+      
       <nav class="sidebar-menu">
     <ul>
     <li><a href="#" data-section="groups"><i class="fa-solid fa-users"></i><span class="label">Groups</span></a></li>
