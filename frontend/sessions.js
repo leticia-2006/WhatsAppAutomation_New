@@ -133,7 +133,10 @@ function renderSessions(list = [], filterType = "all") {
     if (filterType === "unread" && session.status !== "unread") return;
     if (filterType === "unreplied" && session.status !== "unreplied") return;
     if (filterType === "group" && !session.group_id) return;
-
+    
+    if (session.avatar_url === "" || session.avatar_url === undefined) {
+  session.avatar_url = null;
+}
     // إنشاء العنصر
     const card = document.createElement("div");
     card.className = `client-card ${session.status === "unread" ? "unread" : ""}`;
