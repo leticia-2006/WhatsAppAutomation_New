@@ -268,8 +268,25 @@ router.post("/:client_id/upload-avatar", requireLogin, upload.single("avatar"), 
   }
 });
 
+// ✅ تعديل اسم العميل
+router.post("/:client_id/update-name", requireLogin, async (req, res) => {
+  try {
+    const { name } = req.body;
+    const clientId = req.params.client_id;
 
+    if (!name || name.trim() === "") {
+      return res.status(400).json({ error: "الاسم مطلوب" });
+    }
+
+    await db.query("UPDATE clients SET name=$1 WHERE id=$2", [name.trim(), clientId]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ خطأ أثناء تحديث الاسم:", err);
+    res.status(500).json({ error: "حدث خطأ أثناء حفظ الاسم" });
+  }
+});
 module.exports = router;
+
 
 
 
