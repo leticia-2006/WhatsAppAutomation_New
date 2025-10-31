@@ -859,7 +859,46 @@ async function uploadAvatarToServer(session, file) {
 
   console.log("✅ Rendered uniqueTags:", uniqueTags);
   loadMessages(session.id);
-}                                                    
+}  
+// === تعديل اسم العميل ===
+const editBtn = document.getElementById("editClientNameBtn");
+const saveBtn = document.getElementById("saveClientNameBtn");
+const nameInput = document.getElementById("editClientNameInput");
+const nameLabel = document.getElementById("detailName");
+
+if (editBtn && saveBtn && nameInput) {
+  editBtn.onclick = () => {
+    nameInput.style.display = "inline-block";
+    saveBtn.style.display = "inline-block";
+    editBtn.style.display = "none";
+    nameInput.value = session.name || "";
+    nameInput.focus();
+  };
+
+  saveBtn.onclick = async () => {
+    const newName = nameInput.value.trim();
+    if (!newName) return alert("الرجاء إدخال اسم العميل");
+
+    const res = await fetch(`/clients/${session.client_id}/update-name`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: newName }),
+      credentials: "include",
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      nameLabel.innerText = newName;
+      nameInput.style.display = "none";
+      saveBtn.style.display = "none";
+      editBtn.style.display = "inline-block";
+      session.name = newName;
+      alert("✅ تم تحديث الاسم بنجاح");
+    } else {
+      alert("❌ فشل تحديث الاسم");
+    }
+  };
+}
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
   const emojiBtn = document.getElementById("emoji-btn");
