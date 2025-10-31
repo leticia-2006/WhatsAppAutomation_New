@@ -16,6 +16,38 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 let selectedGroupId = "all"; // أو قيمة افتراضية مناسبة
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch("/users/me");
+    const user = await res.json();
+
+    const usernameEl = document.getElementById("username");
+    const avatarEl = document.querySelector(".avatar-wrapper");
+
+    usernameEl.textContent = user.name || "My Account";
+
+    // إذا لم يكن لديه صورة، أنشئ Avatar حرفي بنفس منطق العملاء
+    if (!user.avatar_url || user.avatar_url === "") {
+      const firstChar = user.name ? user.name.charAt(0).toUpperCase() : "?";
+      const { bg, text } = getAvatarColor(firstChar);
+
+      avatarEl.innerHTML = `
+        <div class="avatar-placeholder" 
+             style="background:${bg}; color:${text}; width:50px; height:50px; 
+             border-radius:50%; display:flex; align-items:center; 
+             justify-content:center; font-weight:bold; font-size:22px;">
+          ${firstChar}
+        </div>`;
+    } else {
+      avatarEl.innerHTML = `<img src="${user.avatar_url}" alt="User" class="avatar"/>`;
+    }
+
+  } catch (err) {
+    console.error("❌ Error loading user profile:", err);
+  }
+});
+
 // ====== تحميل الجلسات من API ======
 async function loadSessions() {
   try {
