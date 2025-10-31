@@ -76,7 +76,13 @@
 </div>
         
 <div class="client-info">
-      <h3 class="client-name" id="detailName">Client Name 
+      <h3 class="client-name" id="detailName"> 
+          <div class="client-name-edit">
+  <span id="detailName" class="editable-name">Unknown</span>
+  <button id="editClientNameBtn" class="edit-btn" title="تعديل الاسم">✏️</button>
+  <input type="text" id="editClientNameInput" placeholder="اكتب الاسم..." style="display:none;">
+  <button id="saveClientNameBtn" class="save-btn" style="display:none;">💾</button>
+          </div>
           <span class="tag-icons" id="tagIcons"></span>
       </h3>
         
