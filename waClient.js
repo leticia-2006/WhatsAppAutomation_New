@@ -25,36 +25,35 @@ async function initClient(numberId) {
   logger: console
 });
   clients[numberId] = sock;
-  await new Promise((resolve, reject) => {
   sock.ev.on("connection.update", async (update) => {
   const { qr, connection, lastDisconnect } = update;
 
   if (qr) {
-    qrCodes[numberId] = qr; // خزّن QR
+    qrCodes[numberId] = qr;
     console.log(`📌 QR ready for number ${numberId}`);
   }
- if (connection === "open") {
+
+  if (connection === "open") {
     console.log(`✅ Number ${numberId} connected`);
-   // تحديث الحالة في DB
     try {
       await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);
     } catch (err) {
       console.error("Error updating number status:", err);
     }
-   resolve();
   }
- if (connection === "close") {
-  const reason = lastDisconnect?.error?.output?.statusCode;
-  if (reason === DisconnectReason.loggedOut) {
-    fs.rmSync(path.join(__dirname, `../auth_info/${numberId}`), { recursive: true, force: true });
-    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
-    delete clients[numberId];
-  } else {
-    setTimeout(() => initClient(numberId), 5000);
-  }
- }
-});
 
+  if (connection === "close") {
+    const reason = lastDisconnect?.error?.output?.statusCode;
+    if (reason === DisconnectReason.loggedOut) {
+      fs.rmSync(path.join(__dirname, `../auth_info/${numberId}`), { recursive: true, force: true });
+      await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
+      delete clients[numberId];
+    } else {
+      console.log(`🔁 Trying to reconnect number ${numberId}...`);
+      setTimeout(() => initClient(numberId), 5000);
+    }
+  }
+});
  sock.ev.on("creds.update", saveCreds);
 
  sock.ev.on("messages.upsert", async (m) => {
@@ -177,7 +176,6 @@ sock.ev.on("messages.update", async (updates) => {
     }
 });
  clients[numberId] = sock;
-  });
 }
 
 
