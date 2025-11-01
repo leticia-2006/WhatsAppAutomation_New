@@ -14,7 +14,16 @@ async function initClient(numberId) {
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));
   const { version } = await fetchLatestBaileysVersion();
 
-  const sock = makeWASocket({ version, auth: state });
+  const sock = makeWASocket({
+  version,
+  auth: state,
+  printQRInTerminal: false,
+  browser: ["MyApp", "Chrome", "10.0"],
+  keepAliveIntervalMs: 30000,  // ✅ يمنع غلق الجلسة بعد الخمول
+  markOnlineOnConnect: true,
+  connectTimeoutMs: 60000,
+  logger: console
+});
   clients[numberId] = sock;
   await new Promise((resolve, reject) => {
   sock.ev.on("connection.update", async (update) => {
@@ -35,15 +44,15 @@ async function initClient(numberId) {
    resolve();
   }
  if (connection === "close") {
-    const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-    if (shouldReconnect) {
-      console.log("🔄 Reconnecting...");
-      if (clients[numberId]?.ws) clients[numberId].ws.close();
-      delete clients[numberId];
-      setTimeout(() => initClient(numberId), 5000);
-    } else { reject(new Error("Logged out"));}
-    
+  const reason = lastDisconnect?.error?.output?.statusCode;
+  if (reason === DisconnectReason.loggedOut) {
+    fs.rmSync(path.join(__dirname, `../auth_info/${numberId}`), { recursive: true, force: true });
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
+    delete clients[numberId];
+  } else {
+    setTimeout(() => initClient(numberId), 5000);
   }
+ }
 });
 
  sock.ev.on("creds.update", saveCreds);
@@ -277,6 +286,14 @@ async function getOrCreateSession(numberId, jid) {
 
   return newSession.rows[0].id;
 }
+setInterval(async () => {
+  for (const [id, sock] of Object.entries(clients)) {
+    if (!sock.user) {
+      console.log(`💤 Client ${id} seems inactive. Restarting...`);
+      await initClient(Number(id));
+    }
+  }
+}, 1000 * 60 * 5);
 
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };
 
