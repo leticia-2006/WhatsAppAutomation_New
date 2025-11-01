@@ -13,7 +13,8 @@ const qrCodes = {};
 async function initClient(numberId) {
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));
   const { version } = await fetchLatestBaileysVersion();
-
+  
+  const pino = require("pino");
   const sock = makeWASocket({
   version,
   auth: state,
@@ -22,7 +23,7 @@ async function initClient(numberId) {
   keepAliveIntervalMs: 30000,  // ✅ يمنع غلق الجلسة بعد الخمول
   markOnlineOnConnect: true,
   connectTimeoutMs: 60000,
-  logger: console
+  logger: pino({ level: "silent" }), // ✅
 });
   clients[numberId] = sock;
   sock.ev.on("connection.update", async (update) => {
