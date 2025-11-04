@@ -116,9 +116,9 @@ main {
 }
 
 .sidebar-menu ul li a {
-  display: flex;
-  align-items: center;
-  justify-content: center; /* الأيقونات في الوسط قبل التوسعة */
+  display: flex !important;
+  align-items: center !important ;
+  justify-content: center !important ; /* الأيقونات في الوسط قبل التوسعة */
   gap: 12px;
   width: 100%;
   padding: 10px;
@@ -1578,11 +1578,8 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 }
 
 
-/* 🔧 تثبيت الأيقونات في الوسط تمامًا عندما لا تكون هناك توسعة */
-.sidebar:not(:hover) .sidebar-menu ul li a {
-  justify-content: center !important;
-  padding-left: 0 !important;
-}
+
+
 
 
 
