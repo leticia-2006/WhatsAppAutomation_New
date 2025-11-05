@@ -976,5 +976,15 @@ function rebindChatButtons() {
   }
 }
 rebindChatButtons();
-
+async function loadTagSuggestions() {
+  try {
+    const res = await fetch("/clients/tags/suggestions", { credentials: "include" });
+    const tags = await res.json();
+    const list = document.getElementById("tagSuggestions");
+    list.innerHTML = tags.map(t => `<option value="${t}">`).join("");
+  } catch (err) {
+    console.error("Error loading tag suggestions:", err);
+  }
+}
+document.addEventListener("DOMContentLoaded", loadTagSuggestions);
 setInterval(loadSessions, 60000);
