@@ -987,4 +987,35 @@ async function loadTagSuggestions() {
   }
 }
 document.addEventListener("DOMContentLoaded", loadTagSuggestions);
+document.getElementById("setTagItem").addEventListener("click", () => {
+  const input = document.getElementById("tagInput");
+  input.style.display = "inline-block";
+  input.focus();
+  
+  input.onkeydown = async (e) => {
+    if (e.key === "Enter") {
+      const tag = input.value.trim();
+      if (!tag) return;
+
+      try {
+        await axios.post(`/clients/${selectedClientId}/tags`, { tag });
+        alert(`✅ Tag "${tag}" added!`);
+
+        // تحديث التاغات في الواجهة مباشرة
+        if (currentSession) {
+          if (!currentSession.tags) currentSession.tags = [];
+          currentSession.tags.push(tag);
+          renderSessions(sessions);
+        }
+
+      } catch (err) {
+        alert("❌ Error adding tag");
+      } finally {
+        input.value = "";
+        input.style.display = "none";
+        document.getElementById("contextMenu").style.display = "none";
+      }
+    }
+  };
+});
 setInterval(loadSessions, 60000);
