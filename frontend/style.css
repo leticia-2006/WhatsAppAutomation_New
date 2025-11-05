@@ -118,7 +118,6 @@ main {
 .sidebar-menu ul li a {
   display: flex !important;
   align-items: center !important ;
-  justify-content: center !important ; /* الأيقونات في الوسط قبل التوسعة */
   gap: 12px;
   width: 100%;
   padding: 10px;
@@ -1576,6 +1575,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
+
 
 
 
