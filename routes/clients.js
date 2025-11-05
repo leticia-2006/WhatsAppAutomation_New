@@ -285,7 +285,38 @@ router.post("/:client_id/update-name", requireLogin, async (req, res) => {
     res.status(500).json({ error: "حدث خطأ أثناء حفظ الاسم" });
   }
 });
+// ✅ جلب أو تحديث وسوم العميل
+router.post("/:client_id/tags", requireLogin, async (req, res) => {
+  try {
+    const { client_id } = req.params;
+    const { tags } = req.body; // array أو string
+
+    if (!tags) {
+      return res.status(400).json({ error: "Tags are required" });
+    }
+
+    // تأكد أن العميل موجود
+    const checkClient = await db.query("SELECT id FROM clients WHERE id=$1", [client_id]);
+    if (checkClient.rows.length === 0) {
+      return res.status(404).json({ error: "Client not found" });
+    }
+
+    // حفظ الوسوم (كـ نص JSON أو CSV)
+    const formattedTags = Array.isArray(tags) ? tags.join(",") : tags;
+
+    const updated = await db.query(
+      "UPDATE clients SET tags=$1, updated_at=NOW() WHERE id=$2 RETURNING id, tags",
+      [formattedTags, client_id]
+    );
+
+    res.json({ success: true, client: updated.rows[0] });
+  } catch (err) {
+    console.error("❌ Error updating tags:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 module.exports = router;
+
 
 
 
