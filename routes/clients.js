@@ -315,7 +315,22 @@ router.post("/:client_id/tags", requireLogin, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// ✅ جلب قائمة التاغات المقترحة
+router.get("/tags/suggestions", requireLogin, async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT DISTINCT unnest(string_to_array(tags, ',')) AS tag
+      FROM clients
+      WHERE tags IS NOT NULL AND tags <> ''
+    `);
+    res.json(result.rows.map(r => r.tag.trim()));
+  } catch (err) {
+    console.error("Error fetching tag suggestions:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 module.exports = router;
+
 
 
 
