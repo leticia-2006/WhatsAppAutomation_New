@@ -1007,16 +1007,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // عند الضغط على Set Tag
   setTagItem.addEventListener("click", (e) => {
-    e.stopPropagation();
+  e.stopPropagation();
 
-    // أخفِ القائمة الأصلية
-    contextMenu.style.display = "none";
+  // أخفِ القائمة الأصلية
+  contextMenu.style.display = "none";
 
-    // ضع قائمة التاغات قرب آخر موقع للماوس
-    tagOptions.style.left = `${lastMenuX + 10}px`;
-    tagOptions.style.top = `${lastMenuY + 10}px`;
-    tagOptions.style.display = "block";
-  });
+  // ضع قائمة التاغات في موقع الماوس الفعلي بدل lastMenu
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
+
+  tagOptions.style.left = `${mouseX + 10}px`;
+  tagOptions.style.top = `${mouseY + 10}px`;
+  tagOptions.style.display = "block";
+});
 
   // عند اختيار تاغ
   tagOptions.querySelectorAll("li").forEach(li => {
