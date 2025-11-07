@@ -986,61 +986,60 @@ async function loadTagSuggestions() {
     console.error("Error loading tag suggestions:", err);
   }
 }
-document.addEventListener("DOMContentLoaded", loadTagSuggestions);
-const setTagItem = document.getElementById("setTagItem");
-const tagOptions = document.getElementById("tagOptions");
-const contextMenu = document.getElementById("contextMenu");
+window.addEventListener("DOMContentLoaded", () => {
+  const setTagItem = document.getElementById("setTagItem");
+  const tagOptions = document.getElementById("tagOptions");
+  const contextMenu = document.getElementById("contextMenu");
 
-let lastMenuX = 0;
-let lastMenuY = 0;
+  if (!setTagItem || !tagOptions || !contextMenu) {
+    console.error("❌ عناصر القائمة الجانبية غير موجودة في الصفحة بعد التحميل");
+    return;
+  }
 
-// احفظ آخر موقع فتح فيه الـ context menu
-document.addEventListener("contextmenu", (e) => {
-  lastMenuX = e.clientX;
-  lastMenuY = e.clientY;
-});
+  let lastMenuX = 0;
+  let lastMenuY = 0;
 
-// عند الضغط على Set Tag
-setTagItem.addEventListener("click", (e) => {
-  e.stopPropagation();
+  // احفظ آخر موقع فتح فيه الـ context menu
+  document.addEventListener("contextmenu", (e) => {
+    lastMenuX = e.clientX;
+    lastMenuY = e.clientY;
+  });
 
-  // أخفِ القائمة الأصلية
-  contextMenu.style.display = "none";
+  // عند الضغط على Set Tag
+  setTagItem.addEventListener("click", (e) => {
+    e.stopPropagation();
 
-  // ضع قائمة التاغات قرب آخر موقع للماوس
-  tagOptions.style.left = `${lastMenuX + 10}px`;
-  tagOptions.style.top = `${lastMenuY + 10}px`;
-  tagOptions.style.display = "block";
-});
+    // أخفِ القائمة الأصلية
+    contextMenu.style.display = "none";
 
-// عند اختيار تاغ
-tagOptions.querySelectorAll("li").forEach(li => {
-  li.addEventListener("click", async () => {
-    const tag = li.dataset.tag;
-    tagOptions.style.display = "none";
-    if (!selectedClientId) return;
+    // ضع قائمة التاغات قرب آخر موقع للماوس
+    tagOptions.style.left = `${lastMenuX + 10}px`;
+    tagOptions.style.top = `${lastMenuY + 10}px`;
+    tagOptions.style.display = "block";
+  });
 
-    try {
-      await axios.post(`/clients/${selectedClientId}/tags`, { tag });
-      alert(`✅ Tag "${tag}" added!`);
+  // عند اختيار تاغ
+  tagOptions.querySelectorAll("li").forEach(li => {
+    li.addEventListener("click", async () => {
+      const tag = li.dataset.tag;
+      tagOptions.style.display = "none";
+      if (!selectedClientId) return;
 
-      // تحديث فوري بالواجهة
-      if (currentSession) {
-        if (!currentSession.tags) currentSession.tags = [];
-        currentSession.tags.push(tag);
-        renderSessions(sessions);
+      try {
+        await axios.post(`/clients/${selectedClientId}/tags`, { tags: tag });
+        alert(`✅ Tag "${tag}" added!`);
+      } catch (err) {
+        alert("❌ Error adding tag");
+        console.error(err);
       }
+    });
+  });
 
-    } catch (err) {
-      alert("❌ Error adding tag");
+  // إخفاء عند الضغط بالخارج
+  document.addEventListener("click", (e) => {
+    if (!tagOptions.contains(e.target)) {
+      tagOptions.style.display = "none";
     }
   });
-});
-
-// إخفاء عند الضغط بالخارج
-document.addEventListener("click", (e) => {
-  if (!tagOptions.contains(e.target)) {
-    tagOptions.style.display = "none";
-  }
 });
 setInterval(loadSessions, 60000);
