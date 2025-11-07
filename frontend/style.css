@@ -1577,8 +1577,8 @@ body.dark-mode .numbers-table-header  {background: #363232; }
   background: linear-gradient(135deg, #0069d9, #0056b3);
   transform: translateY(-1px);
 }
-
-.tag-options-popup {
+/*context-menu*/
+.tag-options {
   position: absolute;
   background: white;
   border: 1px solid #ccc;
@@ -1591,7 +1591,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
   z-index: 9999;
 }
 
-.tag-options-popup li {
+.tag-options li {
   padding: 8px 12px;
   cursor: pointer;
   display: flex;
@@ -1600,6 +1600,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
   font-size: 14px;
 }
 
-.tag-options-popup li:hover {
+.tag-options li:hover {
   background: #f0f0f0;
 }
+
