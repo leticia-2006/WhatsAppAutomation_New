@@ -311,7 +311,7 @@ router.post("/:client_id/tags", requireLogin, async (req, res) => {
 
     res.json({ success: true, client: updated.rows[0] });
   } catch (err) {
-    console.error("❌ Error updating tags:", err);
+    console.error("❌ Error updating tags:", err.message, err.stack);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -335,6 +335,7 @@ router.get("/tags/suggestions", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
