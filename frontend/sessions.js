@@ -1005,7 +1005,7 @@ tagOptions.querySelectorAll("li").forEach(li => {
     if (!selectedClientId) return;
 
     try {
-      await axios.post(`/clients/${selectedClientId}/tags`, { tag });
+      await axios.post(`/clients/${selectedClientId}/tags`, { tags: tag });
       alert(`✅ Tag "${tag}" added!`);
 
       // تحديث فوري في الواجهة
