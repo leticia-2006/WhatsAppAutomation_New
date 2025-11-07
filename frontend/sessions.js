@@ -987,35 +987,42 @@ async function loadTagSuggestions() {
   }
 }
 document.addEventListener("DOMContentLoaded", loadTagSuggestions);
-document.getElementById("setTagItem").addEventListener("click", () => {
-  const input = document.getElementById("tagInput");
-  input.style.display = "inline-block";
-  input.focus();
-  
-  input.onkeydown = async (e) => {
-    if (e.key === "Enter") {
-      const tag = input.value.trim();
-      if (!tag) return;
+const setTagItem = document.getElementById("setTagItem");
+const tagOptions = document.getElementById("tagOptions");
 
-      try {
-        await axios.post(`/clients/${selectedClientId}/tags`, { tag });
-        alert(`✅ Tag "${tag}" added!`);
+// عند الضغط على "Set Tag" تظهر قائمة الخيارات
+setTagItem.addEventListener("click", (e) => {
+  e.stopPropagation(); // حتى لا يغلق المينيو
+  tagOptions.style.display = tagOptions.style.display === "none" ? "block" : "none";
+});
 
-        // تحديث التاغات في الواجهة مباشرة
-        if (currentSession) {
-          if (!currentSession.tags) currentSession.tags = [];
-          currentSession.tags.push(tag);
-          renderSessions(sessions);
-        }
+// عند اختيار أحد التاغات
+tagOptions.querySelectorAll("li").forEach(li => {
+  li.addEventListener("click", async () => {
+    const tag = li.dataset.tag;
+    tagOptions.style.display = "none";
+    document.getElementById("contextMenu").style.display = "none";
+    if (!selectedClientId) return;
 
-      } catch (err) {
-        alert("❌ Error adding tag");
-      } finally {
-        input.value = "";
-        input.style.display = "none";
-        document.getElementById("contextMenu").style.display = "none";
+    try {
+      await axios.post(`/clients/${selectedClientId}/tags`, { tag });
+      alert(`✅ Tag "${tag}" added!`);
+
+      // تحديث فوري في الواجهة
+      if (currentSession) {
+        if (!currentSession.tags) currentSession.tags = [];
+        currentSession.tags.push(tag);
+        renderSessions(sessions);
       }
+
+    } catch (err) {
+      alert("❌ Error adding tag");
     }
-  };
+  });
+});
+
+// عند الضغط في أي مكان آخر، تخفي القائمة
+document.addEventListener("click", () => {
+  tagOptions.style.display = "none";
 });
 setInterval(loadSessions, 60000);
