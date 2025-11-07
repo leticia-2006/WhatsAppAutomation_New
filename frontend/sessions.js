@@ -989,20 +989,27 @@ async function loadTagSuggestions() {
 document.addEventListener("DOMContentLoaded", loadTagSuggestions);
 const setTagItem = document.getElementById("setTagItem");
 const tagOptions = document.getElementById("tagOptions");
+const contextMenu = document.getElementById("contextMenu");
+
+let lastMenuX = 0;
+let lastMenuY = 0;
+
+// احفظ آخر موقع فتح فيه الـ context menu
+document.addEventListener("contextmenu", (e) => {
+  lastMenuX = e.clientX;
+  lastMenuY = e.clientY;
+});
 
 // عند الضغط على Set Tag
 setTagItem.addEventListener("click", (e) => {
   e.stopPropagation();
 
-  // إخفاء القائمة الأصلية
-  document.getElementById("contextMenu").style.display = "none";
+  // أخفِ القائمة الأصلية
+  contextMenu.style.display = "none";
 
-  // تحديد موقع الماوس لعرض القائمة قربه
-  const mouseX = e.clientX;
-  const mouseY = e.clientY;
-
-  tagOptions.style.left = `${mouseX + 10}px`;
-  tagOptions.style.top = `${mouseY + 10}px`;
+  // ضع قائمة التاغات قرب آخر موقع للماوس
+  tagOptions.style.left = `${lastMenuX + 10}px`;
+  tagOptions.style.top = `${lastMenuY + 10}px`;
   tagOptions.style.display = "block";
 });
 
@@ -1017,7 +1024,7 @@ tagOptions.querySelectorAll("li").forEach(li => {
       await axios.post(`/clients/${selectedClientId}/tags`, { tag });
       alert(`✅ Tag "${tag}" added!`);
 
-      // تحديث فوري في الواجهة
+      // تحديث فوري بالواجهة
       if (currentSession) {
         if (!currentSession.tags) currentSession.tags = [];
         currentSession.tags.push(tag);
@@ -1030,8 +1037,10 @@ tagOptions.querySelectorAll("li").forEach(li => {
   });
 });
 
-// إخفاء عند النقر بالخارج
-document.addEventListener("click", () => {
-  tagOptions.style.display = "none";
+// إخفاء عند الضغط بالخارج
+document.addEventListener("click", (e) => {
+  if (!tagOptions.contains(e.target)) {
+    tagOptions.style.display = "none";
+  }
 });
 setInterval(loadSessions, 60000);
