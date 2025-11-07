@@ -1009,18 +1009,13 @@ window.addEventListener("DOMContentLoaded", () => {
   setTagItem.addEventListener("click", (e) => {
   e.stopPropagation();
 
-  const contextMenu = document.getElementById("contextMenu");
-
   // أخفِ القائمة الأصلية
   contextMenu.style.display = "none";
 
-  // الحصول على إحداثيات العنصر الذي ضغطنا عليه (القائمة نفسها)
-  const rect = setTagItem.getBoundingClientRect();
-
-  // ضع القائمة بجانب العنصر
-  tagOptions.style.position = "absolute";
-  tagOptions.style.left = `${rect.right + 10}px`;
-  tagOptions.style.top = `${rect.top}px`;
+  // ضع قائمة التاغات بجانب آخر مكان نقر فيه المستخدم
+  tagOptions.style.position = "fixed";
+  tagOptions.style.left = `${lastMenuX + 10}px`;
+  tagOptions.style.top = `${lastMenuY}px`;
   tagOptions.style.display = "block";
 });
   // عند اختيار تاغ
