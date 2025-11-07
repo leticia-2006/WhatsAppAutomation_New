@@ -1009,18 +1009,20 @@ window.addEventListener("DOMContentLoaded", () => {
   setTagItem.addEventListener("click", (e) => {
   e.stopPropagation();
 
+  const contextMenu = document.getElementById("contextMenu");
+
   // أخفِ القائمة الأصلية
   contextMenu.style.display = "none";
 
-  // ضع قائمة التاغات في موقع الماوس الفعلي بدل lastMenu
-  const mouseX = e.clientX;
-  const mouseY = e.clientY;
+  // الحصول على إحداثيات العنصر الذي ضغطنا عليه (القائمة نفسها)
+  const rect = setTagItem.getBoundingClientRect();
 
-  tagOptions.style.left = `${mouseX + 10}px`;
-  tagOptions.style.top = `${mouseY + 10}px`;
+  // ضع القائمة بجانب العنصر
+  tagOptions.style.position = "absolute";
+  tagOptions.style.left = `${rect.right + 10}px`;
+  tagOptions.style.top = `${rect.top}px`;
   tagOptions.style.display = "block";
 });
-
   // عند اختيار تاغ
   tagOptions.querySelectorAll("li").forEach(li => {
     li.addEventListener("click", async () => {
