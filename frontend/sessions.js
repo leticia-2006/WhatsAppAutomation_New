@@ -990,22 +990,31 @@ document.addEventListener("DOMContentLoaded", loadTagSuggestions);
 const setTagItem = document.getElementById("setTagItem");
 const tagOptions = document.getElementById("tagOptions");
 
-// عند الضغط على "Set Tag" تظهر قائمة الخيارات
+// عند الضغط على Set Tag
 setTagItem.addEventListener("click", (e) => {
-  e.stopPropagation(); // حتى لا يغلق المينيو
-  tagOptions.style.display = tagOptions.style.display === "none" ? "block" : "none";
+  e.stopPropagation();
+
+  // إخفاء القائمة الأصلية
+  document.getElementById("contextMenu").style.display = "none";
+
+  // تحديد موقع الماوس لعرض القائمة قربه
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
+
+  tagOptions.style.left = `${mouseX + 10}px`;
+  tagOptions.style.top = `${mouseY + 10}px`;
+  tagOptions.style.display = "block";
 });
 
-// عند اختيار أحد التاغات
+// عند اختيار تاغ
 tagOptions.querySelectorAll("li").forEach(li => {
   li.addEventListener("click", async () => {
     const tag = li.dataset.tag;
     tagOptions.style.display = "none";
-    document.getElementById("contextMenu").style.display = "none";
     if (!selectedClientId) return;
 
     try {
-      await axios.post(`/clients/${selectedClientId}/tags`, { tags: tag });
+      await axios.post(`/clients/${selectedClientId}/tags`, { tag });
       alert(`✅ Tag "${tag}" added!`);
 
       // تحديث فوري في الواجهة
@@ -1021,7 +1030,7 @@ tagOptions.querySelectorAll("li").forEach(li => {
   });
 });
 
-// عند الضغط في أي مكان آخر، تخفي القائمة
+// إخفاء عند النقر بالخارج
 document.addEventListener("click", () => {
   tagOptions.style.display = "none";
 });
