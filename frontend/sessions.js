@@ -463,8 +463,6 @@ function setUserLanguage(lang) {
 
   // تحديث اتجاه الصفحة إذا كانت عربية
   document.documentElement.setAttribute("lang", lang);
-  document.body.style.direction = (lang === "ar") ? "rtl" : "ltr";
-
   console.log("✅ Language set to:", lang);
 }
 
