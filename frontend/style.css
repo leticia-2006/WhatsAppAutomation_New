@@ -216,7 +216,33 @@ main {
   box-shadow: 0 0 10px rgba(37, 211, 102, 0.5);
   transform: scale(1.1);
 }
+/* العنصر الأب */
+.sidebar-menu .dropdown {
+  position: relative;
+}
 
+/* القائمة المنسدلة */
+.dropdown-menu {
+  position: absolute;
+  top: 0;
+  left: 100%; /* تظهر بجانب الزر مباشرة */
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 5px 0;
+  width: 140px;
+  display: none;
+  z-index: 9999;
+}
+
+.dropdown-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #333;
+}
+
+.dropdown-menu li:hover {
+  background: #f0f0f0;
+}
 /* Clients List */
 .clients-list {
   width: 300px;
@@ -1603,4 +1629,5 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .tag-options li:hover {
   background: #f0f0f0;
 }
+
 
