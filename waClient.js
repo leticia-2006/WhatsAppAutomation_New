@@ -157,7 +157,7 @@ let msgCount = 0;
 parseInt(countRes.rows[0].count);  
     if (msgCount >= 3) {
       await db.query(
-        "UPDATE sessions SET group_id = 2 WHERE client_id = $1",
+        "UPDATE sessions SET group_id = 2 WHERE id = $1",
         [sessionId]
       );
       console.log(`🚀 المستخدم ${sender} تم نقله إلى الجروب 2 بعد ${msgCount} رسائل`);
