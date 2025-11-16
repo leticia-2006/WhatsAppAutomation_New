@@ -38,7 +38,13 @@
       
       <nav class="sidebar-menu">
     <ul>
-    <li><a href="#" data-section="groups"><i class="fa-solid fa-users"></i><span class="label">Groups</span></a></li>
+    <li class="dropdown"><a href="#" data-section="groups" id="groupsBtn"><i class="fa-solid fa-users"></i><span class="label">Groups</span></a>>
+      <ul class="dropdown-menu" id="groupsDropdown">
+        <li data-group="all">All</li>
+        <li data-group="1">Group 1</li>
+        <li data-group="2">Group 2</li>
+        <li data-group="3">Group 3</li>
+      </ul></li>
     <li><a href="#" data-section="unread"><i class="fa-solid fa-envelope-open-text"></i><span class="label">Unread</span></a></li>
     <li><a href="#" data-section="numbers"><i class="fa-solid fa-hashtag"></i><span class="label">Numbers</span></a></li>
     <li><a href="#" data-section="users" title="Users"><i class="fa-solid fa-user"></i><span class="label">Users</span></a></li>
