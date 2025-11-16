@@ -13,6 +13,24 @@ document.addEventListener("DOMContentLoaded", () => {
       loadSessions();
     });
   });
+dropdown =====
+  const groupsBtn = document.getElementById("groupsBtn");
+  const dropdown = document.getElementById("groupsDropdown");
+
+  groupsBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    dropdown.style.display =
+      dropdown.style.display === "block" ? "none" : "block";
+  });
+
+  dropdown.querySelectorAll("li").forEach((item) => {
+    item.addEventListener("click", () => {
+      selectedGroupId = item.dataset.group;
+      currentTab = "groups";
+      dropdown.style.display = "none";
+      loadSessions();
+    });
+  });
 });
 
 let selectedGroupId = "all"; // أو قيمة افتراضية مناسبة
