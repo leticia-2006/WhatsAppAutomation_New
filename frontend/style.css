@@ -128,6 +128,7 @@ main {
   transition: all 0.3s ease;
   background-color: transparent;
   box-sizing: border-box;
+  text-decoration: none;
 }
 
 .sidebar-menu ul li a i {
@@ -154,8 +155,9 @@ main {
   justify-content: flex-start; /* تحريك الأيقونات لليسار */
   padding-left: 20px; /* مسافة يسار ثابتة لكل الصفوف */
   background-color: transparent;
+  text-decoration: none;
 }
-.sidebar:hover .sidebar-menu ul li a:hover  { background: #e6f8eb;}
+.sidebar:hover .sidebar-menu ul li a:hover  { background: #e6f8eb; text-decoration: none;}
 
 .sidebar:hover .sidebar-menu ul li a .label {
   opacity: 1;
@@ -1629,5 +1631,6 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .tag-options li:hover {
   background: #f0f0f0;
 }
+
 
 
