@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loadSessions();
     });
   });
-dropdown =====
+
   const groupsBtn = document.getElementById("groupsBtn");
   const dropdown = document.getElementById("groupsDropdown");
 
