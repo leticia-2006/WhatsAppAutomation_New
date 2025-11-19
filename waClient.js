@@ -145,7 +145,13 @@ const insertRes = await db.query(
 );
     console.log("تم تخزين الرسالة:", insertRes.rows[0].id);
     
-
+// ⭐ إعادة الجلسة إلى unread عند رسالة جديدة من العميل
+if (!isFromMe) {
+  await db.query(
+    "UPDATE sessions SET status='unread', updated_at=NOW() WHERE id=$1",
+    [sessionId]
+  );
+}
 // 2. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
 let msgCount = 0;
     if (!isFromMe) {
