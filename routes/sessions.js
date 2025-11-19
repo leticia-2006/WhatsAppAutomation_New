@@ -339,4 +339,17 @@ router.get("/", requireLogin, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+router.post("/mark-read/:sessionId", async (req, res) => {
+  try {
+    await db.query(
+      "UPDATE sessions SET status='read', updated_at=NOW() WHERE id=$1",
+      [req.params.sessionId]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error marking session read:", err);
+    res.status(500).json({ error: "Failed to mark read" });
+  }
+});
 module.exports = router;
+
