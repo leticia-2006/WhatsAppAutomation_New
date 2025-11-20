@@ -333,6 +333,11 @@ document.getElementById("send-btn").onclick = () => sendMessage(selectedSessionI
       }
 }
 
+function markSessionRead(sessionId) {
+  fetch(`/sessions/mark-read/${sessionId}`, { method: "POST" })
+    .then(() => console.log("Marked read"))
+    .catch(err => console.error("Error:", err));
+}
 // ====== تحميل الرسائل ======
 async function loadMessages(sessionId) {
   try {
