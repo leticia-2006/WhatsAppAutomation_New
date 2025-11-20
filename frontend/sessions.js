@@ -318,6 +318,7 @@ async function openChat(session) {
   currentSession = session;
   selectedSessionId = session.id;
   selectedClientId = session.client_id;
+  markSessionRead(session.id);
   document.getElementById("chatClient").innerText = session.name || session.phone;
   
   await loadMessages(session.id);
