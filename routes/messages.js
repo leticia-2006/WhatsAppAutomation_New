@@ -11,17 +11,31 @@ const upload = multer({ dest: path.join(__dirname, "../uploads") });
 // جلب الرسائل لجلسة
 router.get("/:sessionId", requireLogin, async (req, res) => {
   const result = await db.query(`
-  SELECT m.*,
-       CASE 
-         WHEN m.sender_type = 'client'
-         THEN c.avatar_url 
-         ELSE 'default-agent.png'
-       END AS sender_avatar,
-        c.name AS client_name 
-  FROM messages m 
-  JOIN sessions s ON m.session_id = s.id
-  JOIN clients c ON c.id = s.client_id WHERE m.session_id=$1
-  ORDER BY created_at ASC`, [req.params.sessionId]);
+    SELECT 
+      m.*,
+      c.name AS client_name,
+
+      -- صورة المرسل
+      CASE
+        WHEN m.sender_type = 'client' THEN c.avatar_url
+        WHEN m.sender_type = 'agent' THEN u.avatar_url
+        ELSE 'default-agent.png'
+      END AS sender_avatar,
+
+      -- اسم الموظف
+      u.name AS agent_name
+
+    FROM messages m
+    JOIN sessions s ON m.session_id = s.id
+    JOIN clients c ON c.id = s.client_id
+
+    -- انضمام مستخدم (Agent / Admin / Supervisor / Super Admin)
+    LEFT JOIN users u ON m.sender_id = u.id
+
+    WHERE m.session_id = $1
+    ORDER BY m.created_at ASC
+  `, [req.params.sessionId]);
+
   const baseUrl = process.env.BASE_URL || "https://whatsappautomation-new-4fec.onrender.com";
 
   const messages = result.rows.map(msg => {
@@ -33,8 +47,6 @@ router.get("/:sessionId", requireLogin, async (req, res) => {
 
   res.json(messages);
 });
-
-
 // إرسال رسالة
 // حفظ الرسالة بعد الإرسال
 router.post("/:sessionId/send", requireLogin, async (req, res) => {
