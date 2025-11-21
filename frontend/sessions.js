@@ -397,7 +397,7 @@ if (
 
       const div = `
   <div class="message ${msg.sender_type === "client" ? "other" : "me"}" data-id="${msg.id}">
-    <img src="${msg.sender_avatar || msg.agent_avatar || 'assets/avatar.png'}" class="avatar" />
+    <img src="${msg.sender_avatar ? msg.sender_avatar : 'assets/avatar.png'}" class="avatar" />
     <div class="msg-content">
       <div class="meta">${msg.sender_name || 'User'}, ${time}</div>
       <div class="bubble">${content}</div>
@@ -470,7 +470,6 @@ async function sendMessage(sessionId) {
 
     
 // ====== ترجمة رسالة ======
-// ✅ التحكم في اللغة المختارة
 window.currentLang = localStorage.getItem("chat_lang") || "en";
 
 document.addEventListener("DOMContentLoaded", () => {
