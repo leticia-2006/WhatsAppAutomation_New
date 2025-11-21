@@ -151,6 +151,11 @@ if (!isFromMe) {
     "UPDATE sessions SET status='unread', updated_at=NOW() WHERE id=$1",
     [sessionId]
   );
+   // ⭐ وأيضًا ضعها كـ unreplied حتى يراها في تبويب "بدون رد"
+  await db.query(
+  "UPDATE sessions SET status='unreplied', updated_at=NOW() WHERE id=$1",
+  [sessionId]
+  );
 }
 // 2. منطق الأتمتة (بعد 3 رسائل انتقل للجروب 2)
 let msgCount = 0;
@@ -244,6 +249,11 @@ async function sendMessageToNumber(numberId, jid, content) {
   );
 
   console.log("✅ Message sent and saved:", insertRes.rows[0]);
+  // ✅ عندما يرد الوكيل، لا يجب أن تبقى الجلسة unreplied
+await db.query(
+  "UPDATE sessions SET status='read', updated_at=NOW() WHERE id=$1",
+  [await getOrCreateSession(numberId, jid)]
+);
   return insertRes.rows[0];
 }
 
