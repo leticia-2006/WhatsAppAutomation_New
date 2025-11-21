@@ -399,7 +399,7 @@ if (
   <div class="message ${msg.sender_type === "client" ? "other" : "me"}" data-id="${msg.id}">
     <img src="${msg.sender_avatar ? msg.sender_avatar : 'assets/avatar.png'}" class="avatar" />
     <div class="msg-content">
-      <div class="meta">${msg.sender_name || 'User'}, ${time}</div>
+      <div class="meta">${msg.sender_name || (msg.sender_type === "client" ? "Client" : "User")}, ${time}</div>
       <div class="bubble">${content}</div>
       <button class="translate-btn" onclick="translateMessage(${msg.id})">Translate</button>
       ${
