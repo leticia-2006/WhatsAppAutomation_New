@@ -12,29 +12,34 @@ const upload = multer({ dest: path.join(__dirname, "../uploads") });
 router.get("/:sessionId", requireLogin, async (req, res) => {
   const result = await db.query(`
     SELECT 
-      m.*,
-      c.name AS client_name,
+        m.*,
+        c.name AS client_name,
 
-      -- صورة المرسل
-      CASE
-        WHEN m.sender_type = 'client' THEN c.avatar_url
-        WHEN m.sender_type = 'agent' THEN u.avatar_url
-        ELSE 'default-agent.png'
-      END AS sender_avatar,
+        -- صورة المرسل
+        CASE
+          WHEN m.sender_type = 'client' THEN c.avatar_url
+          WHEN m.sender_type = 'agent' THEN u.avatar_url
+          ELSE 'default-agent.png'
+        END AS sender_avatar,
 
-      -- اسم الموظف
-      u.name AS agent_name
+        -- اسم المرسل
+        CASE
+          WHEN m.sender_type = 'client' THEN c.name
+          WHEN m.sender_type = 'agent' THEN u.name
+          ELSE 'System'
+        END AS sender_name
 
-    FROM messages m
-    JOIN sessions s ON m.session_id = s.id
-    JOIN clients c ON c.id = s.client_id
+      FROM messages m
+      JOIN sessions s ON m.session_id = s.id
+      JOIN clients c ON c.id = s.client_id
+      
+      -- مهم: لا نستخدم sender_id عند الإرسال من العميل → لذلك LEFT JOIN
+      LEFT JOIN users u ON (m.sender_type = 'agent' AND m.sender_id = u.id)
 
-    -- انضمام مستخدم (Agent / Admin / Supervisor / Super Admin)
-    LEFT JOIN users u ON m.sender_id = u.id
+      WHERE m.session_id = $1
+      ORDER BY m.created_at ASC
+    `, [req.params.sessionId]);
 
-    WHERE m.session_id = $1
-    ORDER BY m.created_at ASC
-  `, [req.params.sessionId]);
 
   const baseUrl = process.env.BASE_URL || "https://whatsappautomation-new-4fec.onrender.com";
 
