@@ -429,7 +429,7 @@ if (
       )
     }
     <div class="msg-content">
-      <div class="meta">${msg.sender_name || (msg.sender_type === "client" ? "Client" : "User")}, ${time}</div>
+      <div class="meta">${msg.sender_name || (msg.sender_type === "client" ? currentSession.name : "Agent")}, ${time}</div>
       <div class="bubble">${content}</div>
       <button class="translate-btn" onclick="translateMessage(${msg.id})">Translate</button>
       ${
