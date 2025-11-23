@@ -397,7 +397,24 @@ if (
 
       const div = `
   <div class="message ${msg.sender_type === "client" ? "other" : "me"}" data-id="${msg.id}">
-    <img src="${msg.sender_avatar ? msg.sender_avatar : 'assets/avatar.png'}" class="avatar" />
+    ${
+  msg.sender_type === "client"
+    ? (
+        msg.sender_avatar
+          ? `<img src="${msg.sender_avatar}" class="avatar"/>`
+          : (() => {
+              const first = currentSession.name?.charAt(0).toUpperCase() || "?";
+              const { bg, text } = getAvatarColor(first);
+              return `
+                <div class="avatar-placeholder avatar"
+                     style="background:${bg}; color:${text}">
+                  ${first}
+                </div>
+              `;
+            })()
+      )
+    : `<img src="${msg.sender_avatar || 'assets/avatar.png'}" class="avatar"/>`
+    }
     <div class="msg-content">
       <div class="meta">${msg.sender_name || (msg.sender_type === "client" ? "Client" : "User")}, ${time}</div>
       <div class="bubble">${content}</div>
