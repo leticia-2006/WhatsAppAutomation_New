@@ -413,7 +413,20 @@ if (
               `;
             })()
       )
-    : `<img src="${msg.sender_avatar || 'assets/avatar.png'}" class="avatar"/>`
+    : ( msg.sender_avatar
+          ? `<img src="${msg.sender_avatar}" class="avatar"/>`
+          : (() => {
+              const name = msg.agent_name || msg.sender_name || "A";
+              const first = name.charAt(0).toUpperCase();
+              const { bg, text } = getAvatarColor(first);
+              return `
+                <div class="avatar avatar-placeholder"
+                     style="background:${bg}; color:${text}">
+                  ${first}
+                </div>
+              `;
+            })()
+      )
     }
     <div class="msg-content">
       <div class="meta">${msg.sender_name || (msg.sender_type === "client" ? "Client" : "User")}, ${time}</div>
