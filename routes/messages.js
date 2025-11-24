@@ -80,10 +80,10 @@ console.log("clientPhone (JID):", clientPhone);
    const session = await db.query("SELECT * FROM sessions WHERE id=$1", [req.params.sessionId]);
   if (!session.rows.length) return res.status(404).json({ error: "Session not found" });
     // حفظ في DB
-    /*await db.query(
+    await db.query(
       "INSERT INTO messages (session_id, sender_type, content, content_type, media_url, created_at) VALUES ($1, $2, $3, $4, $5,NOW())",
-      [req.params.sessionId, "agent", content || null, mediaType || "text", mediaUrl || null]
-    );*/
+      [req.params.sessionId, "agent", req.user.id, content || null, mediaType || "text", mediaUrl || null]
+    );
 
     res.json({ success: true });
   } catch (err) {
