@@ -1633,7 +1633,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 }
 
 /*login page*/
-* {
+/** {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -1646,7 +1646,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
+}*/
 
 .login-container {
     text-align: center;
@@ -1740,5 +1740,6 @@ body {
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
