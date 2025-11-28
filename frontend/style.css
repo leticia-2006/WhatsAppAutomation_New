@@ -1633,14 +1633,14 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 }
 
 /*login page*/
-/** {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
 
-body {
+.login-page {
     height: 100vh;
     background: linear-gradient(135deg, #1ab394, #d4f8e8);
     display: flex;
@@ -1648,7 +1648,7 @@ body {
     align-items: center;
 }*/
 
-.login-container {
+.login-page .login-container {
     text-align: center;
     width: 350px;
 }
@@ -1673,7 +1673,7 @@ body {
     width: 100%;
 }
 
-.input-group {
+.login-page .input-group {
     display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.15); /* شفافية مثل الصورة */
@@ -1725,7 +1725,7 @@ body {
     text-decoration: none;
 }
 
-.login-btn {
+.login-page .login-btn {
     width: 100%;
     padding: 12px;
     border-radius: 30px;
@@ -1740,6 +1740,7 @@ body {
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
