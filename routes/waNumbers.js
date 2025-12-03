@@ -21,7 +21,7 @@ router.get("/", requireLogin, async (req, res) => {
     }
 
     if (role === "admin") {
-      const result = await db.query("SELECT * FROM wa_numbers WHERE assigned_agent_id IS NOT NULL ORDER BY id DESC");
+      const result = await db.query("SELECT * FROM wa_numbers WHERE assigned_to IS NOT NULL ORDER BY id DESC");
       return res.json(result.rows);
     }
 
@@ -68,7 +68,7 @@ router.post("/:id/assign", requireLogin, checkRole(["admin", "super_admin"]), as
 
     try {
       await db.query(
-        "UPDATE wa_numbers SET assigned_agent_id=$1 WHERE id=$2",
+        "UPDATE wa_numbers SET assigned_to=$1 WHERE id=$2",
         [agentId, id]
       );
       res.json({ success: true });
@@ -86,7 +86,7 @@ router.post("/:id/transfer", requireLogin, checkRole(["admin", "super_admin"]), 
 
   try {
     await db.query(
-      "UPDATE wa_numbers SET assigned_agent_id=$1 WHERE id=$2",
+      "UPDATE wa_numbers SET assigned_to=$1 WHERE id=$2",
       [agentId, id]
     );
     res.json({ success: true });
