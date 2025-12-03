@@ -26,7 +26,7 @@ router.get("/", requireLogin, async (req, res) => {
     }
 
     if (role === "agent") {
-      const result = await db.query("SELECT id, number, status FROM wa_numbers WHERE assigned_agent_id=$1", [id]);
+      const result = await db.query("SELECT id, number, status FROM wa_numbers WHERE assigned_to=$1", [id]);
       return res.json(result.rows);
     }
 
