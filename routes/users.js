@@ -292,7 +292,7 @@ router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (
 });
 
 // 📌 إرجاع قائمة الوكلاء (agents فقط)
-router.get('/agents', requireLogin, checkRole(['admin','super_admin','supervisor']), async (req, res) => {
+router.get('/agents', requireLogin, async (req, res) => {
   try {
     const result = await db.query(
       "SELECT id, name, avatar_url FROM users WHERE role='agent' ORDER BY id ASC"
@@ -304,5 +304,6 @@ router.get('/agents', requireLogin, checkRole(['admin','super_admin','supervisor
   }
 });
 module.exports = router;
+
 
 
