@@ -1,3 +1,38 @@
+function getAvatarColor(char) {
+  if (!char) return { bg: "#444", text: "#ddd" };
+
+  const c = char.toUpperCase();
+  const colorMap = {
+    A: "#3b82f6", B: "#2563eb", C: "#1d4ed8", // أزرقات
+    D: "#16a34a", E: "#15803d", F: "#22c55e", // خضر
+    G: "#9333ea", H: "#7e22ce", I: "#8b5cf6", // بنفسجيات
+    J: "#c2410c", K: "#ea580c", L: "#f97316", // برتقالي
+    M: "#b91c1c", N: "#dc2626", O: "#ef4444", // أحمر
+    P: "#78350f", Q: "#92400e", R: "#b45309", // بني ذهبي
+    S: "#0f766e", T: "#115e59", U: "#14b8a6", // فيروزي
+    V: "#1e40af", W: "#312e81", X: "#4c1d95", // أزرق بنفسجي
+    Y: "#52525b", Z: "#3f3f46" // رمادي غامق
+  };
+
+  const bg = colorMap[c] || "#475569";
+  const text = lightenColor(bg, 40); // أفتح بنسبة 40%
+  return { bg, text };
+}
+
+function lightenColor(hex, percent) {
+  const num = parseInt(hex.replace("#", ""), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = (num >> 16) + amt;
+  const G = (num >> 8 & 0x00FF) + amt;
+  const B = (num & 0x0000FF) + amt;
+  return "#" + (
+    0x1000000 +
+    (R < 255 ? R : 255) * 0x10000 +
+    (G < 255 ? G : 255) * 0x100 +
+    (B < 255 ? B : 255)
+  ).toString(16).slice(1);
+}
+
 // ====== التأكد من تحميل المستخدم قبل تشغيل الصفحة ======
 async function waitForUser() {
   return new Promise((resolve) => {
@@ -64,9 +99,9 @@ async function loadNumbers() {
 
 // ====== عرض الأرقام في الجدول ======
 function renderNumbers(numbers) {
- const canTransfer = ["super_admin", "admin", "supervisor"].includes(window.userRole);
- const canDelete = window.userRole === "super_admin";
- const canAdd = window.userRole === "super_admin";
+  const canTransfer = ["super_admin", "admin", "supervisor"].includes(window.userRole);
+  const canDelete = window.userRole === "super_admin";
+  const canAdd = window.userRole === "super_admin";
   const grid = document.getElementById("numbersGrid");
   if (!grid) return;
 
@@ -83,7 +118,8 @@ function renderNumbers(numbers) {
     const status = num.status ?? "Unknown";
     const agentId = num.assigned_to ?? "-";
     const clientName = num.client_name ?? `Unknown User`;
-    const avatar = num.client_avatar ?? "/images/default-avatar.png";
+    const avatarUrl = num.client_avatar ?? null;
+
     const statusClass =
       status === "Active"
         ? "status-active"
@@ -91,27 +127,37 @@ function renderNumbers(numbers) {
         ? "status-pending"
         : "status-blocked";
 
+    // إذا لم يكن هناك avatarUrl نستخدم أول حرف ولون
+    let avatarHTML;
+    if (avatarUrl) {
+      avatarHTML = `<img src="${avatarUrl}" alt="avatar" class="number-avatar">`;
+    } else {
+      const firstChar = clientName.charAt(0).toUpperCase();
+      const { bg, text } = getAvatarColor(firstChar); // استخدم نفس الدالة من sessions.js
+      avatarHTML = `<div class="avatar-placeholder number-avatar" style="background:${bg}; color:${text}">${firstChar}</div>`;
+    }
+
     const card = document.createElement("div");
-card.className = "number-card";
-card.innerHTML = `
-  <div class="number-info">
-    <img src="${avatar}" alt="avatar" class="number-avatar">
-    <div class="number-details">
-      <div class="number-name">${clientName}</div>
-      </div>
+    card.className = "number-card";
+    card.innerHTML = `
+      <div class="number-info">
+        ${avatarHTML}
+        <div class="number-details">
+          <div class="number-name">${clientName}</div>
+        </div>
       </div>
 
-  <div class="number-contact">${phoneNumber}</div>
-  <div class="number-agent">${agentId}</div>
-  <div class="number-status ${statusClass}">${status}</div>
+      <div class="number-contact">${phoneNumber}</div>
+      <div class="number-agent">${agentId}</div>
+      <div class="number-status ${statusClass}">${status}</div>
 
-  <div class="number-actions">
-    <button onclick="showQR('${id}')" title="Show QR"><i class="fas fa-qrcode"></i></button>
-    ${canTransfer ? `<button onclick="openTransferModal('${id}')" title="Transfer"><i class="fas fa-exchange-alt"></i></button>` : ""}
-    ${canDelete ? `<button onclick="deleteNumber('${id}')" title="Delete"><i class="fas fa-trash"></i></button>` : ""}
-  </div>
-`;
-grid.appendChild(card);
+      <div class="number-actions">
+        <button onclick="showQR('${id}')" title="Show QR"><i class="fas fa-qrcode"></i></button>
+        ${canTransfer ? `<button onclick="openTransferModal('${id}')" title="Transfer"><i class="fas fa-exchange-alt"></i></button>` : ""}
+        ${canDelete ? `<button onclick="deleteNumber('${id}')" title="Delete"><i class="fas fa-trash"></i></button>` : ""}
+      </div>
+    `;
+    grid.appendChild(card);
   });
 }
 
