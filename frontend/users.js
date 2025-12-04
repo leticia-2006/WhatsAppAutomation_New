@@ -1,3 +1,38 @@
+function getAvatarColor(char) {
+  if (!char) return { bg: "#444", text: "#ddd" };
+
+  const c = char.toUpperCase();
+  const colorMap = {
+    A: "#3b82f6", B: "#2563eb", C: "#1d4ed8", // أزرقات
+    D: "#16a34a", E: "#15803d", F: "#22c55e", // خضر
+    G: "#9333ea", H: "#7e22ce", I: "#8b5cf6", // بنفسجيات
+    J: "#c2410c", K: "#ea580c", L: "#f97316", // برتقالي
+    M: "#b91c1c", N: "#dc2626", O: "#ef4444", // أحمر
+    P: "#78350f", Q: "#92400e", R: "#b45309", // بني ذهبي
+    S: "#0f766e", T: "#115e59", U: "#14b8a6", // فيروزي
+    V: "#1e40af", W: "#312e81", X: "#4c1d95", // أزرق بنفسجي
+    Y: "#52525b", Z: "#3f3f46" // رمادي غامق
+  };
+
+  const bg = colorMap[c] || "#475569";
+  const text = lightenColor(bg, 40); // أفتح بنسبة 40%
+  return { bg, text };
+}
+
+function lightenColor(hex, percent) {
+  const num = parseInt(hex.replace("#", ""), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = (num >> 16) + amt;
+  const G = (num >> 8 & 0x00FF) + amt;
+  const B = (num & 0x0000FF) + amt;
+  return "#" + (
+    0x1000000 +
+    (R < 255 ? R : 255) * 0x10000 +
+    (G < 255 ? G : 255) * 0x100 +
+    (B < 255 ? B : 255)
+  ).toString(16).slice(1);
+}
+
 function initUsersPage() {
   const user = window.currentUser;
 
@@ -38,17 +73,28 @@ async function loadUsers() {
       return;
     }
 
- users.forEach(u => {
+    users.forEach(u => {
       const id = u.id ?? "-";
       const name = u.name ?? "-";
       const phone = u.phone ?? "-";
       const role = u.role ?? "-";
-      const avatar = u.avatar_url ?? "/images/default-avatar.png";
+      const avatarUrl = u.avatar_url ?? null;
+
+      // 🔹 إنشاء avatar بنفس أسلوب sessions
+      let avatarHTML;
+      if (avatarUrl) {
+        avatarHTML = `<img src="${avatarUrl}" alt="avatar" class="number-avatar">`;
+      } else {
+        const firstChar = name.charAt(0).toUpperCase();
+        const { bg, text } = getAvatarColor(firstChar); // استخدم نفس الدالة من sessions.js
+        avatarHTML = `<div class="avatar-placeholder number-avatar" style="background:${bg}; color:${text}">${firstChar}</div>`;
+      }
+
       const card = document.createElement("div");
       card.className = "number-card";
       card.innerHTML = `
         <div class="number-info">
-          <img src="${avatar}" alt="avatar" class="number-avatar">
+          ${avatarHTML}
           <div class="number-details">
             <div class="number-name">${name}</div>
             <div class="number-role text-muted">${role}</div>
@@ -56,7 +102,6 @@ async function loadUsers() {
         </div>
 
         <div class="number-contact">${phone}</div>
-
         <div class="number-agent">${id}</div>
 
         <div class="number-status ${
