@@ -121,7 +121,7 @@ async function openTransferModal(id) {
 
   try {
     // جلب قائمة الوكلاء
-    const res = await axios.get("/users/agents");
+    const res = await axios.get("/users?role=agent");
     const agents = res.data;
 
     const select = document.getElementById("agentSelect");
