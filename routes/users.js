@@ -126,12 +126,26 @@ router.post('/add-admin', requireLogin, checkRole(['super_admin']), async (req, 
 // عرض جميع المستخدمين
 router.get('/', requireLogin, checkRole(['super_admin']), async (req, res) => {
   try {
-    const result = await db.query("SELECT id, name, phone, role FROM users ORDER BY id ASC");
+    const { role } = req.query; // الحصول على role من query
+
+    let query = "SELECT id, name, role, avatar_url FROM users";
+    let params = [];
+
+    if (role) {
+      query += " WHERE role = $1";
+      params.push(role);
+    }
+
+    query += " ORDER BY id ASC";
+
+    const result = await db.query(query, params);
     res.json(result.rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 });
+  
 
 
 // تعديل مستخدم
@@ -291,19 +305,9 @@ router.put('/permissions/:id', requireLogin, checkRole(['super_admin']), async (
   }
 });
 
-// 📌 إرجاع قائمة الوكلاء (agents فقط)
-router.get('/agents', requireLogin, async (req, res) => {
-  try {
-    const result = await db.query(
-      "SELECT id, name, avatar_url FROM users WHERE role='agent' ORDER BY id ASC"
-    );
-    res.json(result.rows);
-  } catch (err) {
-    console.error("❌ Error fetching agents:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+
 module.exports = router;
+
 
 
 
