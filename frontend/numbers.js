@@ -121,7 +121,7 @@ async function openTransferModal(id) {
 
   try {
     // جلب قائمة الوكلاء
-    const res = await axios.get("/users?role=agent");
+    const res = await axios.get("/users/agents");
     const agents = res.data;
 
     const select = document.getElementById("agentSelect");
@@ -129,7 +129,7 @@ async function openTransferModal(id) {
     agents.forEach(agent => {
       const option = document.createElement("option");
       option.value = agent.id;
-      option.textContent = agent.username;
+      option.textContent = agent.name;
       select.appendChild(option);
     });
 
