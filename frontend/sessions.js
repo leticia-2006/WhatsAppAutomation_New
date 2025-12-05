@@ -906,15 +906,35 @@ async function loadNotes(clientId) {
 }
 // ✅ حفظ الملاحظة الجديدة وإضافتها للقائمة مباشرة
 async function saveNoteDirect() {
-  const textarea = document.getElementById("detail-notes");
-  if (!textarea) return;
-
-  const clientId = textarea.dataset.clientId;
-  const noteText = textarea.value.trim();
-  if (!noteText) return; // لا ترسل ملاحظة فارغة
-
   try {
-    const res = await axios.post(`/clients/${clientId}/notes`, { note: noteText }, { withCredentials: true });
+    const textarea = document.getElementById("detail-notes");
+    if (!textarea) {
+      console.warn("❌ textarea not found");
+      return;
+    }
+
+    const clientId = textarea.dataset.clientId;
+    const noteText = textarea.value.trim();
+
+    console.log("📝 Attempting to save note:", { clientId, noteText });
+
+    if (!clientId) {
+      console.warn("❌ clientId is undefined");
+      return;
+    }
+
+    if (!noteText) {
+      console.warn("❌ Note text is empty");
+      return;
+    }
+
+    const res = await axios.post(
+      `/clients/${clientId}/notes`,
+      { note: noteText },
+      { withCredentials: true }
+    );
+
+    console.log("✅ Response from server:", res.data);
 
     // إنشاء عنصر جديد وإضافته للأعلى
     const newNote = document.createElement("div");
@@ -924,17 +944,19 @@ async function saveNoteDirect() {
       <div class="note-text">${noteText}</div>
     `;
     const listContainer = document.getElementById("notes-list");
+    if (!listContainer) {
+      console.warn("❌ notes-list container not found");
+      return;
+    }
     listContainer.prepend(newNote);
 
     // مسح مربع الإدخال
     textarea.value = "";
 
   } catch (err) {
-    console.error("Error saving note:", err);
-    alert("❌ Failed to save note.");
+    console.error("❌ Error saving note:", err);
   }
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const textarea = document.getElementById("detail-notes");
