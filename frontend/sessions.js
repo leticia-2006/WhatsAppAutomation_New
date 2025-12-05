@@ -224,80 +224,80 @@ function renderSessions(list = [], filterType = "all") {
     if (filterType === "unread" && session.status !== "unread") return;
     if (filterType === "unreplied" && session.status !== "unreplied") return;
     if (filterType === "group" && !session.group_id) return;
-    
-    if (session.avatar_url === "" || session.avatar_url === undefined) {
-  session.avatar_url = null;
-}
-    // إنشاء العنصر
+
+    // ضبط avatar_url الفارغ
+    if (!session.avatar_url) {
+      session.avatar_url = null;
+    }
+
+    // إنشاء الكارت
     const card = document.createElement("div");
     card.className = `client-card ${session.status === "unread" ? "unread" : ""}`;
 
-    // المحتوى النصي
-    const info = document.createElement("div");
-    info.className = "client-info";
-   card.innerHTML = `
-  <div class="list-avatar-wrapper">
-    ${
-      session.avatar_url
-        ? `<img src="${session.avatar_url}" class="list-client-avatar" alt="avatar">`
-        : session.name
-        ? (() => {
-            const { bg, text } = getAvatarColor(session.name.charAt(0));
-            return `<div class="avatar-placeholder" style="--avatar-bg:${bg}; --avatar-text:${text}; background:${bg}; color:${text};">
-                      ${session.name.charAt(0).toUpperCase()}
+    // ===== حساب Avatar قبل innerHTML =====
+    let avatarHTML = "";
+    if (session.avatar_url) {
+      avatarHTML = `<img src="${session.avatar_url}" class="list-client-avatar" alt="avatar">`;
+    } else if (session.name) {
+      const first = session.name.charAt(0).toUpperCase();
+      const { bg, text } = getAvatarColor(first);
+      avatarHTML = `<div class="avatar-placeholder" style="background:${bg}; color:${text};">
+                      ${first}
                     </div>`;
-          })()
-        : `<img src="/default-avatar.png" class="list-client-avatar" alt="avatar">`
+    } else {
+      avatarHTML = `<img src="/default-avatar.png" class="list-client-avatar" alt="avatar">`;
     }
-    <span class="list-status-dot ${session.is_online ? "online" : "offline"}"></span>
-  </div>
 
-  <div class="client-info">
-    <div class="client-top">
-      <div class="client-name">${session.name || session.client_name || session.phone}</div>
-      <div class="client-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
-    </div>
-    <div class="client-status ${session.is_online ? "online" : "offline"}"></div>
-    <div class="client-labels">
-      ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
-    </div>
-  </div>
+    // ===== بناء HTML للكارت =====
+    card.innerHTML = `
+      <div class="list-avatar-wrapper">
+        ${avatarHTML}
+        <span class="list-status-dot ${session.is_online ? "online" : "offline"}"></span>
+      </div>
 
-  <div class="client-tags">
-    ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
-    ${(
-      Array.isArray(session.tags)
-        ? session.tags
-        : typeof session.tags === "string" && session.tags.trim() !== ""
-        ? session.tags.split(",").map(t => t.trim())
-        : []
-    )
-      .map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`)
-      .join("")}
-  </div>
+      <div class="client-info">
+        <div class="client-top">
+          <div class="client-name">${session.name || session.client_name || session.phone}</div>
+          <div class="client-message">${session.last_message ? session.last_message.slice(0, 30) + "…" : "No messages yet"}</div>
+        </div>
+        <div class="client-status ${session.is_online ? "online" : "offline"}"></div>
+        <div class="client-labels">
+          ${(session.labels || []).map(l => `<span class="label">${l}</span>`).join("")}
+        </div>
+      </div>
 
-  <small class="client-time">${timeAgoEN(session.updated_at || session.last_active)}</small>
-`;
-    
-  // حدث النقر لفتح الدردشة
+      <div class="client-tags">
+        ${session.is_repeat ? '<span class="tag">Repeat</span>' : ""}
+        ${
+          Array.isArray(session.tags)
+            ? session.tags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("")
+            : typeof session.tags === "string" && session.tags.trim() !== ""
+              ? session.tags.split(",").map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join("")
+              : ""
+        }
+      </div>
+
+      <small class="client-time">${timeAgoEN(session.updated_at || session.last_active)}</small>
+    `;
+
+    // أحداث النقر
     card.onclick = () => {
       openChat(session);
       selectClient(session);
     };
 
-  // حدث النقر باليمين
     card.oncontextmenu = (e) => {
       e.preventDefault();
       showContextMenu(e, session);
     };
 
     container.appendChild(card);
+  });
 
+  // تحديث عدد العملاء
   const counter = document.getElementById("session-count");
-  if (counter)
-    counter.innerText = `${list.length} clients (${filterType})`;
-});
-};
+  if (counter) counter.innerText = `${list.length} clients (${filterType})`;
+}
  function timeAgoEN(dateString) {
   const date = new Date(dateString);
   const seconds = Math.floor((new Date() - date) / 1000);
