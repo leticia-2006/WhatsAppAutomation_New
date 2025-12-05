@@ -938,13 +938,16 @@ async function saveNoteDirect() {
 document.addEventListener("DOMContentLoaded", () => {
   const textarea = document.getElementById("detail-notes");
   if (textarea) {
-    textarea.addEventListener("blur", saveNoteDirect);
+    //textarea.addEventListener("blur", saveNoteDirect);
   }
 
   const saveBtn = document.getElementById("save-notes");
-  if (saveBtn) {
-    saveBtn.addEventListener("click", saveNoteDirect);
-  }
+if (saveBtn) {
+  saveBtn.addEventListener("click", (e) => {
+    e.preventDefault(); // منع أي إعادة تحميل للصفحة
+    saveNoteDirect();
+  });
+}
 const blockBtn = document.getElementById("block-client");
 if (blockBtn) blockBtn.onclick = () => blockCustomer(selectedClientId);
 });
