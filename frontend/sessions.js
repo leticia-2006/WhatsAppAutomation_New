@@ -964,13 +964,18 @@ document.addEventListener("DOMContentLoaded", () => {
     //textarea.addEventListener("blur", saveNoteDirect);
   }
 
+  document.addEventListener("DOMContentLoaded", () => {
   const saveBtn = document.getElementById("save-notes");
-if (saveBtn) {
-  saveBtn.addEventListener("click", (e) => {
-    e.preventDefault(); // منع أي إعادة تحميل للصفحة
-    saveNoteDirect();
-  });
-}
+  if (saveBtn) {
+    console.log("Save note button found, attaching click handler");
+    saveBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      saveNoteDirect();
+    });
+  } else {
+    console.warn("❌ Save note button not found");
+  }
+});
 const blockBtn = document.getElementById("block-client");
 if (blockBtn) blockBtn.onclick = () => blockCustomer(selectedClientId);
 });
