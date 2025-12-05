@@ -546,89 +546,6 @@ window.translateMessage = async function(messageId) {
   }
 };
 
-// ====== ملاحظات ======
-async function loadNotes(clientId) {
-  try {
-    const res = await axios.get(`/clients/${clientId}/notes`, { withCredentials: true });
-    const notes = Array.isArray(res.data) ? res.data : res.data.notes || [];
-
-    const listContainer = document.getElementById("notes-list");
-    const textarea = document.getElementById("detail-notes");
-
-    if (!listContainer || !textarea) return;
-
-    // تنظيف القديم
-    listContainer.innerHTML = "";
-
-    if (notes.length === 0) {
-      listContainer.innerHTML = `<div class="note-item">No notes yet...</div>`;
-    } else {
-      notes.forEach(n => {
-        const noteEl = document.createElement("div");
-        noteEl.className = "note-item";
-        noteEl.innerHTML = `
-          <div class="note-time">🕓 ${new Date(n.created_at).toLocaleString()}</div>
-          <div class="note-text">${n.note}</div>
-        `;
-        listContainer.prepend(noteEl);
-      });
-    }
-
-    textarea.value = ""; // فقط لكتابة ملاحظة جديدة
-    textarea.dataset.clientId = clientId;
-
-  } catch (err) {
-    console.error("Error loading notes:", err);
-  }
-}
-
-// ✅ حفظ الملاحظة الجديدة وإضافتها للقائمة مباشرة
-async function saveNoteDirect() {
-  const textarea = document.getElementById("detail-notes");
-  if (!textarea) return;
-
-  const clientId = textarea.dataset.clientId;
-  const noteText = textarea.value.trim();
-  if (!noteText) return; // لا ترسل ملاحظة فارغة
-
-  try {
-    const res = await axios.post(`/clients/${clientId}/notes`, { note: noteText }, { withCredentials: true });
-
-    // إنشاء عنصر جديد وإضافته للأعلى
-    const newNote = document.createElement("div");
-    newNote.className = "note-item";
-    newNote.innerHTML = `
-      <div class="note-time">🕓 ${new Date().toLocaleString()}</div>
-      <div class="note-text">${noteText}</div>
-    `;
-    const listContainer = document.getElementById("notes-list");
-    listContainer.prepend(newNote);
-
-    // مسح مربع الإدخال
-    textarea.value = "";
-
-  } catch (err) {
-    console.error("Error saving note:", err);
-    alert("❌ Failed to save note.");
-  }
-}
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  const textarea = document.getElementById("detail-notes");
-  if (textarea) {
-    textarea.addEventListener("blur", saveNoteDirect);
-  }
-
-  const saveBtn = document.getElementById("save-notes");
-  if (saveBtn) {
-    saveBtn.addEventListener("click", saveNoteDirect);
-  }
-const blockBtn = document.getElementById("block-client");
-if (blockBtn) blockBtn.onclick = () => blockCustomer(selectedClientId);
-});
-
-
 let selectedSession = null;
 let selectedSessionId = null;
 let selectedClientId = null;
@@ -950,6 +867,87 @@ if (editBtn && saveBtn && nameInput) {
   };
 }
 }  
+
+// ====== ملاحظات ======
+async function loadNotes(clientId) {
+  try {
+    const res = await axios.get(`/clients/${clientId}/notes`, { withCredentials: true });
+    const notes = Array.isArray(res.data) ? res.data : res.data.notes || [];
+
+    const listContainer = document.getElementById("notes-list");
+    const textarea = document.getElementById("detail-notes");
+
+    if (!listContainer || !textarea) return;
+
+    // تنظيف القديم
+    listContainer.innerHTML = "";
+
+    if (notes.length === 0) {
+      listContainer.innerHTML = `<div class="note-item">No notes yet...</div>`;
+    } else {
+      notes.forEach(n => {
+        const noteEl = document.createElement("div");
+        noteEl.className = "note-item";
+        noteEl.innerHTML = `
+          <div class="note-time">🕓 ${new Date(n.created_at).toLocaleString()}</div>
+          <div class="note-text">${n.note}</div>
+        `;
+        listContainer.prepend(noteEl);
+      });
+    }
+
+    textarea.value = ""; // فقط لكتابة ملاحظة جديدة
+    textarea.dataset.clientId = clientId;
+
+  } catch (err) {
+    console.error("Error loading notes:", err);
+  }
+}
+// ✅ حفظ الملاحظة الجديدة وإضافتها للقائمة مباشرة
+async function saveNoteDirect() {
+  const textarea = document.getElementById("detail-notes");
+  if (!textarea) return;
+
+  const clientId = textarea.dataset.clientId;
+  const noteText = textarea.value.trim();
+  if (!noteText) return; // لا ترسل ملاحظة فارغة
+
+  try {
+    const res = await axios.post(`/clients/${clientId}/notes`, { note: noteText }, { withCredentials: true });
+
+    // إنشاء عنصر جديد وإضافته للأعلى
+    const newNote = document.createElement("div");
+    newNote.className = "note-item";
+    newNote.innerHTML = `
+      <div class="note-time">🕓 ${new Date().toLocaleString()}</div>
+      <div class="note-text">${noteText}</div>
+    `;
+    const listContainer = document.getElementById("notes-list");
+    listContainer.prepend(newNote);
+
+    // مسح مربع الإدخال
+    textarea.value = "";
+
+  } catch (err) {
+    console.error("Error saving note:", err);
+    alert("❌ Failed to save note.");
+  }
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const textarea = document.getElementById("detail-notes");
+  if (textarea) {
+    textarea.addEventListener("blur", saveNoteDirect);
+  }
+
+  const saveBtn = document.getElementById("save-notes");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", saveNoteDirect);
+  }
+const blockBtn = document.getElementById("block-client");
+if (blockBtn) blockBtn.onclick = () => blockCustomer(selectedClientId);
+});
 
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
