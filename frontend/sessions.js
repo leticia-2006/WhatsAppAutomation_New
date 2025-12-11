@@ -919,8 +919,7 @@ async function saveNoteDirect() {
     const clientId = textarea.dataset.clientId;
     const noteText = textarea.value.trim();
 
-    console.log("📝 Attempting to save note:", { clientId, noteText });
-
+    console.log("DEBUG: clientId =", clientId, "noteText =", noteText);
     if (!clientId) {
       console.warn("❌ clientId is undefined");
       return;
@@ -937,7 +936,7 @@ async function saveNoteDirect() {
       { withCredentials: true }
     );
 
-    console.log("✅ Response from server:", res.data);
+    console.log("Server response:", res.data);
 
     // إنشاء عنصر جديد وإضافته للأعلى
     const newNote = document.createElement("div");
