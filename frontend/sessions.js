@@ -828,6 +828,9 @@ async function uploadAvatarToServer(session, file) {
   console.log("✅ Rendered uniqueTags:", uniqueTags);
   loadMessages(session.id);
   loadNotes(session.client_id);
+  // ضع هذا
+const trueClientId = session.client_id || session.id;
+loadNotes(trueClientId);
 // === تعديل اسم العميل ===
 const editBtn = document.getElementById("editClientNameBtn");
 const saveBtn = document.getElementById("saveClientNameBtn");
