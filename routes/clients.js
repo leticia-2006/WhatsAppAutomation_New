@@ -221,7 +221,24 @@ router.delete("/:client_id", requireLogin, checkRole(["super_admin"]), async (re
     res.status(500).json({ error: "Server error" });
   }
 });
+// ✅ Block / Unblock customer
+router.post("/:client_id/block", requireLogin, async (req, res) => {
+  try {
+    const { client_id } = req.params;
 
+    const result = await db.query(
+      "UPDATE clients SET is_blacklisted = true, updated_at = NOW() WHERE id = $1 RETURNING id, is_blacklisted",
+      [client_id]
+    );
+
+    if (result.rowCount === 0) return res.status(404).json({ error: "Client not found" });
+
+    res.json({ success: true, message: "Customer blocked", data: result.rows[0] });
+  } catch (err) {
+    console.error("Error blocking customer:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 // ✅ Toggle Blacklist (حظر أو إلغاء الحظر)
 router.patch("/:client_id/blacklist", requireLogin, async (req, res) => {
   try {
@@ -353,19 +370,3 @@ router.get("/tags/suggestions", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
