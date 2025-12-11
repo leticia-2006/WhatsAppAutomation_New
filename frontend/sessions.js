@@ -583,6 +583,10 @@ function showContextMenu(e, session) {
   menu.style.display = "block";
   
 document.getElementById("pinUnpinOption").onclick = togglePinSession;
+const pinLi = document.getElementById("pinUnpinOption");
+  if (pinLi) {
+    pinLi.onclick = togglePinSession;
+  }
 }
 
 
