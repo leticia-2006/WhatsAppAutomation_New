@@ -887,7 +887,7 @@ async function loadNotes(clientId) {
     listContainer.innerHTML = "";
 
     if (notes.length === 0) {
-      listContainer.innerHTML = `<div class="note-item">No notes yet...</div>`;
+      listContainer.innerHTML = `<div class="note-item no-notes">No notes yet...</div>`;
     } else {
       notes.forEach(n => {
         const noteEl = document.createElement("div");
@@ -951,6 +951,8 @@ async function saveNoteDirect() {
       console.warn("❌ notes-list container not found");
       return;
     }
+    const emptyMsg = listContainer.querySelector(".no-notes");
+    if (emptyMsg) emptyMsg.remove();
     listContainer.prepend(newNote);
 
     // مسح مربع الإدخال
