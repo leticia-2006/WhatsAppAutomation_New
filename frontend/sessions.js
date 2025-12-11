@@ -960,7 +960,13 @@ async function saveNoteDirect() {
     console.error("❌ Error saving note:", err);
   }
 }
-
+document.addEventListener("click", (e) => {
+  if (e.target && e.target.id === "save-notes") {
+    console.log("Global handler: save-notes clicked");
+    e.preventDefault();
+    saveNoteDirect();
+  }
+});
 document.addEventListener("DOMContentLoaded", () => {
   const textarea = document.getElementById("detail-notes");
   const saveBtn = document.getElementById("save-notes");
