@@ -715,6 +715,27 @@ window.addEventListener("load", () => {
     if (toggle) toggle.checked = true;
   }
 });
+function bindClientActionButtons(session) {
+  const blockBtn = document.getElementById("block-client");
+  const transferBtn = document.getElementById("transfer-client");
+  const refreshBtn = document.getElementById("refresh-avatar");
+
+  if (blockBtn) blockBtn.onclick = () => {
+    selectedClientId = session.client_id;
+    blockCustomer();
+  };
+
+  if (transferBtn) transferBtn.onclick = () => {
+    selectedClientId = session.client_id;
+    selectedSessionId = session.id;
+    transferSession();
+  };
+
+  if (refreshBtn) refreshBtn.onclick = () => {
+    selectedClientId = session.client_id;
+    refreshAvatar();
+  };
+}
 function selectClient(session) {      
   console.log("🔹 selectClient called for:", session.name);      
 
@@ -851,6 +872,7 @@ async function uploadAvatarToServer(session, file) {
   console.log("✅ Rendered uniqueTags:", uniqueTags);
   loadMessages(session.id);
   loadNotes(session.client_id);
+  bindClientActionButtons(session);
   // ضع هذا
 const trueClientId = session.client_id || session.id;
 loadNotes(trueClientId);
