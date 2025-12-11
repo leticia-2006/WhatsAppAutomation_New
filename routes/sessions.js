@@ -252,7 +252,22 @@ router.post("/:id/unpin", requireLogin, async (req, res) => {
   await db.query("UPDATE sessions SET pinned=false WHERE id=$1", [req.params.id]);
   res.json({ success: true });
 });
+router.patch("/:id/toggle-pin", requireLogin, async (req, res) => {
+  try {
+    // جلب الحالة الحالية
+    const current = await db.query("SELECT pinned FROM sessions WHERE id=$1", [req.params.id]);
+    if (current.rows.length === 0) return res.status(404).json({ error: "Session not found" });
 
+    const newPinned = !current.rows[0].pinned; // عكس الحالة الحالية
+
+    await db.query("UPDATE sessions SET pinned=$1, updated_at=NOW() WHERE id=$2", [newPinned, req.params.id]);
+
+    res.json({ success: true, pinned: newPinned });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 router.patch('/:id/mark', requireLogin, async (req, res) => {
   const { id } = req.params;
   const { type, value } = req.body; // value = true | false
@@ -352,4 +367,5 @@ router.post("/mark-read/:sessionId", async (req, res) => {
   }
 });
 module.exports = router;
+
 
