@@ -586,7 +586,13 @@ function showContextMenu(e, session) {
 document.addEventListener("click", () => {
   document.getElementById("contextMenu").style.display = "none";
 });
+function hideContextMenu() {
+  const menu = document.getElementById("contextMenu");
+  if (menu) menu.style.display = "none";
 
+  // إزالة تحديد الجلسة
+  document.querySelectorAll("#sessions-body li").forEach(li => li.classList.remove("context-selected"));
+}
 // أمثلة على العمليات
 function setupGroups() {
   alert("Setup groups for: " + selectedSession?.name);
@@ -596,9 +602,6 @@ function deleteTag() {
 }
 function blockMessaging() {
   alert("Blocked messaging for: " + selectedSession?.name);
-}
-function unpinSession() {
-  alert("Unpinned: " + selectedSession?.name);
 }
 function doNotDisturb() {
   alert("DND mode enabled for: " + selectedSession?.name);
@@ -666,9 +669,34 @@ async function refreshAvatar() {
 }
 // Pin/Unpin
 async function pinSession() {
-  await axios.post(`/sessions/${selectedSessionId}/pin`);
-  alert("📌 Session pinned/unpinned!");
-  hideContextMenu();
+  if (!selectedSessionId) {
+    alert("No session selected!");
+    return;
+  }
+
+  try {
+    await axios.post(`/sessions/${selectedSessionId}/pin`);
+    alert("📌 Session pinned!");
+    hideContextMenu();
+  } catch (err) {
+    console.error("Error pinning session:", err);
+    alert("Failed to pin session");
+  }
+}
+async function unpinSession() {
+  if (!selectedSessionId) {
+    alert("No session selected!");
+    return;
+  }
+
+  try {
+    await axios.post(`/sessions/${selectedSessionId}/unpin`);
+    alert("📌 Session unpinned!");
+    hideContextMenu();
+  } catch (err) {
+    console.error("Error unpinning session:", err);
+    alert("Failed to unpin session");
+  }
 }
 // Mark Unread
 async function markUnread() {
