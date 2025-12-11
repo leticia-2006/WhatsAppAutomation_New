@@ -581,7 +581,11 @@ function showContextMenu(e, session) {
   menu.style.left = x + "px";
   menu.style.top = y + "px";
   menu.style.display = "block";
+  
+document.getElementById("pinUnpinOption").onclick = togglePinSession;
 }
+
+
 // إخفاء القائمة عند أي كليك
 document.addEventListener("click", () => {
   document.getElementById("contextMenu").style.display = "none";
@@ -668,36 +672,23 @@ async function refreshAvatar() {
   hideContextMenu();
 }
 // Pin/Unpin
-async function pinSession() {
+async function togglePinSession() {
   if (!selectedSessionId) {
     alert("No session selected!");
     return;
   }
 
   try {
-    await axios.post(`/sessions/${selectedSessionId}/pin`);
-    alert("📌 Session pinned!");
+    const res = await axios.patch(`/sessions/${selectedSessionId}/toggle-pin`);
+    const pinned = res.data.pinned;
+    alert(pinned ? "📌 Session pinned!" : "📌 Session unpinned!");
     hideContextMenu();
   } catch (err) {
-    console.error("Error pinning session:", err);
-    alert("Failed to pin session");
+    console.error("Error toggling pin:", err);
+    alert("Failed to toggle pin");
   }
 }
-async function unpinSession() {
-  if (!selectedSessionId) {
-    alert("No session selected!");
-    return;
-  }
 
-  try {
-    await axios.post(`/sessions/${selectedSessionId}/unpin`);
-    alert("📌 Session unpinned!");
-    hideContextMenu();
-  } catch (err) {
-    console.error("Error unpinning session:", err);
-    alert("Failed to unpin session");
-  }
-}
 // Mark Unread
 async function markUnread() {
   await axios.post(`/sessions/${selectedSessionId}/unread`);
