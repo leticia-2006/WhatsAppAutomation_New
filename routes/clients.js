@@ -155,7 +155,25 @@ router.post("/:client_id/notes", requireLogin, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// ✅ جلب ملاحظات العميل
+router.get("/:client_id/notes", requireLogin, async (req, res) => {
+  try {
+    const { client_id } = req.params;
 
+    const notes = await db.query(
+      `SELECT * FROM notes 
+       WHERE client_id = $1 
+       ORDER BY created_at DESC`,
+      [client_id]
+    );
+
+    res.json(notes.rows);
+
+  } catch (err) {
+    console.error("Error loading notes:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 // ✅ تحديث بيانات العميل (فقط Admin أو SuperAdmin)
 router.put("/:client_id", requireLogin, checkRole(["admin", "super_admin"]), async (req, res) => {
   try {
@@ -335,6 +353,7 @@ router.get("/tags/suggestions", requireLogin, async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
