@@ -963,12 +963,9 @@ async function saveNoteDirect() {
 
 document.addEventListener("DOMContentLoaded", () => {
   const textarea = document.getElementById("detail-notes");
-  if (textarea) {
-    //textarea.addEventListener("blur", saveNoteDirect);
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
   const saveBtn = document.getElementById("save-notes");
+  const blockBtn = document.getElementById("block-client");
+
   if (saveBtn) {
     console.log("Save note button found, attaching click handler");
     saveBtn.addEventListener("click", (e) => {
@@ -978,11 +975,10 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     console.warn("❌ Save note button not found");
   }
-});
-const blockBtn = document.getElementById("block-client");
-if (blockBtn) blockBtn.onclick = () => blockCustomer(selectedClientId);
-});
 
+  if (blockBtn) { blockBtn.onclick = () => blockCustomer(selectedClientId);
+}
+});
 function initChatButtons() {
   const fileBtn = document.getElementById("file-btn");
   const emojiBtn = document.getElementById("emoji-btn");
