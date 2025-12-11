@@ -909,6 +909,7 @@ async function loadNotes(clientId) {
 }
 // ✅ حفظ الملاحظة الجديدة وإضافتها للقائمة مباشرة
 async function saveNoteDirect() {
+ console.log("saveNoteDirect called");  // ✅
   try {
     const textarea = document.getElementById("detail-notes");
     if (!textarea) {
