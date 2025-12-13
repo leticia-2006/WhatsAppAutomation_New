@@ -4,202 +4,151 @@ const db = require('../db');
 const { getQRForNumber } = require('../waClient'); // استدعاء العميل الذي أنشأناه
 const { requireLogin } = require("../middleware/auth");
 
-
-router.get("/all", requireLogin, async (req, res) => {
- const { role, id, permissions} = req.session.user;
- try {
-    let result;
-     if (role === "super_admin") {
-       result = await db.query(`
-      SELECT 
-  s.*, 
-  c.name, c.phone, c.avatar_url, c.is_online,
-  (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-  (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
-  (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
-  (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
-  s.status, s.created_at, s.updated_at,
+const BASE_SESSIONS_SELECT = `
+SELECT 
+  s.*,
+  c.name,
+  c.phone,
+  c.avatar_url,
+  c.is_online,
+  c.tags,
+  (SELECT content FROM messages m 
+     WHERE m.session_id = s.id 
+     ORDER BY created_at DESC 
+     LIMIT 1) AS last_message,
+  (SELECT created_at FROM messages m 
+     WHERE m.session_id = s.id 
+     ORDER BY created_at DESC 
+     LIMIT 1) AS last_message_time,
+  (SELECT COUNT(*) FROM notes n 
+     WHERE n.client_id = c.id) AS notes_count,
+  (SELECT COUNT(*) FROM sessions s2 
+     WHERE s2.client_id = c.id) > 1 AS is_repeat,
   u.name AS agent_name,
-  u.avatar_url AS agent_avatar,
-  c.is_blacklisted,
-  c.is_invalid,
-  c.tags
+  u.avatar_url AS agent_avatar
 FROM sessions s
 JOIN clients c ON c.id = s.client_id
-LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
-LEFT JOIN users u ON u.id = s.assigned_agent_id 
-WHERE c.is_blacklisted = false AND c.is_invalid = false
-ORDER BY s.pinned DESC, s.updated_at DESC;
-`);
- } else if(role === "supervisor") {
-   if (permissions.can_manage_numbers)
-   { result = await db.query(`
-      SELECT 
-  s.*, 
-  c.name, c.phone, c.avatar_url, c.is_online,
-  (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-  (SELECT created_at FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message_time,
-  (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
-  (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
-  s.status, s.created_at, s.updated_at,
-  u.name AS agent_name,
-  u.avatar_url AS agent_avatar,
-  c.is_blacklisted,
-  c.is_invalid,
-  c.tags
-FROM sessions s
-JOIN clients c ON c.id = s.client_id
-LEFT JOIN wa_numbers wn ON wn.id = s.wa_number_id
-LEFT JOIN users u ON u.id = s.assigned_agent_id 
-ORDER BY s.pinned DESC, s.updated_at DESC;
-    `);
-   } else { 
-     result = await db.query(`
-      SELECT s.*, c.name, c.phone,
-             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-             s.status, s.created_at, s.updated_at,
-             c.is_blacklisted, c.is_invalid, c.tags
-      FROM sessions s
-      JOIN clients c ON c.id = s.client_id
-      WHERE s.supervisor_id = $1
-      ORDER BY s.updated_at DESC
-    `, [id]);}
- } else if (role === "admin") {
-   result = await db.query(`
-      SELECT s.*, c.name, c.phone, c.avatar_url, c.is_online,
-             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-             (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
-             (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
-             s.status, s.created_at, s.updated_at,
-             c.is_blacklisted, c.is_invalid, c.tags
-      FROM sessions s
-      JOIN clients c ON c.id = s.client_id
-      WHERE s.admin_id = $1
-      ORDER BY s.pinned DESC, s.updated_at DESC;
-    `, [id]);
- } else if (role === "agent") {
-   result = await db.query(`
-      SELECT s.*,  c.name, c.phone, c.avatar_url, c.is_online,
-             u.name AS agent_name, u.avatar_url AS agent_avatar,
-             (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-             (SELECT COUNT(*) FROM notes n WHERE n.client_id = c.id) AS notes_count,
-             (SELECT COUNT(*) FROM sessions s2 WHERE s2.client_id = c.id) > 1 AS is_repeat,
-             s.status, s.created_at, s.updated_at,
-             c.is_blacklisted, c.is_invalid, c.tags
-      FROM sessions s
-      JOIN clients c ON c.id = s.client_id
-      JOIN wa_numbers wn ON wn.id = s.wa_number_id
-      LEFT JOIN users u ON u.id = s.assigned_agent_id 
-      WHERE s.assigned_agent_id = $1
-      ORDER BY s.pinned DESC, s.updated_at DESC;
-    `, [id]);
- } else {
-  return res.status(403).json({ error: "Not allowed" });
- }
- // 🧹 تنظيف الـ jid قبل الإرسال للواجهة
-const cleanedRows = result.rows.map(row => {
-  if (row.jid) {
-    row.phone = row.jid.replace(/@s\.whatsapp\.net$/, ""); // نحذف @s.whatsapp.net
+LEFT JOIN users u ON u.id = s.assigned_agent_id
+`;
+function applyRoleFilter({ role, id }, where = [], params = []) {
+  if (role === "agent") {
+    where.push(`s.assigned_agent_id = $${params.length + 1}`);
+    params.push(id);
   }
-  return row;
-});
-res.json(cleanedRows);
+
+  if (role === "admin") {
+    where.push(`s.admin_id = $${params.length + 1}`);
+    params.push(id);
+  }
+
+  if (role === "supervisor") {
+    where.push(`s.supervisor_id = $${params.length + 1}`);
+    params.push(id);
+  }
+
+  if (role === "super_admin") {
+    // لا فلترة
+  }
+
+  return { where, params };
+}
+function cleanSessions(rows) {
+  return rows.map(r => {
+    if (r.jid) {
+      r.phone = r.jid.replace(/@s\.whatsapp\.net$/, "");
+    }
+    return r;
+  });
+}
+router.get("/all", requireLogin, async (req, res) => {
+  try {
+    const user = req.session.user;
+
+    let where = [];
+    let params = [];
+
+    ({ where, params } = applyRoleFilter(user, where, params));
+
+    let query = BASE_SESSIONS_SELECT;
+    if (where.length) query += " WHERE " + where.join(" AND ");
+    query += " ORDER BY s.pinned DESC, s.updated_at DESC";
+
+    const result = await db.query(query, params);
+    res.json(cleanSessions(result.rows));
   } catch (err) {
-    console.error("Error fetching all sessions:", err);
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
 
 // --- 3️⃣ جلسات حسب المجموعة ---
-router.get('/group/:group_id', requireLogin, async (req, res) => {
+router.get("/group/:group_id", requireLogin, async (req, res) => {
   try {
-    const groupId = req.params.group_id;
+    const user = req.session.user;
+    const { group_id } = req.params;
 
-    let query = `
-      SELECT 
-        s.*, 
-        c.name,
-        c.phone,
-        c.avatar_url,
-        c.is_online,
-        c.tags,
-        (SELECT content FROM messages m 
-         WHERE m.session_id = s.id 
-         ORDER BY created_at DESC 
-         LIMIT 1) AS last_message,
-        (SELECT COUNT(*) FROM sessions s2 
-         WHERE s2.client_id = c.id) > 1 AS is_repeat
-      FROM sessions s
-      JOIN clients c ON c.id = s.client_id
-    `;
+    let where = [];
+    let params = [];
 
-    const params = [];
-
-    if (groupId !== "all") {
-      query += ` WHERE s.group_id = $1`;
-      params.push(groupId);
+    if (group_id !== "all") {
+      where.push(`s.group_id = $${params.length + 1}`);
+      params.push(group_id);
     }
 
-    query += ` ORDER BY s.pinned DESC, s.updated_at DESC`;
+    ({ where, params } = applyRoleFilter(user, where, params));
+
+    let query = BASE_SESSIONS_SELECT;
+    if (where.length) query += " WHERE " + where.join(" AND ");
+    query += " ORDER BY s.pinned DESC, s.updated_at DESC";
 
     const result = await db.query(query, params);
-    const cleanedRows = result.rows.map(row => {
-  if (row.jid) {
-    row.phone = row.jid.replace(/@s\.whatsapp\.net$/, "");
-  }
-
-  // في حالة الاسم غير موجود
-  if (!row.name && row.client_name) {
-    row.name = row.client_name;
-  }
-
-  return row;
-});
-
-res.json(cleanedRows);
+    res.json(cleanSessions(result.rows));
   } catch (err) {
-    console.error("Error in /group/:group_id", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
 // --- 4️⃣ جلسات غير مقروءة ---
-router.get('/unread', requireLogin, async (req, res) => {
-    try {
-        const result = await db.query(`
-         SELECT s.id, s.client_id, c.name AS client_name, c.phone, c.avatar_url, c.is_online,
-            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-            s.status, s.created_at, s.updated_at
-            FROM sessions s
-            JOIN clients c ON c.id = s.client_id
-            WHERE s.status='unread'
-            ORDER BY s.updated_at DESC  
-        `);
-        res.json(result.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
+router.get("/unread", requireLogin, async (req, res) => {
+  try {
+    const user = req.session.user;
+
+    let where = [`s.status = 'unread'`];
+    let params = [];
+
+    ({ where, params } = applyRoleFilter(user, where, params));
+
+    let query = BASE_SESSIONS_SELECT +
+      " WHERE " + where.join(" AND ") +
+      " ORDER BY s.pinned DESC, s.updated_at DESC";
+
+    const result = await db.query(query, params);
+    res.json(cleanSessions(result.rows));
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // --- 5️⃣ جلسات غير مضافة رد عليها ---
-router.get('/unreplied', requireLogin, async (req, res) => {
-    try {
-        const result = await db.query(`
-            SELECT s.id, s.client_id, c.name as client_name, c.phone, c.avatar_url, c.is_online,
-            (SELECT content FROM messages m WHERE m.session_id= s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-            s.status, s.created_at, s.updated_at
-            FROM sessions s
-            JOIN clients c ON c.id = s.client_id
-            WHERE s.status='unreplied'
-            ORDER BY s.updated_at DESC
-        `);
-        res.json(result.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
+router.get("/unreplied", requireLogin, async (req, res) => {
+  try {
+    const user = req.session.user;
+
+    let where = [`s.status = 'unreplied'`];
+    let params = [];
+
+    ({ where, params } = applyRoleFilter(user, where, params));
+
+    let query = BASE_SESSIONS_SELECT +
+      " WHERE " + where.join(" AND ") +
+      " ORDER BY s.pinned DESC, s.updated_at DESC";
+
+    const result = await db.query(query, params);
+    res.json(cleanSessions(result.rows));
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // --- 1️⃣ عرض QR Code لرقم محدد ---
@@ -384,6 +333,7 @@ router.post("/mark-read/:sessionId", async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
