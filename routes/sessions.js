@@ -144,7 +144,20 @@ router.get('/group/:group_id', requireLogin, async (req, res) => {
     query += ` ORDER BY s.pinned DESC, s.updated_at DESC`;
 
     const result = await db.query(query, params);
-    res.json(result.rows);
+    const cleanedRows = result.rows.map(row => {
+  if (row.jid) {
+    row.phone = row.jid.replace(/@s\.whatsapp\.net$/, "");
+  }
+
+  // في حالة الاسم غير موجود
+  if (!row.name && row.client_name) {
+    row.name = row.client_name;
+  }
+
+  return row;
+});
+
+res.json(cleanedRows);
   } catch (err) {
     console.error("Error in /group/:group_id", err);
     res.status(500).json({ message: "Server error" });
@@ -371,6 +384,7 @@ router.post("/mark-read/:sessionId", async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
