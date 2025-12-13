@@ -112,38 +112,42 @@ res.json(cleanedRows);
 
 
 // --- 3️⃣ جلسات حسب المجموعة ---
-router.get('/group/:group_id', async (req, res) => {
+router.get('/group/:group_id', requireLogin, async (req, res) => {
   try {
     const groupId = req.params.group_id;
 
-    let result;
-    if (groupId === "all") {
-      // ✅ في حالة /group/all نعرض كل الجلسات بدون فلترة
-      result = await db.query(`
-        SELECT s.id, s.client_id, c.name as client_name,
-               (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-               s.status, s.created_at, s.updated_at
-        FROM sessions s
-        JOIN clients c ON c.id = s.client_id
-        ORDER BY s.updated_at DESC
-      `);
-    } else {
-      // ✅ في حالة رقم حقيقي فقط
-      result = await db.query(`
-        SELECT s.id, s.client_id, c.name as client_name,
-               (SELECT content FROM messages m WHERE m.session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
-               s.status, s.created_at, s.updated_at
-        FROM sessions s
-        JOIN clients c ON c.id = s.client_id
-        WHERE s.group_id = $1
-        ORDER BY s.updated_at DESC
-      `, [groupId]);
+    let query = `
+      SELECT 
+        s.*, 
+        c.name,
+        c.phone,
+        c.avatar_url,
+        c.is_online,
+        c.tags,
+        (SELECT content FROM messages m 
+         WHERE m.session_id = s.id 
+         ORDER BY created_at DESC 
+         LIMIT 1) AS last_message,
+        (SELECT COUNT(*) FROM sessions s2 
+         WHERE s2.client_id = c.id) > 1 AS is_repeat
+      FROM sessions s
+      JOIN clients c ON c.id = s.client_id
+    `;
+
+    const params = [];
+
+    if (groupId !== "all") {
+      query += ` WHERE s.group_id = $1`;
+      params.push(groupId);
     }
 
+    query += ` ORDER BY s.pinned DESC, s.updated_at DESC`;
+
+    const result = await db.query(query, params);
     res.json(result.rows);
   } catch (err) {
     console.error("Error in /group/:group_id", err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -367,5 +371,6 @@ router.post("/mark-read/:sessionId", async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
