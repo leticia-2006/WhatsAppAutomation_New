@@ -847,9 +847,6 @@ if (statusEl) {
   statusEl.innerText = timeAgoEN(session.updated_at || session.last_active);
 }
 
-// إزالة النص القديم أسفل الرقم
-if (lastActiveEl) {
-  lastActiveEl.style.display = "none"; // نخفيه نهائياً
 }
 // ضبط لون النقطة حسب الحالة
 if (statusDotEl) {
