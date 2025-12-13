@@ -840,14 +840,17 @@ async function uploadAvatarToServer(session, file) {
 }
 // ====== الحالة والوقت ======
 const statusEl = document.getElementById("detailStatus");
-const statusDotEl = document.getElementById("detailStatusDot"); // النقطة
+const lastActiveEl = document.getElementById("lastActive");
+
 if (statusEl) {
-  // إظهار آخر وقت نشاط بدل Online/Offline
-  statusEl.innerText = session.updated_at || session.last_active
-    ? "Active " + timeAgoEN(session.updated_at || session.last_active)
-    : "No activity";
+  // عرض الوقت داخل بطاقة status
+  statusEl.innerText = timeAgoEN(session.updated_at || session.last_active);
 }
 
+// إزالة النص القديم أسفل الرقم
+if (lastActiveEl) {
+  lastActiveEl.style.display = "none"; // نخفيه نهائياً
+}
 // ضبط لون النقطة حسب الحالة
 if (statusDotEl) {
   statusDotEl.classList.remove("online", "offline");
