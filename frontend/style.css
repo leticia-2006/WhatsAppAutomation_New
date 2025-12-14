@@ -1656,7 +1656,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
     display: flex;
     justify-content: center;
     align-items: center;
-}*/
+}
 
 .login-page .login-container {
     text-align: center;
@@ -1711,12 +1711,12 @@ body.dark-mode .numbers-table-header  {background: #363232; }
     background: transparent;
     width: 100%;
     font-size: 16px;
-    color: #fff;
+    color: #fff;}
   .input-group input {
     color: #e6fffa;
     font-weight: 500;
   }
-}
+
 
 .input-group input::placeholder {
     color: #e0ffee;
@@ -1750,6 +1750,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
