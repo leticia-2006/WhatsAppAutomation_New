@@ -841,7 +841,7 @@ async function uploadAvatarToServer(session, file) {
 // ====== الحالة والوقت ======
 const statusEl = document.getElementById("detailStatus");
 const lastActiveEl = document.getElementById("lastActive");
-
+const statusDotEl = document.getElementById("detailStatusDot");
 if (statusEl) {
   // عرض الوقت داخل بطاقة status
   statusEl.innerText = timeAgoEN(session.updated_at || session.last_active);
