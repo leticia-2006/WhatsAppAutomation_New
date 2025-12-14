@@ -814,16 +814,42 @@ client-top {
   font-size: 16px;
 }
 
-.client-number {
+/* ====== tags + phone تحت الاسم==== */
+.client-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.client-meta .client-number {
+   margin: 0;
   font-size: 13px;
   color: #555555e0;
 }
-
-.client-time {
-  font-size: 12px;
-  color: #888;
-  margin-left: 20px;
+/* ====== أيقونات التاغ بجانب الاسم ====== */
+.client-meta .tag-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
 }
+
+.tag-icon {
+  font-size: 14px;
+  cursor: default;
+  color: #555;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.tag-icon:hover {
+  color: var(--primary-green);
+  transform: scale(1.2);
+}
+
+
 /* ====== الـTags و Labels ====== */
 .client-tags,
 .client-labels {
@@ -855,25 +881,6 @@ client-top {
 .label {
   background: #f1f5f9;
   color: #374151;
-}
-/* ====== أيقونات التاغ بجانب الاسم ====== */
-.tag-icons {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 6px;
-}
-
-.tag-icon {
-  font-size: 14px;
-  cursor: default;
-  color: #555;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.tag-icon:hover {
-  color: var(--primary-green);
-  transform: scale(1.2);
 }
 
 /* ====== بطاقات المعلومات (Status - Tags...) ====== */
@@ -1742,6 +1749,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
