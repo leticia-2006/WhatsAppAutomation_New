@@ -389,7 +389,7 @@ main {
   flex-grow: 1;
   min-width: 0;
 }
-client-top {
+.client-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1750,6 +1750,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
