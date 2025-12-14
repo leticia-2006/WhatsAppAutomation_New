@@ -1702,7 +1702,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .input-group .icon {
     margin: 0 10px;
     font-size: 18px;
-  color: red;
+  color: #44c2a7;
 }
 
 .input-group input {
@@ -1750,6 +1750,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
