@@ -392,7 +392,7 @@ main {
 .client-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
 }
 .list-client-avatar {
   width: 100%;
@@ -1750,6 +1750,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
