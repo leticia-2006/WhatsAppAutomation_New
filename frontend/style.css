@@ -393,6 +393,7 @@ main {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+  margin-top: 10px;
 }
 .list-client-avatar {
   width: 100%;
@@ -423,7 +424,7 @@ main {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #212529;
 }
@@ -1751,6 +1752,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
