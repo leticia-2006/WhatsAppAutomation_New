@@ -819,9 +819,10 @@ client-top {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 5px;
+  margin-top: auto ;
   flex-wrap: wrap;
+  margin-right: 20px;
 }
 
 .client-meta .client-number {
@@ -1749,6 +1750,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
