@@ -428,7 +428,6 @@ main {
   color: #212529;
   margin-block-end: 0px;
   margin-block-start: 10px;
-  margin-left: 25px;
   }
 
 .client-phone {
@@ -1754,6 +1753,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
