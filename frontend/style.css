@@ -999,7 +999,7 @@ main {
 .note-input:focus {
   border-color: var(--primary-green);
   background: #fff;
-  outline: none;
+  outline: none;}
 .note-time { font-size: 10px; color: #495057de; margin-bottom: 4px; gap: 4px;}
   .note-text { font-size: 14px:; color: #000; }
 /* ====== الأزرار السفلية ====== */
@@ -1750,6 +1750,7 @@ body.dark-mode .numbers-table-header  {background: #363232; }
 .login-btn:hover {
     opacity: 0.9;
   }
+
 
 
 
