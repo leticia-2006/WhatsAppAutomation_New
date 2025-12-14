@@ -57,6 +57,21 @@ function cleanSessions(rows) {
     if (r.jid) {
       r.phone = r.jid.replace(/@s\.whatsapp\.net$/, "");
     }
+
+    // ✅ تنظيف التاغز
+    if (r.tags) {
+      if (Array.isArray(r.tags)) {
+        r.tags = r.tags;
+      } else if (typeof r.tags === "string") {
+        r.tags = r.tags
+          .split(",")
+          .map(t => t.trim())
+          .filter(Boolean);
+      }
+    } else {
+      r.tags = [];
+    }
+
     return r;
   });
 }
@@ -333,6 +348,7 @@ router.post("/mark-read/:sessionId", async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
