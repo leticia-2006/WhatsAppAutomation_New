@@ -847,7 +847,7 @@ if (statusEl) {
   statusEl.innerText = timeAgoEN(session.updated_at || session.last_active);
 }
 
-}
+
 // ضبط لون النقطة حسب الحالة
 if (statusDotEl) {
   statusDotEl.classList.remove("online", "offline");
