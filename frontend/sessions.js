@@ -236,18 +236,18 @@ function lightenColor(hex, percent) {
 // بعد التعديل (نسخة محسّنة)
 function renderSessions(list = [], filterType = "all") {
   const container = document.getElementById("sessions-body");
-  if (!container) return;
+ if (!container) return;
   container.innerHTML = "";
 
-  const ul = document.createElement("ul");
+const ul = document.createElement("ul");
   ul.className = "clients-list";
 
   list.forEach((session) => {
-    // فلترة حسب التبويب
+    /* فلترة حسب التبويب
     if (filterType === "unread" && session.status !== "unread") return;
     if (filterType === "unreplied" && session.status !== "unreplied") return;
     if (filterType === "group" && !session.group_id) return;
-
+*/
     // ضبط avatar_url الفارغ
     if (!session.avatar_url) {
       session.avatar_url = null;
