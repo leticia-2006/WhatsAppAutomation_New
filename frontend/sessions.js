@@ -156,6 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchBar = document.getElementById("search-clients");
   console.log("DOM Loaded");
   const tagFilter = document.getElementById("filter-tag");
+  if (tagFilter) {
   console.log("tagFilter element:", tagFilter);
 
   // 🔍 البحث
@@ -183,6 +184,9 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("activeTag updated to:", activeTag);
     applyAllFilters();
   });
+}else {
+  console.warn("⚠️ filter-tag not found on this page");
+  }
 });
 function applyRuntimeFilters(list) {
   console.log("✅ applyAllFilters called");
