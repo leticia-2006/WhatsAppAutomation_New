@@ -277,7 +277,7 @@ router.patch('/:id/mark', requireLogin, async (req, res) => {
   }
 });
 
-router.get("/", requireLogin, async (req, res) => {
+/*router.get("/", requireLogin, async (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -334,7 +334,7 @@ router.get("/", requireLogin, async (req, res) => {
     console.error("Error fetching sessions with filter:", err);
     res.status(500).json({ message: "Server error" });
   }
-});
+});*/
 router.post("/mark-read/:sessionId", async (req, res) => {
   try {
     await db.query(
@@ -348,6 +348,7 @@ router.post("/mark-read/:sessionId", async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 
