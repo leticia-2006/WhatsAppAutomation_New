@@ -139,9 +139,7 @@ function applyAllFilters() {
     filtered = filtered.filter(s => s.status === "unread");
   } else if (currentTab === "unreplied") {
     filtered = filtered.filter(s => s.status === "unreplied");
-  } else if (currentTab === "groups") {
-    filtered = filtered.filter(s => s.group_id);
-  }
+  } 
 
   // 🏷️ فلترة حسب التاغ (فقط هنا)
   if (activeTag !== "all") {
@@ -156,7 +154,9 @@ function applyAllFilters() {
 }
 document.addEventListener("DOMContentLoaded", () => {
   const searchBar = document.getElementById("search-clients");
+  console.log("DOM Loaded");
   const tagFilter = document.getElementById("filter-tag");
+  console.log("tagFilter element:", tagFilter);
 
   // 🔍 البحث
   searchBar.addEventListener("input", () => {
@@ -177,11 +177,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 🏷️ فلتر التاغ
   tagFilter.addEventListener("change", () => {
+    console.log("🔥 select changed");
+    console.log("selected value:", tagFilter.value);
     activeTag = tagFilter.value.toLowerCase();
+    console.log("activeTag updated to:", activeTag);
     applyAllFilters();
   });
 });
 function applyRuntimeFilters(list) {
+  console.log("✅ applyAllFilters called");
+  console.log("activeTag:", activeTag);
+  console.log("allSessions count:", allSessions.length);
   let filtered = [...list];
 
   if (currentTab === "unread") {
@@ -189,6 +195,7 @@ function applyRuntimeFilters(list) {
   } else if (currentTab === "unreplied") {
     filtered = filtered.filter(s => s.status === "unreplied");
   }
+ console.log("tags in sessions:", filtered.map(s => s.tags));
 
   if (activeTag !== "all") {
     filtered = filtered.filter(s =>
@@ -196,7 +203,7 @@ function applyRuntimeFilters(list) {
       s.tags.map(t => t.toLowerCase()).includes(activeTag)
     );
   }
-
+  console.log("filtered count after tag:", filtered.length);
   return filtered;
 }
 function getAvatarColor(char) {
