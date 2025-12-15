@@ -145,10 +145,10 @@ function applyAllFilters() {
 
   // 🏷️ فلترة حسب التاغ (فقط هنا)
   if (activeTag !== "all") {
-    filtered = filtered.filter(s =>
-      Array.isArray(s.tags) &&
-      s.tags.map(t => t.toLowerCase()).includes(activeTag)
-    );
+  filtered = filtered.filter(s =>
+    Array.isArray(s.tags) &&
+    s.tags.some(t => t.toLowerCase() === activeTag)
+  );
   }
 
   renderSessions(filtered, currentTab);
