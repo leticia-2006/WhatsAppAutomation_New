@@ -2,6 +2,8 @@
 let sessions = [];
 let currentTab = "all";
 let currentSession = null;
+let allSessions = [];   // البيانات القادمة من السيرفر حسب التبويب
+let activeTag = "all"; // التاغ الحالي
 
 // ====== تغيير التبويبات ======
 document.addEventListener("DOMContentLoaded", () => {
@@ -111,30 +113,50 @@ fileInput.onchange = async (e) => {
 async function loadSessions() {
   try {
     let url = `/sessions/all`;
-    if (currentTab === "unread") { url = `/sessions/unread`;
-    } else if (currentTab === "unreplied") { url = `/sessions/unreplied`;
-    } else if (currentTab === "groups") { 
-    const groupId = selectedGroupId || "all"; // أو أي قيمة افتراضية
-    url= `/sessions/group/${groupId}`;
-    } 
-    // FIXED: placeholder groupId
-    const res = await axios.get(url, { withCredentials: true });
-    
-    // FIXED: دعم صلاحية الوكيل (Agent)
-    sessions = res.data;
-    let filtered = sessions;
-    if (window.currentUser?.role === "agent") {
-  filtered = sessions.filter((s) => s.assigned_agent_id === window.currentUser.id);
-} else if (window.currentUser?.role === "admin") {
-  filtered = sessions; // ✅ المشرف يرى جميع الجلسات
+
+    if (currentTab === "unread") {
+      url = `/sessions/unread`;
+    } else if (currentTab === "unreplied") {
+      url = `/sessions/unreplied`;
+    } else if (currentTab === "groups") {
+      const groupId = selectedGroupId || "all";
+      url = `/sessions/group/${groupId}`;
     }
-    renderSessions(filtered, currentTab);
-    updateSidebarCounts(sessions);
+
+    const res = await axios.get(url, { withCredentials: true });
+
+    allSessions = res.data;   // 🔴 المصدر الأساسي
+    applyAllFilters();        // 🔥 نطبّق كل الفلاتر معًا
   } catch (err) {
     console.error("Error loading sessions:", err);
   }
 }
+function applyAllFilters() {
+  let filtered = [...allSessions];
 
+  // 🏷️ فلترة بالتاغ
+  if (activeTag !== "all") {
+    filtered = filtered.filter(s => {
+      if (!s.tags) return false;
+
+      if (Array.isArray(s.tags)) {
+        return s.tags.map(t => t.toLowerCase()).includes(activeTag);
+      }
+
+      if (typeof s.tags === "string") {
+        return s.tags
+          .split(",")
+          .map(t => t.trim().toLowerCase())
+          .includes(activeTag);
+      }
+
+      return false;
+    });
+  }
+
+  renderSessions(filtered, currentTab);
+  updateSidebarCounts(filtered);
+}
 // 🔹 Search bar
 document.addEventListener("DOMContentLoaded", () => { 
   const searchBar = document.getElementById("search-clients");
@@ -143,15 +165,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔍 البحث
   if (searchBar) {
     searchBar.addEventListener("input", () => {
-      const value = searchBar.value.toLowerCase();
-      const filtered = sessions.filter((s) =>
-        (s.name || "").toLowerCase().includes(value) ||
-        (s.phone || "").includes(value) ||
-        (s.tags?.join(" ") || "").toLowerCase().includes(value) ||
-        (s.last_message || "").toLowerCase().includes(value)
-      );
-      renderSessions(filtered);
-    });
+  const value = searchBar.value.toLowerCase();
+
+  let filtered = allSessions.filter((s) =>
+    (s.name || "").toLowerCase().includes(value) ||
+    (s.phone || "").includes(value) ||
+    (s.last_message || "").toLowerCase().includes(value)
+  );
+
+  // 🔁 طبّق التاغ الحالي أيضًا
+  if (activeTag !== "all") {
+    filtered = filtered.filter(s =>
+      typeof s.tags === "string" &&
+      s.tags.toLowerCase().includes(activeTag)
+    );
+  }
+
+  renderSessions(filtered, currentTab);
+});
   }
 
   // 🏷️ الفلترة بالوسوم
@@ -160,14 +191,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const tag = tagFilter.value;
 
       try {
-        let res;
-        if (tag === "all") {
-         res = await axios.get(`/sessions?filter=all`, { withCredentials: true }); 
-        } else {
-         res = await axios.get(`/sessions?filter=${tag}`, { withCredentials: true });
+        if (tagFilter) {
+  tagFilter.addEventListener("change", () => {
+    activeTag = tagFilter.value.toLowerCase();
+    applyAllFilters(); // ✅ بدون API
+  });
         }
-
-        sessions = res.data;
         renderSessions(sessions, tag);
         updateSidebarCounts(sessions);
       } catch (err) {
