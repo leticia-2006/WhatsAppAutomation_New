@@ -186,24 +186,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 🏷️ الفلترة بالوسوم
-  if (tagFilter) {
-    tagFilter.addEventListener("change", async () => {
-      const tag = tagFilter.value;
-
-      try {
-        if (tagFilter) {
+if (tagFilter) {
   tagFilter.addEventListener("change", () => {
     activeTag = tagFilter.value.toLowerCase();
     applyAllFilters(); // ✅ بدون API
   });
-        }
-        renderSessions(sessions, tag);
-        updateSidebarCounts(sessions);
-      } catch (err) {
-        console.error("Error filtering by tag:", err);
-      }
-    });
-  }
+}
 });
 function getAvatarColor(char) {
   if (!char) return { bg: "#444", text: "#ddd" };
