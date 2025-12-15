@@ -124,9 +124,9 @@ async function loadSessions() {
     }
 
     const res = await axios.get(url, { withCredentials: true });
+    allSessions = res.data;
 
-    allSessions = res.data;   // 🔴 المصدر الأساسي
-    applyAllFilters();        // 🔥 نطبّق كل الفلاتر معًا
+    applyAllFilters();
   } catch (err) {
     console.error("Error loading sessions:", err);
   }
@@ -134,65 +134,71 @@ async function loadSessions() {
 function applyAllFilters() {
   let filtered = [...allSessions];
 
-  // 🏷️ فلترة بالتاغ
+  // 🔹 فلترة حسب التبويب
+  if (currentTab === "unread") {
+    filtered = filtered.filter(s => s.status === "unread");
+  } else if (currentTab === "unreplied") {
+    filtered = filtered.filter(s => s.status === "unreplied");
+  } else if (currentTab === "groups") {
+    filtered = filtered.filter(s => s.group_id);
+  }
+
+  // 🏷️ فلترة حسب التاغ (فقط هنا)
   if (activeTag !== "all") {
-    filtered = filtered.filter(s => {
-      if (!s.tags) return false;
-
-      if (Array.isArray(s.tags)) {
-        return s.tags.map(t => t.toLowerCase()).includes(activeTag);
-      }
-
-      if (typeof s.tags === "string") {
-        return s.tags
-          .split(",")
-          .map(t => t.trim().toLowerCase())
-          .includes(activeTag);
-      }
-
-      return false;
-    });
+    filtered = filtered.filter(s =>
+      Array.isArray(s.tags) &&
+      s.tags.map(t => t.toLowerCase()).includes(activeTag)
+    );
   }
 
   renderSessions(filtered, currentTab);
   updateSidebarCounts(filtered);
 }
-// 🔹 Search bar
-document.addEventListener("DOMContentLoaded", () => { 
+document.addEventListener("DOMContentLoaded", () => {
   const searchBar = document.getElementById("search-clients");
   const tagFilter = document.getElementById("filter-tag");
 
   // 🔍 البحث
-  if (searchBar) {
-    searchBar.addEventListener("input", () => {
-  const value = searchBar.value.toLowerCase();
+  searchBar.addEventListener("input", () => {
+    const value = searchBar.value.toLowerCase().trim();
 
-  let filtered = allSessions.filter((s) =>
-    (s.name || "").toLowerCase().includes(value) ||
-    (s.phone || "").includes(value) ||
-    (s.last_message || "").toLowerCase().includes(value)
-  );
+    let filtered = allSessions.filter(s =>
+      (s.name || "").toLowerCase().includes(value) ||
+      (s.phone || "").includes(value)
+    );
 
-  // 🔁 طبّق التاغ الحالي أيضًا
+    // 🔁 طبق التبويب + التاغ
+    if (currentTab !== "all" || activeTag !== "all") {
+      filtered = applyRuntimeFilters(filtered);
+    }
+
+    renderSessions(filtered, currentTab);
+  });
+
+  // 🏷️ فلتر التاغ
+  tagFilter.addEventListener("change", () => {
+    activeTag = tagFilter.value.toLowerCase();
+    applyAllFilters();
+  });
+});
+function applyRuntimeFilters(list) {
+  let filtered = [...list];
+
+  if (currentTab === "unread") {
+    filtered = filtered.filter(s => s.status === "unread");
+  } else if (currentTab === "unreplied") {
+    filtered = filtered.filter(s => s.status === "unreplied");
+  }
+
   if (activeTag !== "all") {
     filtered = filtered.filter(s =>
-      typeof s.tags === "string" &&
-      s.tags.toLowerCase().includes(activeTag)
+      Array.isArray(s.tags) &&
+      s.tags.map(t => t.toLowerCase()).includes(activeTag)
     );
   }
 
-  renderSessions(filtered, currentTab);
-});
-  }
-
-  // 🏷️ الفلترة بالوسوم
-if (tagFilter) {
-  tagFilter.addEventListener("change", () => {
-    activeTag = tagFilter.value.toLowerCase();
-    applyAllFilters(); // ✅ بدون API
-  });
+  return filtered;
 }
-});
 function getAvatarColor(char) {
   if (!char) return { bg: "#444", text: "#ddd" };
 
