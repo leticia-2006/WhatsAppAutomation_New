@@ -155,6 +155,7 @@ function applyAllFilters() {
 document.addEventListener("DOMContentLoaded", () => {
   const searchBar = document.getElementById("search-clients");
   console.log("DOM Loaded");
+  const observer = new MutationObserver((mutations, obs) => {
   const tagFilter = document.getElementById("filter-tag");
   if (tagFilter) {
   console.log("tagFilter element:", tagFilter);
@@ -187,7 +188,10 @@ document.addEventListener("DOMContentLoaded", () => {
 }else {
   console.warn("⚠️ filter-tag not found on this page");
   }
+    obs.disconnect();
+  }
 });
+observer.observe(document.body, { childList: true, subtree: true });
 function applyRuntimeFilters(list) {
   console.log("✅ applyAllFilters called");
   console.log("activeTag:", activeTag);
