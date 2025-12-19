@@ -148,54 +148,52 @@ function applyAllFilters() {
     s.tags.some(t => t.toLowerCase() === activeTag)
   );
   }
+ const searchBar = document.getElementById("search-clients");
+  if (searchBar && searchBar.value.trim() !== "") {
+    const value = searchBar.value.toLowerCase();
+    filtered = filtered.filter(s =>
+      (s.name || "").toLowerCase().includes(value) ||
+      (s.phone || "").includes(value)
+    );
+  }
 
   renderSessions(filtered, currentTab);
   updateSidebarCounts(filtered);
 }
-
 document.addEventListener("DOMContentLoaded", () => {
-  const searchBar = document.getElementById("search-clients");
-  if (searchBar) {
-    console.log("searchBar found:", searchBar);
-  } else {
-    console.warn("⚠️ search-clients not found on this page");
-  }
 
   const observer = new MutationObserver((mutations, obs) => {
+    const searchBar = document.getElementById("search-clients");
     const tagFilter = document.getElementById("filter-tag");
-    if (tagFilter) {
-      console.log("tagFilter element:", tagFilter);
 
-      // 🔍 البحث
-      if (searchBar) {
-        searchBar.addEventListener("input", () => {
-          const value = searchBar.value.toLowerCase().trim();
-          let filtered = allSessions.filter(s =>
-            (s.name || "").toLowerCase().includes(value) ||
-            (s.phone || "").includes(value)
-          );
+    if (!searchBar || !tagFilter) return;
 
-          if (currentTab !== "all" || activeTag !== "all") {
-            filtered = applyRuntimeFilters(filtered);
-          }
+    console.log("✅ filters elements found");
 
-          renderSessions(filtered, currentTab);
-        });
-      }
+    // 🔍 البحث (لا فلترة هنا)
+    searchBar.addEventListener("input", () => {
+      applyAllFilters();
+    });
 
-      // 🏷️ فلتر التاغ
-      tagFilter.addEventListener("change", () => {
-        console.log("🔥 select changed");
-        activeTag = tagFilter.value.toLowerCase();
-        applyAllFilters();
-      });
+    // 🏷️ فلتر التاغ
+    tagFilter.addEventListener("change", () => {
+      activeTag = tagFilter.value.toLowerCase();
+      applyAllFilters();
+    });
 
-      obs.disconnect(); // فقط بعد إيجاد العنصر وربط الأحداث
-    }
+    obs.disconnect(); // ✅ مهم
   });
 
-  observer.observe(document.body, { childList: true, subtree: true });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
 });
+
+  
+  
+
 function applyRuntimeFilters(list) {
   console.log("✅ applyAllFilters called");
   console.log("activeTag:", activeTag);
