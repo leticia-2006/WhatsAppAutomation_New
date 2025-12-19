@@ -162,26 +162,26 @@ function applyAllFilters() {
 }
 document.addEventListener("DOMContentLoaded", () => {
 
-  const observer = new MutationObserver((mutations, obs) => {
+  const observer = new MutationObserver(() => {
     const searchBar = document.getElementById("search-clients");
     const tagFilter = document.getElementById("filter-tag");
 
     if (!searchBar || !tagFilter) return;
 
-    console.log("✅ filters elements found");
+    // منع التكرار
+    if (searchBar.dataset.bound === "true") return;
 
-    // 🔍 البحث (لا فلترة هنا)
-    searchBar.addEventListener("input", () => {
-      applyAllFilters();
-    });
+    console.log("✅ filters bound");
 
-    // 🏷️ فلتر التاغ
+    searchBar.addEventListener("input", applyAllFilters);
+
     tagFilter.addEventListener("change", () => {
       activeTag = tagFilter.value.toLowerCase();
       applyAllFilters();
     });
 
-    obs.disconnect(); // ✅ مهم
+    // علامة أنه تم الربط
+    searchBar.dataset.bound = "true";
   });
 
   observer.observe(document.body, {
@@ -191,31 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-  
-  
 
-function applyRuntimeFilters(list) {
-  console.log("✅ applyAllFilters called");
-  console.log("activeTag:", activeTag);
-  console.log("allSessions count:", allSessions.length);
-  let filtered = [...list];
-
-  if (currentTab === "unread") {
-    filtered = filtered.filter(s => s.status === "unread");
-  } else if (currentTab === "unreplied") {
-    filtered = filtered.filter(s => s.status === "unreplied");
-  }
- console.log("tags in sessions:", filtered.map(s => s.tags));
-
-  if (activeTag !== "all") {
-    filtered = filtered.filter(s =>
-      Array.isArray(s.tags) &&
-      s.tags.map(t => t.toLowerCase()).includes(activeTag)
-    );
-  }
-  console.log("filtered count after tag:", filtered.length);
-  return filtered;
-}
 function getAvatarColor(char) {
   if (!char) return { bg: "#444", text: "#ddd" };
 
