@@ -26,35 +26,48 @@ async function initClient(numberId) {
   logger: pino({ level: "silent" }), // ✅    
 });    
   clients[numberId] = sock;    
-  sock.ev.on("connection.update", async (update) => {    
-  const { qr, connection, lastDisconnect } = update;    
-    
-  if (qr) {    
-    qrCodes[numberId] = qr;    
-    console.log(`📌 QR ready for number ${numberId}`);    
-  }    
-    
-  if (connection === "open") {    
-    console.log(`✅ Number ${numberId} connected`);    
-    try {    
-      await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);    
-    } catch (err) {    
-      console.error("Error updating number status:", err);    
-    }    
-  }    
-    
-  if (connection === "close") {    
-    const reason = lastDisconnect?.error?.output?.statusCode;    
-    if (reason === DisconnectReason.loggedOut) {    
-      fs.rmSync(path.join(__dirname, `../auth_info/${numberId}`), { recursive: true, force: true });    
-      await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);    
-      delete clients[numberId];    
-    } else {    
-      console.log(`🔁 Trying to reconnect number ${numberId}...`);    
-      setTimeout(() => initClient(numberId), 5000);    
-    }    
-  }    
-});    
+  
+sock.ev.on("connection.update", async (update) => {
+  const { connection, lastDisconnect, qr } = update;
+
+  if (qr) qrCodes[numberId] = qr;
+
+  if (connection === "open") {
+    console.log(`✅ ${numberId} connected`);
+    await db.query(
+      "UPDATE wa_numbers SET status='Active' WHERE id=$1",
+      [numberId]
+    );
+  }
+
+  if (connection === "close") {
+    const statusCode = lastDisconnect?.error?.output?.statusCode;
+
+    console.log("❌ connection closed:", statusCode);
+
+    // ❌ فقط هنا نطلب QR جديد
+    if (statusCode === DisconnectReason.loggedOut) {
+      console.log("🚪 Logged out – need new QR");
+
+      fs.rmSync(
+        path.join(__dirname, `../auth_info/${numberId}`),
+        { recursive: true, force: true }
+      );
+
+      await db.query(
+        "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
+        [numberId]
+      );
+
+      delete clients[numberId];
+      return;
+    }
+
+    // ✅ غير ذلك: أعد الاتصال تلقائيًا
+    console.log("🔁 auto reconnect...");
+    setTimeout(() => initClient(numberId), 3000);
+  }
+});  
  sock.ev.on("creds.update", saveCreds);    
     
  sock.ev.on("messages.upsert", async (m) => {    
@@ -301,10 +314,23 @@ async function getOrCreateSession(numberId, jid) {
     
   return newSession.rows[0].id;    
 }    
+setInterval(async () => {
+  for (const sock of Object.values(clients)) {
+    try {
+      if (sock?.ws?.readyState === 1) {
+        await sock.sendPresenceUpdate("available");
+      }
+    } catch (e) {
+      console.log("⚠️ ping failed");
+    }
+  }
+}, 1000 * 25);
 setInterval(async () => {    
   for (const [id, sock] of Object.entries(clients)) {    
-    if (!sock.user) {    
+    if (sock.ws.readyState !== 1) {    
       console.log(`💤 Client ${id} seems inactive. Restarting...`);    
+      await clients[id]?.ws?.close();
+      delete clients[id];
       await initClient(Number(id));    
     }    
   }    
