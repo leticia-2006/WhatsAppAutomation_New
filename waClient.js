@@ -9,19 +9,7 @@ const fs = require("fs");
 
 const clients = {};
 const qrCodes = {};
-async function reconnectClient(numberId) {
-  try {
-    if (clients[numberId]) {
-      try {
-        await clients[numberId].ws.close();
-      } catch {}
-      delete clients[numberId];
-    }
-    await initClient(numberId);
-  } catch (e) {
-    console.error("Reconnect failed:", e);
-  }
-}
+
 async function initClient(numberId) {
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));
   const { version } = await fetchLatestBaileysVersion();
@@ -46,18 +34,7 @@ async function initClient(numberId) {
     console.log(`📌 QR ready for number ${numberId}`);
   }
 
-  if (update.connection === "open") {
-    setInterval(async () => {
-      try {
-        await sock.sendPresenceUpdate("available");
-        console.log(`📡 Presence sent for ${numberId}`);
-      } catch (e) {
-        console.warn("Presence failed", e.message);
-      }
-    }, 1000 * 60 * 2); // كل دقيقتين
-  }
-
-  if (connection === "close") {
+if (connection === "close") {
   const reason = lastDisconnect?.error?.output?.statusCode;
 
   console.log("❌ Connection closed:", reason);
@@ -218,10 +195,7 @@ async function sendMessageToNumber(numberId, jid, content) {
   if (!sock) throw new Error(`⚠️ Client ${numberId} not initialized`);
 
   // تحقق أن الاتصال مفتوح فعلاً
-  if (!sock.ws || sock.ws.readyState !== 1) {
-  console.log(`💤 WS closed for ${id}, reconnecting`);
-  await reconnectClient(Number(id));
-  }
+  
 
   // ✅ تجهيز الـ JID الصحيح
   const finalJid = jid.includes("@s.whatsapp.net")
