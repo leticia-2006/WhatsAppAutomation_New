@@ -9,7 +9,19 @@ const fs = require("fs");
 
 const clients = {};
 const qrCodes = {};
-
+async function reconnectClient(numberId) {
+  try {
+    if (clients[numberId]) {
+      try {
+        await clients[numberId].ws.close();
+      } catch {}
+      delete clients[numberId];
+    }
+    await initClient(numberId);
+  } catch (e) {
+    console.error("Reconnect failed:", e);
+  }
+}
 async function initClient(numberId) {
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));
   const { version } = await fetchLatestBaileysVersion();
@@ -34,25 +46,28 @@ async function initClient(numberId) {
     console.log(`📌 QR ready for number ${numberId}`);
   }
 
-  if (connection === "open") {
-    console.log(`✅ Number ${numberId} connected`);
-    try {
-      await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Active", numberId]);
-    } catch (err) {
-      console.error("Error updating number status:", err);
-    }
+  if (update.connection === "open") {
+    setInterval(async () => {
+      try {
+        await sock.sendPresenceUpdate("available");
+        console.log(`📡 Presence sent for ${numberId}`);
+      } catch (e) {
+        console.warn("Presence failed", e.message);
+      }
+    }, 1000 * 60 * 2); // كل دقيقتين
   }
 
   if (connection === "close") {
-    const reason = lastDisconnect?.error?.output?.statusCode;
-    if (reason === DisconnectReason.loggedOut) {
-      fs.rmSync(path.join(__dirname, `../auth_info/${numberId}`), { recursive: true, force: true });
-      await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
-      delete clients[numberId];
-    } else {
-      console.log(`🔁 Trying to reconnect number ${numberId}...`);
-      setTimeout(() => initClient(numberId), 5000);
-    }
+  const reason = lastDisconnect?.error?.output?.statusCode;
+
+  if (reason === DisconnectReason.loggedOut) {
+    fs.rmSync(path.join(__dirname, `../auth_info/${numberId}`), { recursive: true, force: true });
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
+    delete clients[numberId];
+  } else {
+    console.log(`🔁 Soft reconnect for ${numberId}`);
+    setTimeout(() => reconnectClient(numberId), 5000);
+  }
   }
 });
  sock.ev.on("creds.update", saveCreds);
@@ -200,9 +215,9 @@ async function sendMessageToNumber(numberId, jid, content) {
   if (!sock) throw new Error(`⚠️ Client ${numberId} not initialized`);
 
   // تحقق أن الاتصال مفتوح فعلاً
-  if (!sock.user || !sock.user.id) {
-    console.warn(`⚠️ Client ${numberId} not authenticated or disconnected`);
-    return { error: "Client not authenticated or disconnected" };
+  if (!sock.ws || sock.ws.readyState !== 1) {
+  console.log(`💤 WS closed for ${id}, reconnecting`);
+  await reconnectClient(Number(id));
   }
 
   // ✅ تجهيز الـ JID الصحيح
@@ -303,12 +318,11 @@ async function getOrCreateSession(numberId, jid) {
 }
 setInterval(async () => {
   for (const [id, sock] of Object.entries(clients)) {
-    if (!sock.user) {
-      console.log(`💤 Client ${id} seems inactive. Restarting...`);
-      await initClient(Number(id));
+    if (!sock.ws || sock.ws.readyState !== 1) {
+      await reconnectClient(Number(id));
     }
   }
-}, 1000 * 60 * 5);
+}, 1000 * 60 * 3);
 
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };
 
