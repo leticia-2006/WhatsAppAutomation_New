@@ -60,13 +60,16 @@ async function initClient(numberId) {
   if (connection === "close") {
   const reason = lastDisconnect?.error?.output?.statusCode;
 
+  console.log("❌ Connection closed:", reason);
+
   if (reason === DisconnectReason.loggedOut) {
+    console.log("🚫 Logged out – QR required");
     fs.rmSync(path.join(__dirname, `../auth_info/${numberId}`), { recursive: true, force: true });
     await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
     delete clients[numberId];
   } else {
-    console.log(`🔁 Soft reconnect for ${numberId}`);
-    setTimeout(() => reconnectClient(numberId), 5000);
+    console.log("🔄 Reconnecting automatically (no QR)");
+    setTimeout(() => initClient(numberId), 3000);
   }
   }
 });
@@ -316,12 +319,5 @@ async function getOrCreateSession(numberId, jid) {
 
   return newSession.rows[0].id;
 }
-setInterval(async () => {
-  for (const [id, sock] of Object.entries(clients)) {
-    if (!sock.ws || sock.ws.readyState !== 1) {
-      await reconnectClient(Number(id));
-    }
-  }
-}, 1000 * 60 * 3);
 
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };
