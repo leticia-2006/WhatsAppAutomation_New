@@ -325,15 +325,12 @@ setInterval(async () => {
     }
   }
 }, 1000 * 25);
-setInterval(async () => {    
-  for (const [id, sock] of Object.entries(clients)) {    
-    if (sock.ws.readyState !== 1) {    
-      console.log(`💤 Client ${id} seems inactive. Restarting...`);    
-      await clients[id]?.ws?.close();
-      delete clients[id];
-      await initClient(Number(id));    
-    }    
-  }    
-}, 1000 * 60 * 5);    
-    
+setInterval(() => {
+  for (const [id, sock] of Object.entries(clients)) {
+    if (!sock || !sock.user) {
+      console.log(`💤 Client ${id} inactive → reconnect`);
+      initClient(Number(id));
+    }
+  }
+}, 1000 * 60 * 5);  
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };    
