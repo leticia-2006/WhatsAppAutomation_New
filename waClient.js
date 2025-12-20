@@ -319,7 +319,7 @@ async function getOrCreateSession(numberId, jid) {
 setInterval(async () => {
   for (const [id, sock] of Object.entries(clients)) {
     if (!sock.ws || sock.ws.readyState !== 1) {
-      await reconnectClient(Number(numberId));
+      await reconnectClient(Number(id));
     }
   }
 }, 1000 * 60 * 3);
