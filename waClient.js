@@ -9,7 +9,19 @@ const fs = require("fs");
 
 const clients = {};
 const qrCodes = {};
-
+async function reconnectClient(numberId) {
+  try {
+    if (clients[numberId]) {
+      try {
+        await clients[numberId].ws.close();
+      } catch {}
+      delete clients[numberId];
+    }
+    await initClient(numberId);
+  } catch (e) {
+    console.error("Reconnect failed:", e);
+  }
+}
 async function initClient(numberId) {
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));
   const { version } = await fetchLatestBaileysVersion();
@@ -34,19 +46,27 @@ async function initClient(numberId) {
     console.log(`📌 QR ready for number ${numberId}`);
   }
 
-if (connection === "close") {
+  if (update.connection === "open") {
+    setInterval(async () => {
+      try {
+        await sock.sendPresenceUpdate("available");
+        console.log(`📡 Presence sent for ${numberId}`);
+      } catch (e) {
+        console.warn("Presence failed", e.message);
+      }
+    }, 1000 * 60 * 2); // كل دقيقتين
+  }
+
+  if (connection === "close") {
   const reason = lastDisconnect?.error?.output?.statusCode;
 
-  console.log("❌ Connection closed:", reason);
-
   if (reason === DisconnectReason.loggedOut) {
-    console.log("🚫 Logged out – QR required");
     fs.rmSync(path.join(__dirname, `../auth_info/${numberId}`), { recursive: true, force: true });
     await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
     delete clients[numberId];
   } else {
-    console.log("🔄 Reconnecting automatically (no QR)");
-    setTimeout(() => initClient(numberId), 3000);
+    console.log(`🔁 Soft reconnect for ${numberId}`);
+    setTimeout(() => reconnectClient(numberId), 5000);
   }
   }
 });
@@ -195,7 +215,10 @@ async function sendMessageToNumber(numberId, jid, content) {
   if (!sock) throw new Error(`⚠️ Client ${numberId} not initialized`);
 
   // تحقق أن الاتصال مفتوح فعلاً
-  
+  if (!sock.ws || sock.ws.readyState !== 1) {
+  console.log(`💤 WS closed for ${id}, reconnecting`);
+  await reconnectClient(Number(id));
+  }
 
   // ✅ تجهيز الـ JID الصحيح
   const finalJid = jid.includes("@s.whatsapp.net")
@@ -293,5 +316,12 @@ async function getOrCreateSession(numberId, jid) {
 
   return newSession.rows[0].id;
 }
+setInterval(async () => {
+  for (const [id, sock] of Object.entries(clients)) {
+    if (!sock.ws || sock.ws.readyState !== 1) {
+      await reconnectClient(Number(id));
+    }
+  }
+}, 1000 * 60 * 3);
 
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };
