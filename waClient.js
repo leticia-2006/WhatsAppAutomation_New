@@ -20,7 +20,7 @@ async function initClient(numberId) {
   version,    
   auth: state,    
   printQRInTerminal: true,    
-  browser: ["MyApp", "Chrome", "120.0"],    
+  browser: ["Ubuntu", "Chrome", "120.0.0.0"],
   keepAliveIntervalMs: 30000,  // ✅ يمنع غلق الجلسة بعد الخمول    
   markOnlineOnConnect: true,    
   connectTimeoutMs: 60000,    
