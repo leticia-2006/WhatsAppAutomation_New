@@ -11,6 +11,7 @@ const clients = {};
 const qrCodes = {};    
     
 async function initClient(numberId) {    
+  console.log("🚀 initClient called for", numberId);
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));    
   const { version } = await fetchLatestBaileysVersion();    
       
@@ -24,8 +25,10 @@ async function initClient(numberId) {
   markOnlineOnConnect: true,    
   connectTimeoutMs: 60000,    
   logger: pino({ level: "debug" }), // ✅    
-});    
-  clients[numberId] = sock;    
+});
+    console.log("🧪 makeWASocket executed");   
+  
+    clients[numberId] = sock;    
   
 sock.ev.on("connection.update", async (update) => {
   const { connection, lastDisconnect, qr } = update;
