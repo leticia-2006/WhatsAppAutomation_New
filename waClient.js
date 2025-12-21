@@ -23,7 +23,7 @@ async function initClient(numberId) {
   keepAliveIntervalMs: 30000,  // ✅ يمنع غلق الجلسة بعد الخمول    
   markOnlineOnConnect: true,    
   connectTimeoutMs: 60000,    
-  logger: pino({ level: "silent" }), // ✅    
+  logger: pino({ level: "debug" }), // ✅    
 });    
   clients[numberId] = sock;    
   
