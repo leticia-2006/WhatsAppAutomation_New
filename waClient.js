@@ -18,8 +18,8 @@ async function initClient(numberId) {
   const sock = makeWASocket({    
   version,    
   auth: state,    
-  printQRInTerminal: false,    
-  browser: ["MyApp", "Chrome", "10.0"],    
+  printQRInTerminal: true,    
+  browser: ["MyApp", "Chrome", "120.0"],    
   keepAliveIntervalMs: 30000,  // ✅ يمنع غلق الجلسة بعد الخمول    
   markOnlineOnConnect: true,    
   connectTimeoutMs: 60000,    
