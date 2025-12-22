@@ -11,7 +11,6 @@ const clients = {};
 const qrCodes = {};    
     
 async function initClient(numberId) {    
-  async function initClient(numberId) {
 
   if (clients[numberId]) {
     console.log(`⚠️ Client ${numberId} already exists, skipping init`);
