@@ -11,6 +11,12 @@ const clients = {};
 const qrCodes = {};    
     
 async function initClient(numberId) {    
+  async function initClient(numberId) {
+
+  if (clients[numberId]) {
+    console.log(`⚠️ Client ${numberId} already exists, skipping init`);
+    return;
+  }
   console.log("🚀 initClient called for", numberId);
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));    
   const { version } = await fetchLatestBaileysVersion();    
@@ -65,6 +71,11 @@ sock.ev.on("connection.update", async (update) => {
       delete clients[numberId];
       return;
     }
+    // 🛑 إذا يوجد QR → لا تعيد الاتصال
+  if (qrCodes[numberId]) {
+    console.log("⏸ QR موجود، ننتظر المستخدم يمسحه");
+    return;
+  }
 
     // ✅ غير ذلك: أعد الاتصال تلقائيًا
     console.log("🔁 auto reconnect...");
@@ -328,12 +339,12 @@ setInterval(async () => {
     }
   }
 }, 1000 * 25);
-setInterval(() => {
+/*setInterval(() => {
   for (const [id, sock] of Object.entries(clients)) {
     if (!sock || !sock.user) {
       console.log(`💤 Client ${id} inactive → reconnect`);
       initClient(Number(id));
     }
   }
-}, 1000 * 60 * 5);  
+}, 1000 * 60 * 5);  */
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };    
