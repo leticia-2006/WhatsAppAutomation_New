@@ -25,7 +25,7 @@ async function initClient(numberId) {
   version,    
   auth: state,    
   printQRInTerminal: false,    
-  browser: ["WhatsApp Web", "Chrome", "120.0.0"],
+  browser: ["Chrome (Linux)", "Chrome", "120.0.0"],
   keepAliveIntervalMs: 30000,  // ✅ يمنع غلق الجلسة بعد الخمول    
   markOnlineOnConnect: false,    
   connectTimeoutMs: 60000,    
@@ -38,8 +38,10 @@ async function initClient(numberId) {
 sock.ev.on("connection.update", async (update) => {
   const { connection, lastDisconnect, qr } = update;
 
-  if (qr) qrCodes[numberId] = qr;
-
+  if (qr && !qrCodes[numberId]) {
+  qrCodes[numberId] = qr;
+  console.log("📸 QR generated for", numberId);
+  }
   if (connection === "open") {
     console.log(`✅ ${numberId} connected`);
     await db.query(
@@ -79,6 +81,7 @@ sock.ev.on("connection.update", async (update) => {
 
     // ✅ غير ذلك: أعد الاتصال تلقائيًا
     console.log("🔁 auto reconnect...");
+    delete clients[numberId]; 
     setTimeout(() => initClient(numberId), 5000);
   }
 });  
@@ -290,17 +293,23 @@ function getClientStatus(numberId) {
 }    
     
 // Auto reconnect for all active numbers    
-async function reconnectAllActive() {    
-  try {    
-    const res = await db.query("SELECT id FROM wa_numbers WHERE status IN ('Active','Disconnected')");    
-    for (const row of res.rows) {    
-      console.log(`🔄 إعادة الاتصال بالرقم ${row.id}...`);    
-      await initClient(row.id);    
-    }    
-  } catch (err) {    
-    console.error("⚠️ خطأ أثناء إعادة الاتصال بالأرقام:", err);    
-  }    
-}    
+async function reconnectAllActive() {
+  try {
+    const res = await db.query(
+      "SELECT id FROM wa_numbers WHERE status IN ('Active','Disconnected')"
+    );
+
+    for (const row of res.rows) {
+      if (qrCodes[row.id]) {
+        console.log(`⏸ QR pending for ${row.id}, skip reconnect`);
+        continue;
+      }
+      await initClient(row.id);
+    }
+  } catch (err) {
+    console.error("⚠️ خطأ أثناء إعادة الاتصال:", err);
+  }
+}
 async function getOrCreateSession(numberId, jid) {    
   const clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [jid]);    
   let clientId;    
