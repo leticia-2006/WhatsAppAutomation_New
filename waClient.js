@@ -24,12 +24,12 @@ async function initClient(numberId) {
   const sock = makeWASocket({    
   version,    
   auth: state,    
-  printQRInTerminal: true,    
-  browser: ["Ubuntu", "Chrome", "120.0.0.0"],
+  printQRInTerminal: false,    
+  browser: ["WhatsApp Web", "Chrome", "120.0.0"],
   keepAliveIntervalMs: 30000,  // ✅ يمنع غلق الجلسة بعد الخمول    
-  markOnlineOnConnect: true,    
+  markOnlineOnConnect: false,    
   connectTimeoutMs: 60000,    
-  logger: pino({ level: "debug" }), // ✅    
+  logger: pino({ level: "silent" }), // ✅    
 });
     console.log("🧪 makeWASocket executed");   
   
@@ -46,6 +46,7 @@ sock.ev.on("connection.update", async (update) => {
       "UPDATE wa_numbers SET status='Active' WHERE id=$1",
       [numberId]
     );
+      delete qrCodes[numberId];
   }
 
   if (connection === "close") {
@@ -78,7 +79,7 @@ sock.ev.on("connection.update", async (update) => {
 
     // ✅ غير ذلك: أعد الاتصال تلقائيًا
     console.log("🔁 auto reconnect...");
-    setTimeout(() => initClient(numberId), 3000);
+    setTimeout(() => initClient(numberId), 5000);
   }
 });  
  sock.ev.on("creds.update", saveCreds);    
