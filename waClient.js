@@ -36,6 +36,7 @@ async function initClient(numberId) {
     clients[numberId] = sock;    
   
 sock.ev.on("connection.update", async (update) => {
+  console.log("🔍 WA UPDATE:", JSON.stringify(update, null, 2));
   const { connection, lastDisconnect, qr } = update;
 
   if (qr && !qrCodes[numberId]) {
