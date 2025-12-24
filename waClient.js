@@ -79,10 +79,45 @@ sock.ev.on("connection.update", async (update) => {
       return;
     }
     // 🛑 إذا يوجد QR → لا تعيد الاتصال
-  if (qrCodes[numberId]) {
-    console.log("⏸ QR موجود، ننتظر المستخدم يمسحه");
-    return;
-  }
+  // 🔁 WhatsApp يطلب إعادة تشغيل بعد QR (طبيعي)
+if (statusCode === 515) {
+  console.log("🔁 Stream restart requested (515) – reconnecting");
+  delete clients[numberId];
+  return setTimeout(() => initClient(numberId), 2000);
+}
+
+// 🚪 logout حقيقي فقط
+if (
+  statusCode === DisconnectReason.loggedOut ||
+  statusCode === 401
+) {
+  console.log("🚪 Logged out – need new QR");
+
+  fs.rmSync(
+    path.join(__dirname, `../auth_info/${numberId}`),
+    { recursive: true, force: true }
+  );
+
+  await db.query(
+    "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
+    [numberId]
+  );
+
+  delete clients[numberId];
+  delete qrCodes[numberId];
+  return;
+}
+
+// ⏸ QR موجود ولم يُمسح بعد
+if (qrCodes[numberId]) {
+  console.log("⏸ QR موجود، ننتظر المستخدم");
+  return;
+}
+
+// 🔁 reconnect عادي
+console.log("🔁 auto reconnect...");
+delete clients[numberId];
+setTimeout(() => initClient(numberId), 5000);
 
     // ✅ غير ذلك: أعد الاتصال تلقائيًا
     console.log("🔁 auto reconnect...");
