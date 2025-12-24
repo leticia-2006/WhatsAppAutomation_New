@@ -57,72 +57,48 @@ sock.ev.on("connection.update", async (update) => {
   }
 
   if (connection === "close") {
-    const statusCode = lastDisconnect?.error?.output?.statusCode;
+  const statusCode = lastDisconnect?.error?.output?.statusCode;
+  console.log("❌ connection closed:", statusCode);
 
-    console.log("❌ connection closed:", statusCode);
+  // 🔁 515 = إعادة تشغيل طبيعية بعد مسح QR
+  if (statusCode === 515) {
+    console.log("🔁 Stream restart requested (515)");
+    delete clients[numberId];
+    return setTimeout(() => initClient(numberId), 2000);
+  }
 
-    // ❌ فقط هنا نطلب QR جديد
-    if (statusCode === DisconnectReason.loggedOut) {
-      console.log("🚪 Logged out – need new QR");
+  // 🚪 logout حقيقي أو session مرفوض
+  if (
+    statusCode === DisconnectReason.loggedOut ||
+    statusCode === 401
+  ) {
+    console.log("🚪 Logged out – delete session & wait for new QR");
 
-      fs.rmSync(
-        path.join(__dirname, `../auth_info/${numberId}`),
-        { recursive: true, force: true }
-      );
+    fs.rmSync(
+      path.join(__dirname, `../auth_info/${numberId}`),
+      { recursive: true, force: true }
+    );
 
-      await db.query(
-        "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
-        [numberId]
-      );
+    await db.query(
+      "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
+      [numberId]
+    );
 
-      delete clients[numberId];
-      return;
-    }
-    // 🛑 إذا يوجد QR → لا تعيد الاتصال
-  // 🔁 WhatsApp يطلب إعادة تشغيل بعد QR (طبيعي)
-if (statusCode === 515) {
-  console.log("🔁 Stream restart requested (515) – reconnecting");
+    delete clients[numberId];
+    delete qrCodes[numberId];
+    return;
+  }
+
+  // ⏸ QR لم يُمسح بعد
+  if (qrCodes[numberId]) {
+    console.log("⏸ QR موجود، ننتظر المستخدم");
+    return;
+  }
+
+  // 🔁 reconnect عادي
+  console.log("🔁 auto reconnect...");
   delete clients[numberId];
-  return setTimeout(() => initClient(numberId), 2000);
-}
-
-// 🚪 logout حقيقي فقط
-if (
-  statusCode === DisconnectReason.loggedOut ||
-  statusCode === 401
-) {
-  console.log("🚪 Logged out – need new QR");
-
-  fs.rmSync(
-    path.join(__dirname, `../auth_info/${numberId}`),
-    { recursive: true, force: true }
-  );
-
-  await db.query(
-    "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
-    [numberId]
-  );
-
-  delete clients[numberId];
-  delete qrCodes[numberId];
-  return;
-}
-
-// ⏸ QR موجود ولم يُمسح بعد
-if (qrCodes[numberId]) {
-  console.log("⏸ QR موجود، ننتظر المستخدم");
-  return;
-}
-
-// 🔁 reconnect عادي
-console.log("🔁 auto reconnect...");
-delete clients[numberId];
-setTimeout(() => initClient(numberId), 5000);
-
-    // ✅ غير ذلك: أعد الاتصال تلقائيًا
-    console.log("🔁 auto reconnect...");
-    delete clients[numberId]; 
-    setTimeout(() => initClient(numberId), 5000);
+  setTimeout(() => initClient(numberId), 5000);
   }
 });  
  sock.ev.on("creds.update", saveCreds);    
