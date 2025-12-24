@@ -25,12 +25,16 @@ async function initClient(numberId) {
   version,    
   auth: state,    
   printQRInTerminal: false,    
-  browser: ["Chrome (Linux)", "Chrome", "120.0.0"],
-  keepAliveIntervalMs: 30000,  // ✅ يمنع غلق الجلسة بعد الخمول    
-  markOnlineOnConnect: false,    
-  connectTimeoutMs: 60000,    
-  logger: pino({ level: "silent" }), // ✅    
+  browser: ["Ubuntu", "Chrome", "20.0.04"], // جرب تغيير المتصفح لتعريف نفسه بشكل أفضل
+  connectTimeoutMs: 120000, // ارفعها إلى دقيقتين (120 ثانية)
+  defaultQueryTimeoutMs: 60000, 
+  keepAliveIntervalMs: 10000,
+  logger: pino({ level: "debug" }),
+      patchMessageBeforeSending: (message) => {
+    return message;
+  },// اجعله info بدلاً من silent
 });
+
     console.log("🧪 makeWASocket executed");   
   
     clients[numberId] = sock;    
