@@ -324,7 +324,7 @@ function getClientStatus(numberId) {
 }    
     
 // Auto reconnect for all active numbers    
-/*async function reconnectAllActive() {
+async function reconnectAllActive() {
   try {
     const res = await db.query(
       "SELECT id FROM wa_numbers WHERE status IN ('Active','Disconnected')"
@@ -345,7 +345,7 @@ function getClientStatus(numberId) {
   } catch (err) {
     console.error("⚠️ خطأ أثناء إعادة الاتصال:", err);
   }
-}*/
+}
 async function getOrCreateSession(numberId, jid) {    
   const clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [jid]);    
   let clientId;    
@@ -392,4 +392,4 @@ async function getOrCreateSession(numberId, jid) {
     }
   }
 }, 1000 * 60 * 5);  */
-module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, clients };    
+module.exports = { initClient, getQRForNumber, reconnectAllActive, sendMessageToNumber, getClientStatus, clients };    
