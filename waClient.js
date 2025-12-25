@@ -82,7 +82,8 @@ sock.ev.on("connection.update", async (update) => {
     console.log("🚪 Logged out – delete session & wait for new QR");
 
     fs.rmSync(
-      path.join(__dirname, `../auth_info/${numberId}`),
+      path.join(__dirname, `auth_info/${numberId}`),
+      console.log("📂 AUTH PATH =", authPath);
       { recursive: true, force: true }
     );
 
