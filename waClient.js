@@ -318,7 +318,7 @@ function getClientStatus(numberId) {
 }    
     
 // Auto reconnect for all active numbers    
-async function reconnectAllActive() {
+/*async function reconnectAllActive() {
   try {
     const res = await db.query(
       "SELECT id FROM wa_numbers WHERE status IN ('Active','Disconnected')"
@@ -339,7 +339,7 @@ async function reconnectAllActive() {
   } catch (err) {
     console.error("⚠️ خطأ أثناء إعادة الاتصال:", err);
   }
-}
+}*/
 async function getOrCreateSession(numberId, jid) {    
   const clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [jid]);    
   let clientId;    
@@ -367,7 +367,7 @@ async function getOrCreateSession(numberId, jid) {
     
   return newSession.rows[0].id;    
 }    
-setInterval(async () => {
+/*setInterval(async () => {
   for (const sock of Object.values(clients)) {
     try {
       if (sock?.ws?.readyState === 1) {
@@ -377,7 +377,7 @@ setInterval(async () => {
       console.log("⚠️ ping failed");
     }
   }
-}, 1000 * 25);
+}, 1000 * 25);*/
 /*setInterval(() => {
   for (const [id, sock] of Object.entries(clients)) {
     if (!sock || !sock.user) {
