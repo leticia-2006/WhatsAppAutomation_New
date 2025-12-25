@@ -31,7 +31,7 @@ if (initializing.has(numberId)) {
 
   try {
   console.log("🚀 Starting initClient for", numberId);
-  const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));    
+  const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `auth_info/${numberId}`));    
   const { version } = await fetchLatestBaileysVersion();    
       
   const pino = require("pino");    
@@ -83,22 +83,23 @@ sock.ev.on("connection.update", async (update) => {
   }
 
   // 🚪 logout حقيقي أو session مرفوض
-  if (
-    statusCode === DisconnectReason.loggedOut ||
-    statusCode === 401 && reason !== "restart_required"
-  ) {
-    console.log("🚪 Logged out – delete session & wait for new QR");
-
-    deleteAuthSession(numberId)
-    await db.query(
+  if (statusCode === DisconnectReason.loggedOut) {
+  console.log("🚪 Logged out – delete session");
+  deleteAuthSession(numberId);
+  await db.query(
       "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
       [numberId]
-    );
+  );
+  delete clients[numberId];
+  delete qrCodes[numberId];
+  return;
+}
 
-    delete clients[numberId];
-    delete qrCodes[numberId];
-    return;
-  }
+if (statusCode === 401) {
+  console.log("⚠️ 401 conflict – do NOT delete session");
+  delete clients[numberId];
+  return;
+}
 
   // ⏸ QR لم يُمسح بعد
   if (qrCodes[numberId]) {
