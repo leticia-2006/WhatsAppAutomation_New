@@ -392,4 +392,4 @@ async function getOrCreateSession(numberId, jid) {
     }
   }
 }, 1000 * 60 * 5);  */
-module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };    
+module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, clients };    
