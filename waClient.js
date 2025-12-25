@@ -4,12 +4,20 @@ const db = require("./db");
 const path = require("path");    
 const { downloadMediaMessage } = require("@whiskeysockets/baileys");    
 const fs = require("fs");    
-    
-    
-    
 const clients = {};    
 const qrCodes = {};    
 const initializing = new Set();   
+
+function deleteAuthSession(numberId) {
+  const authPath = path.join(__dirname, `auth_info/${numberId}`);
+
+  if (fs.existsSync(authPath)) {
+    fs.rmSync(authPath, { recursive: true, force: true });
+    console.log("🗑️ auth_info deleted for", numberId);
+  } else {
+    console.log("ℹ️ auth_info not found for", numberId);
+  }
+}
 async function initClient(numberId) {    
 if (initializing.has(numberId)) {
     console.log("⛔ init already in progress for", numberId);
@@ -81,10 +89,7 @@ sock.ev.on("connection.update", async (update) => {
   ) {
     console.log("🚪 Logged out – delete session & wait for new QR");
 
-    const authPath = path.join(__dirname, `auth_info/${numberId}`);
-fs.rmSync(authPath, { recursive: true, force: true });
-console.log("📂 AUTH PATH =", authPath);
-
+    deleteAuthSession(numberId)
     await db.query(
       "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
       [numberId]
