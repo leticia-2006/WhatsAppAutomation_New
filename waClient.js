@@ -31,7 +31,7 @@ if (initializing.has(numberId)) {
   version,    
   auth: state,    
   printQRInTerminal: false,    
-  browser: ["Ubuntu", "Chrome", "20.0.04"], // جرب تغيير المتصفح لتعريف نفسه بشكل أفضل
+  browser: ["Baileys", "Chrome", "1.0.0"], // جرب تغيير المتصفح لتعريف نفسه بشكل أفضل
   connectTimeoutMs: 120000, // ارفعها إلى دقيقتين (120 ثانية)
   defaultQueryTimeoutMs: 60000, 
   keepAliveIntervalMs: 10000,
@@ -67,7 +67,8 @@ sock.ev.on("connection.update", async (update) => {
   console.log("❌ connection closed:", statusCode);
 
   // 🔁 515 = إعادة تشغيل طبيعية بعد مسح QR
-  if (statusCode === 515) {
+  const reason = lastDisconnect?.error?.data?.reason;
+    if (statusCode === 515) {
     console.log("🔁 Stream restart requested (515)");
     delete clients[numberId];
     return setTimeout(() => initClient(numberId), 2000);
@@ -76,7 +77,7 @@ sock.ev.on("connection.update", async (update) => {
   // 🚪 logout حقيقي أو session مرفوض
   if (
     statusCode === DisconnectReason.loggedOut ||
-    statusCode === 401
+    statusCode === 401 && reason !== "restart_required"
   ) {
     console.log("🚪 Logged out – delete session & wait for new QR");
 
@@ -239,7 +240,7 @@ sock.ev.on("messages.update", async (updates) => {
       }    
     }    
 });    
- clients[numberId] = sock;    
+     
 } finally {
     initializing.delete(numberId);
   }
@@ -325,7 +326,12 @@ async function reconnectAllActive() {
     );
 
     for (const row of res.rows) {
-      if (qrCodes[row.id]) {
+       // ⛔ init جاري بالفعل
+        if (initializing.has(row.id)) {
+       console.log("⏳ init in progress, skip", row.id);
+       continue;
+        }
+        if (qrCodes[row.id]) {
         console.log(`⏸ QR pending for ${row.id}, skip reconnect`);
         continue;
       }
