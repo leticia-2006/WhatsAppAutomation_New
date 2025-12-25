@@ -9,14 +9,20 @@ const fs = require("fs");
     
 const clients = {};    
 const qrCodes = {};    
-    
+const initializing = new Set();   
 async function initClient(numberId) {    
-
+if (initializing.has(numberId)) {
+    console.log("⛔ init already in progress for", numberId);
+    return;
+}
   if (clients[numberId]) {
-    console.log(`⚠️ Client ${numberId} already exists, skipping init`);
+    console.log("⚠️ Client already exists", numberId);
     return;
   }
-  console.log("🚀 initClient called for", numberId);
+    initializing.add(numberId);
+
+  try {
+  console.log("🚀 Starting initClient for", numberId);
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));    
   const { version } = await fetchLatestBaileysVersion();    
       
@@ -30,7 +36,7 @@ async function initClient(numberId) {
   defaultQueryTimeoutMs: 60000, 
   keepAliveIntervalMs: 10000,
   logger: pino({ level: "debug" }),
-      patchMessageBeforeSending: (message) => {
+  patchMessageBeforeSending: (message) => {
     return message;
   },// اجعله info بدلاً من silent
 });
@@ -234,6 +240,9 @@ sock.ev.on("messages.update", async (updates) => {
     }    
 });    
  clients[numberId] = sock;    
+} finally {
+    initializing.delete(numberId);
+  }
 }    
     
     
