@@ -83,6 +83,7 @@ sock.ev.on("connection.update", async (update) => {
 
     fs.rmSync(
       path.join(__dirname, `auth_info/${numberId}`),
+      fs.rmSync(authPath, { recursive: true, force: true });
       console.log("📂 AUTH PATH =", authPath);
       { recursive: true, force: true }
     );
