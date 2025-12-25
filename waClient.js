@@ -81,12 +81,9 @@ sock.ev.on("connection.update", async (update) => {
   ) {
     console.log("🚪 Logged out – delete session & wait for new QR");
 
-    fs.rmSync(
-      path.join(__dirname, `auth_info/${numberId}`),
-      fs.rmSync(authPath, { recursive: true, force: true });
-      console.log("📂 AUTH PATH =", authPath);
-      { recursive: true, force: true }
-    );
+    const authPath = path.join(__dirname, `auth_info/${numberId}`);
+fs.rmSync(authPath, { recursive: true, force: true });
+console.log("📂 AUTH PATH =", authPath);
 
     await db.query(
       "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
