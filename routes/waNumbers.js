@@ -117,27 +117,26 @@ router.get("/:id/qr", requireLogin, async (req, res) => {
       return res.status(400).json({ error: "Invalid number id" });
     }
 
-    let qr = getQRForNumber(numberId);
+    let qr;
+try {
+  qr = getQRForNumber(numberId);
+} catch (e) {
+  console.error("Error generating QR:", e);
+  return res.status(500).json({ qr: null, message: "Error generating QR" });
+}
 
-    // 🔥 إذا لا يوجد QR → اطلب init من جديد
-    if (!qr) {
-      console.log("♻️ No QR found → re-init client", numberId);
-      initClient(numberId);
-      return res.json({
-        qr: null,
-        message: "Generating QR, please retry in 3 seconds"
-      });
-      }
+console.log("API /qr called for:", numberId, "result:", qr ? "FOUND" : "NULL");
 
-    res.json({
-      qr,
-      message: "QR ready"
-    });
+res.json({
+  qr: qr || null,
+  message: qr ? "QR ready" : "QR expired or client already connected"
+});
   } catch (err) {
     console.error("Error fetching QR:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
+
 // 📌 تأكيد / إعادة تفعيل الرقم
 router.post("/:id/confirm", requireLogin, checkRole(["super_admin"]),
   async (req, res) => {
