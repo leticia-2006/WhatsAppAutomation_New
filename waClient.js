@@ -70,54 +70,50 @@ sock.ev.on("connection.update", async (update) => {
       delete qrCodes[numberId];
   }
 
-  if (connection === "close") {
+if (connection === "close") {
   const statusCode = lastDisconnect?.error?.output?.statusCode;
-  console.log("❌ connection closed:", statusCode);
-
-  // 🔁 515 = إعادة تشغيل طبيعية بعد مسح QR
   const reason = lastDisconnect?.error?.data?.reason;
-    if (statusCode === 515) {
-    console.log("🔁 Stream restart requested (515)");
-    delete clients[numberId];
-    return setTimeout(() => initClient(numberId), 2000);
-    return;
-  }
 
-  // 🚪 logout حقيقي أو session مرفوض
-  if (statusCode === DisconnectReason.loggedOut) {
-  console.log("🚪 Logged out – delete session");
-  //deleteAuthSession(numberId);
-  await db.query(
+  console.log("❌ connection closed:", statusCode, reason);
+
+  // 🔥 أي 401 = تنظيف كامل
+  if (statusCode === 401) {
+    console.log("🚨 401 conflict → FULL RESET");
+
+    deleteAuthSession(numberId);
+    delete clients[numberId];
+    delete qrCodes[numberId];
+    initializing.delete(numberId);
+
+    await db.query(
       "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
       [numberId]
-  );
-  delete clients[numberId];
-  delete qrCodes[numberId];
-  return;
-}
+    );
 
-if (statusCode === 401) {
-  console.log("🚪 401 – session invalid, force re-login");
-
-  deleteAuthSession(numberId);   // ✅ يمسح auth_info
-  delete clients[numberId];
-  delete qrCodes[numberId];
-
-  setTimeout(() => initClient(numberId), 2000); // ✅ يولد QR جديد
-  return;
-}
-
-  // ⏸ QR لم يُمسح بعد
-  if (qrCodes[numberId]) {
-    console.log("⏸ QR موجود، ننتظر المستخدم");
+    // ❗ لا تعيد init مباشرة
+    // المستخدم هو من يطلب QR من جديد
     return;
   }
 
-  // 🔁 reconnect عادي
-  console.log("🔁 auto reconnect...");
-  delete clients[numberId];
-  setTimeout(() => initClient(numberId), 5000);
+  // logout صريح
+  if (statusCode === DisconnectReason.loggedOut) {
+    console.log("🚪 Logged out");
+
+    deleteAuthSession(numberId);
+    delete clients[numberId];
+    delete qrCodes[numberId];
+    initializing.delete(numberId);
+
+    return;
   }
+
+  // reconnect عادي (بدون QR)
+  if (!qrCodes[numberId]) {
+    delete clients[numberId];
+    initializing.delete(numberId);
+    setTimeout(() => initClient(numberId), 5000);
+  }
+}
 });  
  sock.ev.on("creds.update", saveCreds);    
     
@@ -331,25 +327,16 @@ function getClientStatus(numberId) {
     
 // Auto reconnect for all active numbers    
 async function reconnectAllActive() {
-  try {
-    const res = await db.query(
-      "SELECT id FROM wa_numbers WHERE status IN ('Active','Disconnected')"
-    );
+  const res = await db.query(
+    "SELECT id FROM wa_numbers WHERE status='Active'"
+  );
 
-    for (const row of res.rows) {
-       // ⛔ init جاري بالفعل
-        if (initializing.has(row.id)) {
-       console.log("⏳ init in progress, skip", row.id);
-       continue;
-        }
-        if (qrCodes[row.id]) {
-        console.log(`⏸ QR pending for ${row.id}, skip reconnect`);
-        continue;
-      }
-      await initClient(row.id);
-    }
-  } catch (err) {
-    console.error("⚠️ خطأ أثناء إعادة الاتصال:", err);
+  for (const row of res.rows) {
+    if (clients[row.id]) continue;
+    if (initializing.has(row.id)) continue;
+    if (qrCodes[row.id]) continue;
+
+    await initClient(row.id);
   }
 }
 async function getOrCreateSession(numberId, jid) {    
