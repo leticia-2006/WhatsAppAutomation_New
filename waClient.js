@@ -74,11 +74,14 @@ if (connection === "close") {
   const statusCode = lastDisconnect?.error?.output?.statusCode;
   const reason = lastDisconnect?.error?.data?.reason;
 
-  console.log("❌ connection closed:", statusCode, reason);
+  console.log("🔌 WA closed:", statusCode, reason);
 
-  // 🔥 أي 401 = تنظيف كامل
-  if (statusCode === 401) {
-    console.log("🚨 401 conflict → FULL RESET");
+  // 🚪 أي 401 أو loggedOut = إعادة ربط يدوية فقط
+  if (
+    statusCode === 401 ||
+    statusCode === DisconnectReason.loggedOut
+  ) {
+    console.log("🚨 Session invalid → wait for manual QR");
 
     deleteAuthSession(numberId);
     delete clients[numberId];
@@ -90,29 +93,20 @@ if (connection === "close") {
       [numberId]
     );
 
-    // ❗ لا تعيد init مباشرة
-    // المستخدم هو من يطلب QR من جديد
+    return; // ❌ لا reconnect تلقائي
+  }
+
+  // 🔁 515 = تجاهل (واتساب يعيد الاتصال وحده)
+  if (statusCode === 515) {
+    console.log("🔁 515 restart requested → ignore");
     return;
   }
 
-  // logout صريح
-  if (statusCode === DisconnectReason.loggedOut) {
-    console.log("🚪 Logged out");
+  // 🔄 باقي الحالات (network)
+  delete clients[numberId];
+  initializing.delete(numberId);
 
-    deleteAuthSession(numberId);
-    delete clients[numberId];
-    delete qrCodes[numberId];
-    initializing.delete(numberId);
-
-    return;
-  }
-
-  // reconnect عادي (بدون QR)
-  if (!qrCodes[numberId]) {
-    delete clients[numberId];
-    initializing.delete(numberId);
-    setTimeout(() => initClient(numberId), 5000);
-  }
+  setTimeout(() => initClient(numberId), 8000);
 }
 });  
  sock.ev.on("creds.update", saveCreds);    
