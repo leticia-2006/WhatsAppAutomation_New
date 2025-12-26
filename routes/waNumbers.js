@@ -110,52 +110,34 @@ router.delete("/:id", requireLogin, checkRole(["super_admin"]), async (req, res)
 );
 
 // 📌 استرجاع QR Code لرقم معين
-// 📌 استرجاع QR Code لرقم معين
 router.get("/:id/qr", requireLogin, async (req, res) => {
-    try {
-        const numberId = parseInt(req.params.id, 10);
-        if (isNaN(numberId)) {
-            return res.status(400).json({ error: "Invalid number id" });
-        }
-
-        // ⬇️ أولاً: تحديث حالة الرقم
-        await db.query(
-            "UPDATE wa_numbers SET status='Connecting' WHERE id=$1",
-            [numberId]
-        );
-        
-        let qr = getQRForNumber(numberId);
-        
-        // ⬇️ إذا لا يوجد QR → ابدأ العملية
-        if (!qr) {
-            console.log("♻️ No QR found → re-init client", numberId);
-            await db.query(
-                "UPDATE wa_numbers SET status='Initializing' WHERE id=$1",
-                [numberId]
-            );
-            
-            // ⚡ استدعاء initClient مع تأخير صغير
-            setTimeout(() => initClient(numberId), 1000);
-            
-            return res.json({
-                qr: null,
-                status: "initializing",
-                message: "Starting WhatsApp connection..."
-            });
-        }
-        
-        res.json({
-            qr,
-            status: "qr_ready",
-            message: "Scan QR code with your phone"
-        });
-
-    } catch (err) {
-        console.error("Error fetching QR:", err);
-        res.status(500).json({ error: "Server error" });
+  try {
+    const numberId = parseInt(req.params.id, 10);
+    if (isNaN(numberId)) {
+      return res.status(400).json({ error: "Invalid number id" });
     }
-});
 
+    let qr = getQRForNumber(numberId);
+
+    // 🔥 إذا لا يوجد QR → اطلب init من جديد
+    if (!qr) {
+      console.log("♻️ No QR found → re-init client", numberId);
+      initClient(numberId);
+      return res.json({
+        qr: null,
+        message: "Generating QR, please retry in 3 seconds"
+      });
+      }
+
+    res.json({
+      qr,
+      message: "QR ready"
+    });
+  } catch (err) {
+    console.error("Error fetching QR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 // 📌 تأكيد / إعادة تفعيل الرقم
 router.post("/:id/confirm", requireLogin, checkRole(["super_admin"]),
   async (req, res) => {
