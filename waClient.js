@@ -78,14 +78,13 @@ sock.ev.on("connection.update", async (update) => {
   const reason = lastDisconnect?.error?.data?.reason;
     if (statusCode === 515) {
     console.log("🔁 Stream restart requested (515)");
-    delete clients[numberId];
-    return setTimeout(() => initClient(numberId), 2000);
+    return;
   }
 
   // 🚪 logout حقيقي أو session مرفوض
   if (statusCode === DisconnectReason.loggedOut) {
   console.log("🚪 Logged out – delete session");
-  deleteAuthSession(numberId);
+  //deleteAuthSession(numberId);
   await db.query(
       "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
       [numberId]
