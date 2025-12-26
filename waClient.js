@@ -18,97 +18,117 @@ function deleteAuthSession(numberId) {
     console.log("ℹ️ auth_info not found for", numberId);
   }
 }
-async function initClient(numberId) {    
-if (initializing.has(numberId)) {
-    console.log("⛔ init already in progress for", numberId);
-    return;
-}
-  if (clients[numberId]) {
-    console.log("⚠️ Client already exists", numberId);
-    return;
-  }
+async function initClient(numberId) {
+    if (initializing.has(numberId)) {
+        console.log("⛔ init already in progress for", numberId);
+        return;
+    }
+    
+    // ✅ تحقق إضافي: إذا كان العميل موجوداً ومتصل
+    if (clients[numberId] && clients[numberId].user) {
+        console.log(`✅ Client ${numberId} already connected (jid: ${clients[numberId].user.id})`);
+        return;
+    }
+    
     initializing.add(numberId);
 
-  try {
-  console.log("🚀 Starting initClient for", numberId);
-  const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `auth_info/${numberId}`));    
-  const { version } = await fetchLatestBaileysVersion();    
-      
-  const pino = require("pino");    
-  const sock = makeWASocket({    
-  version,    
-  auth: state,    
-  printQRInTerminal: false,    
-  browser: ["Baileys", "Chrome", "1.0.0"], // جرب تغيير المتصفح لتعريف نفسه بشكل أفضل
-  connectTimeoutMs: 120000, // ارفعها إلى دقيقتين (120 ثانية)
-  defaultQueryTimeoutMs: 60000, 
-  keepAliveIntervalMs: 10000,
-  logger: pino({ level: "debug" }),
-  patchMessageBeforeSending: (message) => {
-    return message;
-  },// اجعله info بدلاً من silent
-});
+    try {
+        console.log("🚀 Starting initClient for", numberId);
+        const { state, saveCreds } = await useMultiFileAuthState(
+            path.join(__dirname, `auth_info/${numberId}`)
+        );
+        const { version } = await fetchLatestBaileysVersion();
 
-    console.log("🧪 makeWASocket executed");   
-  
-    clients[numberId] = sock;    
-  
-sock.ev.on("connection.update", async (update) => {
-  console.log("🔍 WA UPDATE:", JSON.stringify(update, null, 2));
-  const { connection, lastDisconnect, qr } = update;
+        const sock = makeWASocket({
+            version,
+            auth: state,
+            printQRInTerminal: false,
+            browser: ["Ubuntu", "Chrome", "120.0.0.0"], // ⬅️ غيّر هذا
+            connectTimeoutMs: 60000,
+            defaultQueryTimeoutMs: 60000,
+            keepAliveIntervalMs: 30000, // ⬅️ زيادة هذا
+            logger: pino({ level: "silent" }), // ⬅️ غير إلى silent لتنظيف اللوج
+            // ⬇️ أضف هذه الإعدادات الجديدة
+            markOnlineOnConnect: true,
+            syncFullHistory: false,
+            generateHighQualityLinkPreview: false,
+            linkPreviewImageThumbnailWidth: 192,
+            getMessage: async (key) => {
+                return {
+                    conversation: "hello"
+                }
+            }
+        });
 
-  if (qr && !qrCodes[numberId]) {
-  qrCodes[numberId] = qr;
-  console.log("📸 QR generated for", numberId);
-  }
-  if (connection === "open") {
-    console.log(`✅ ${numberId} connected`);
-    await db.query(
-      "UPDATE wa_numbers SET status='Active' WHERE id=$1",
-      [numberId]
-    );
-      delete qrCodes[numberId];
-  }
+        console.log("🧪 makeWASocket executed");
+        clients[numberId] = sock;
 
-if (connection === "close") {
-  const statusCode = lastDisconnect?.error?.output?.statusCode;
-  const reason = lastDisconnect?.error?.data?.reason;
+        sock.ev.on("connection.update", async (update) => {
+            console.log("🔍 WA UPDATE:", JSON.stringify(update, null, 2));
+            const { connection, lastDisconnect, qr } = update;
 
-  console.log("🔌 WA closed:", statusCode, reason);
+            if (qr) {
+                qrCodes[numberId] = qr;
+                console.log("📸 QR generated for", numberId);
+                
+                // ⬇️ تحديث حالة قاعدة البيانات
+                await db.query(
+                    "UPDATE wa_numbers SET status='QR Ready' WHERE id=$1",
+                    [numberId]
+                );
+            }
 
-  // 🚪 أي 401 أو loggedOut = إعادة ربط يدوية فقط
-  if (
-    statusCode === 401 ||
-    statusCode === DisconnectReason.loggedOut
-  ) {
-    console.log("🚨 Session invalid → wait for manual QR");
+            if (connection === "open") {
+                console.log(`✅ ${numberId} connected`);
+                await db.query(
+                    "UPDATE wa_numbers SET status='Active' WHERE id=$1",
+                    [numberId]
+                );
+                delete qrCodes[numberId];
+            }
 
-    deleteAuthSession(numberId);
-    delete clients[numberId];
-    delete qrCodes[numberId];
-    initializing.delete(numberId);
+            if (connection === "close") {
+                const statusCode = lastDisconnect?.error?.output?.statusCode;
+                const shouldReconnect = shouldReconnectSocket(lastDisconnect);
+                
+                console.log("🔌 WA closed:", statusCode, "shouldReconnect:", shouldReconnect);
 
-    await db.query(
-      "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
-      [numberId]
-    );
-
-    return; // ❌ لا reconnect تلقائي
-  }
-
-  // 🔁 515 = تجاهل (واتساب يعيد الاتصال وحده)
-  if (statusCode === 515) {
-    console.log("🔁 515 restart requested → ignore");
-    return;
-  }
-
-  // 🔄 باقي الحالات (network)
-  delete clients[numberId];
-  initializing.delete(numberId);
-
-  setTimeout(() => initClient(numberId), 8000);
-}
-});  
+                // 🔄 منطق إعادة الاتصال المحسن
+                if (shouldReconnect) {
+                    console.log(`🔄 Reconnecting ${numberId} in 5s...`);
+                    
+                    // تنظيف الذاكرة
+                    delete clients[numberId];
+                    delete qrCodes[numberId];
+                    initializing.delete(numberId);
+                    
+                    setTimeout(() => {
+                        console.log(`🔄 Attempting reconnect for ${numberId}`);
+                        initClient(numberId);
+                    }, 5000);
+                } 
+                // ⚠️ حالة خاصة: 515 بعد الاقتران مباشرة
+                else if (statusCode === 515 && qrCodes[numberId]) {
+                    console.log("⚡ 515 after pairing - waiting for auto-reconnect");
+                    // لا تفعل شيء، دع Baileys يعيد الاتصال تلقائياً
+                }
+                // 🚨 جلسة منتهية أو غير صالحة
+                else if (statusCode === 401 || statusCode === DisconnectReason.loggedOut) {
+                    console.log("🚨 Session invalid → need new QR");
+                    
+                    // تنظيف كامل
+                    deleteAuthSession(numberId);
+                    delete clients[numberId];
+                    delete qrCodes[numberId];
+                    initializing.delete(numberId);
+                    
+                    await db.query(
+                        "UPDATE wa_numbers SET status='Disconnected' WHERE id=$1",
+                        [numberId]
+                    );
+                }
+            }
+        });
  sock.ev.on("creds.update", saveCreds);    
     
  sock.ev.on("messages.upsert", async (m) => {    
@@ -246,7 +266,53 @@ sock.ev.on("messages.update", async (updates) => {
     initializing.delete(numberId);
   }
 }    
+function shouldReconnectSocket(lastDisconnect) {
+    const statusCode = lastDisconnect?.error?.output?.statusCode;
     
+    // ⚠️ الأخطاء التي لا تحتاج لإعادة اتصال
+    const nonReconnectCodes = [
+        401, // غير مصرح
+        403, // محظور
+        404, // غير موجود
+        405, // غير مسموح
+        406, // غير مقبول
+        407, // مطلوب مصادقة الوكيل
+        409, // تعارض
+        410, // ذهب
+        422, // كيان غير معالج
+        423, // مقفل
+        424, // فشل تبعية
+        428, // شرط مطلوب
+        429, // طلبات كثيرة جداً
+        451, // غير متوفر لأسباب قانونية
+    ];
+    
+    if (nonReconnectCodes.includes(statusCode)) {
+        return false;
+    }
+    
+    // 🔄 الأخطاء التي تحتاج لإعادة اتصال
+    const reconnectCodes = [
+        408, // انتهت المهلة
+        500, // خطأ داخلي في الخادم
+        502, // بوابة سيئة
+        503, // الخدمة غير متوفرة
+        504, // انتهت مهلة البوابة
+        515, // خطأ في البث (Stream Errored) ⬅️ مهم!
+    ];
+    
+    if (reconnectCodes.includes(statusCode)) {
+        return true;
+    }
+    
+    // ⚡ حالة الـ loggedOut من Baileys
+    if (statusCode === DisconnectReason.loggedOut) {
+        return false; // يحتاج QR جديد
+    }
+    
+    // افتراضياً: حاول إعادة الاتصال
+    return true;
+}  
     
 function getQRForNumber(numberId) {    
   return qrCodes[numberId] || null;    
