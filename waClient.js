@@ -47,7 +47,7 @@ async function initClient(numberId) {
             connectTimeoutMs: 60000,
             defaultQueryTimeoutMs: 60000,
             keepAliveIntervalMs: 30000, // ⬅️ زيادة هذا
-            logger: pino({ level: "silent" }), // ⬅️ غير إلى silent لتنظيف اللوج
+            logger: pino({ level: "debug" }), // ⬅️ غير إلى silent لتنظيف اللوج
             // ⬇️ أضف هذه الإعدادات الجديدة
             markOnlineOnConnect: true,
             syncFullHistory: false,
