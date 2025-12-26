@@ -95,8 +95,13 @@ sock.ev.on("connection.update", async (update) => {
 }
 
 if (statusCode === 401) {
-  console.log("⚠️ 401 conflict – do NOT delete session");
+  console.log("🚪 401 – session invalid, force re-login");
+
+  deleteAuthSession(numberId);   // ✅ يمسح auth_info
   delete clients[numberId];
+  delete qrCodes[numberId];
+
+  setTimeout(() => initClient(numberId), 2000); // ✅ يولد QR جديد
   return;
 }
 
