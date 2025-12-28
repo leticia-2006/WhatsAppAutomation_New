@@ -11,7 +11,11 @@ const clients = {};
 const qrCodes = {};
 
 async function initClient(numberId) {
-  const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `../auth_info/${numberId}`));
+  if (clients[numberId]) {
+    console.log(`⚠️ Client ${numberId} already exists, skipping init`);
+    return;
+  }
+  const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `auth_info/${numberId}`));
   const { version } = await fetchLatestBaileysVersion();
   
   const pino = require("pino");
@@ -44,15 +48,33 @@ async function initClient(numberId) {
   }
 
   if (connection === "close") {
-    const reason = lastDisconnect?.error?.output?.statusCode;
-    if (reason === DisconnectReason.loggedOut) {
-      fs.rmSync(path.join(__dirname, `../auth_info/${numberId}`), { recursive: true, force: true });
-      await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", ["Disconnected", numberId]);
-      delete clients[numberId];
-    } else {
-      console.log(`🔁 Trying to reconnect number ${numberId}...`);
-      setTimeout(() => initClient(numberId), 5000);
-    }
+  const statusCode = lastDisconnect?.error?.output?.statusCode;
+
+  console.log(`❌ Connection closed for ${numberId}, code:`, statusCode);
+
+  if (statusCode === DisconnectReason.loggedOut || statusCode === 401) {
+    console.log("🚪 Session invalid → deleting auth");
+
+    fs.rmSync(
+      path.join(__dirname, `auth_info/${numberId}`),
+      { recursive: true, force: true }
+    );
+
+    delete clients[numberId];
+    delete qrCodes[numberId];
+
+    await db.query(
+      "UPDATE wa_numbers SET status=$1 WHERE id=$2",
+      ["Disconnected", numberId]
+    );
+
+    // ❗ فقط هنا نعيد init
+    setTimeout(() => initClient(numberId), 3000);
+    return;
+  }
+
+  // ❌ لا reconnect تلقائي
+  console.log("⛔ Not reconnecting automatically");
   }
 });
  sock.ev.on("creds.update", saveCreds);
@@ -301,13 +323,13 @@ async function getOrCreateSession(numberId, jid) {
 
   return newSession.rows[0].id;
 }
-setInterval(async () => {
+/*setInterval(async () => {
   for (const [id, sock] of Object.entries(clients)) {
     if (!sock.user) {
       console.log(`💤 Client ${id} seems inactive. Restarting...`);
       await initClient(Number(id));
     }
   }
-}, 1000 * 60 * 5);
+}, 1000 * 60 * 5);*/
 
 module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };
