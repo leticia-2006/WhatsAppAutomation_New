@@ -4,7 +4,7 @@ const db = require("./db");
 const path = require("path");
 const { downloadMediaMessage } = require("@whiskeysockets/baileys");
 const fs = require("fs");
-
+const { console } = require("inspector");
 
 
 const clients = {};
@@ -47,35 +47,61 @@ async function initClient(numberId) {
     }
   }
 
-  if (connection === "close") {
+ if (connection === "close") {
   const statusCode = lastDisconnect?.error?.output?.statusCode;
+  const conflict = lastDisconnect?.error?.output?.payload?.content || lastDisconnect?.error?.content;
+  const reason =  Array.isArray(conflict) ? conflict[0]?.attrs.type : undefined;
 
-  console.log(`❌ Connection closed for ${numberId}, code:`, statusCode);
+  console.log(`❌ Connection closed for ${numberId}, code:`, statusCode, "reason:", reason);
 
-  if (statusCode === DisconnectReason.loggedOut || statusCode === 401) {
-    console.log("🚪 Session invalid → deleting auth");
+  if(statusCode === 515) {
+    console.log("515= soft restart after pairing"); 
+    if (clients[numberId]) {
+      try { 
+        clients[numberId].end();
+      } catch {}
+      delete clients[numberId];}
+      setTimeout(() => initClient(numberId), 1500);
+    return;
+  }
+if (statusCode === 401 &&  reason === "device_removed") { 
 
+  console.log("Device removed by Whatsapp → deleting auth");
+  try {
+      fs.rmSync(
+        path.join(__dirname, `auth_info/${numberId}`),
+        { recursive: true, force: true }
+      );
+    } catch {} 
+    delete clients[numberId];
+    delete qrCodes[numberId];
+    await db.query("UPDATE wa_numbers SET status=$1 WHERE id=$2", 
+      ["Disconnected", numberId]);
+    return;
+  }
+
+// 🔴 Logout نهائي
+  if (statusCode === DisconnectReason.loggedOut ) {
+    console.log("🚪 Logged out → delete auth");
+try {
     fs.rmSync(
       path.join(__dirname, `auth_info/${numberId}`),
       { recursive: true, force: true }
     );
+  } catch {} 
+  if (clients[numberId]) {
+    try {
+      clients[numberId].end();
+    } catch {}
 
-    delete clients[numberId];
+    delete clients[numberId];}
     delete qrCodes[numberId];
-
-    await db.query(
-      "UPDATE wa_numbers SET status=$1 WHERE id=$2",
-      ["Disconnected", numberId]
-    );
-
-    // ❗ فقط هنا نعيد init
-    setTimeout(() => initClient(numberId), 3000);
-    return;
+    return ;
   }
 
-  // ❌ لا reconnect تلقائي
-  console.log("⛔ Not reconnecting automatically");
-  }
+  // 🟢 515 / 408 / أي خطأ آخر → Restart
+  console.log("Close without automatic restart");
+}
 });
  sock.ev.on("creds.update", saveCreds);
 
@@ -85,9 +111,10 @@ async function initClient(numberId) {
     const msg = m.messages[0];
     console.log("Raw message object:", JSON.stringify(msg, null, 2));
     
-    if (!msg.message) {
-      console.log("An empthy message that was ignored"); 
-    return;
+    if (!msg?.message) return;
+    if (msg.message.protocolMessage) {
+      console.log("Ignored protocolMessage:", msg.message.protocolMessage.type);
+      return
     }
 
     const isFromMe = msg.key.fromMe;
@@ -125,7 +152,8 @@ const filePath = path.join(uploadsDir, fileName);
     fs.mkdirSync("./uploads");
   }
   fs.writeFileSync(filePath, buffer);
-  mediaUrl = `${process.env.BASE_URL || "https://whatsappautomation-new-4fec.onrender.com"}/uploads/${fileName}`;
+  const BASE_URL = "http://localhost:5008";
+  mediaUrl = `${BASE_URL}/uploads/${fileName}`;
   text = "[🎥 فيديو]";
 }
 console.log("Content of the message", text, "نوع:", contentType, "رابط:", mediaUrl);
@@ -209,7 +237,7 @@ sock.ev.on("messages.update", async (updates) => {
       }
     }
 });
- clients[numberId] = sock;
+ 
 }
 
 
@@ -285,7 +313,7 @@ function getClientStatus(numberId) {
 }
 
 // Auto reconnect for all active numbers
-async function reconnectAllActive() {
+/*async function reconnectAllActive() {
   try {
     const res = await db.query("SELECT id FROM wa_numbers WHERE status IN ('Active','Disconnected')");
     for (const row of res.rows) {
@@ -295,7 +323,7 @@ async function reconnectAllActive() {
   } catch (err) {
     console.error("⚠️ خطأ أثناء إعادة الاتصال بالأرقام:", err);
   }
-}
+}*/
 async function getOrCreateSession(numberId, jid) {
   const clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [jid]);
   let clientId;
@@ -332,4 +360,4 @@ async function getOrCreateSession(numberId, jid) {
   }
 }, 1000 * 60 * 5);*/
 
-module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, reconnectAllActive, clients };
+module.exports = { initClient, getQRForNumber, sendMessageToNumber, getClientStatus, /*reconnectAllActive,*/ clients };
