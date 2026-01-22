@@ -24,7 +24,7 @@ console.log("Server file started running...");
 
 // Middleware
 app.use(cors({
-  origin: ["https://whatsappautomation-new-2-q4pc.onrender.com", "http://localhost:3000" ],
+  origin: ["https://whatsappautomation-new-4fec.onrender.com", "http://localhost:3000" ],
   credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -131,15 +131,16 @@ const server = http.createServer(app);
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
-reconnectAllActive().then(() => {
+/*reconnectAllActive().then(() => {
   console.log("✅ تم إعادة تشغيل جميع الأرقام النشطة");
-});process.on("uncaughtException", (err) => {
+});*/process.on("uncaughtException", (err) => {
  console.error("Uncaught Exception:", err);
 });
 process.on("unhandledRejection", (reason, promise) => {
 console.error("Unhandled Rejection:", reason);
 });
 module.exports = server;
+
 
 
 
