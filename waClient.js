@@ -103,6 +103,20 @@ try {
   console.log("Close without automatic restart");
 }
 });
+  function normalizeJid(msg) {
+  // participant موجود في المجموعات، أو private message استخدم remoteJid
+  const jid = msg.key.participant || msg.key.remoteJid;
+  if (!jid) return null;
+
+  // إذا انتهى بـ @lid، فقط حوله إلى @s.whatsapp.net وليس تجاهله
+  if (jid.endsWith("@lid")) {
+    const numeric = jid.split("@")[0];
+    return numeric + "@s.whatsapp.net";
+  }
+
+  // إذا كان رقم عادي
+  return jid.includes("@s.whatsapp.net") ? jid : jid.split("@")[0] + "@s.whatsapp.net";
+  }
  sock.ev.on("creds.update", saveCreds);
 
  sock.ev.on("messages.upsert", async (m) => {
@@ -118,7 +132,14 @@ try {
     }
 
     const isFromMe = msg.key.fromMe;
-    const sender = msg.key.remoteJid; 
+    const sender = normalizeJid(msg);
+
+if (!sender) {
+  console.log("⚠️ Invalid JID, ignoring message:", msg.key);
+  return;
+}
+
+const finalJid = sender;
     console.log("Sender:", sender);
     
 let text = "[رسالة غير مدعومة]";
