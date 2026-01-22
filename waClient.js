@@ -103,16 +103,6 @@ try {
   console.log("Close without automatic restart");
 }
 });
-
- function normalizeJid(jid) {
-  if (!jid) return null;
-
-  // إذا كان lid → تجاهله
-  if (jid.endsWith("@lid")) return null;
-
-  // خذ الرقم فقط
-  return jid.split("@")[0] + "@s.whatsapp.net";
- }
  sock.ev.on("creds.update", saveCreds);
 
  sock.ev.on("messages.upsert", async (m) => {
@@ -128,12 +118,7 @@ try {
     }
 
     const isFromMe = msg.key.fromMe;
-    const rawJid = msg.key.participant || msg.key.remoteJid;
-    const sender = normalizeJid(rawJid);
-    if (!sender) {
-    console.log("⚠️ Ignored message with invalid JID:", rawJid);
-    return;
-    }
+    const sender = msg.key.remoteJid; 
     console.log("Sender:", sender);
     
 let text = "[رسالة غير مدعومة]";
@@ -203,8 +188,7 @@ if (sessionRes.rowCount === 0) {
 }
 
 // 1. خزّن الرسالة مرتبطة بالجلسة
-const finalJid = normalizeJid(sender);
-if (!finalJid) return;
+const finalJid = sender.includes("@s.whatsapp.net") ? sender : sender + "@s.whatsapp.net";
 const insertRes = await db.query(
   "INSERT INTO messages (wa_message_id, session_id, sender_type, content, content_type, media_url, wa_number_id, is_deleted, created_at, jid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),$9) RETURNING id",
   [msg.key.id, sessionId, isFromMe ? "agent" : "client", text, contentType, mediaUrl, numberId, false, finalJid]
