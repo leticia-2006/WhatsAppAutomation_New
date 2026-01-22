@@ -139,8 +139,7 @@ if (!sender) {
   return;
 }
 
-const finalJid = sender;
-    console.log("Sender:", sender);
+console.log("Sender:", sender);
     
 let text = "[رسالة غير مدعومة]";
 let contentType = "text";
