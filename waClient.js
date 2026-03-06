@@ -344,7 +344,9 @@ function getClientStatus(numberId) {
   }
 }*/
 async function getOrCreateSession(numberId, jid) {
-  const clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [jid]);
+  const finalJid = jid.includes("@s.whatsapp.net") ? jid : jid.split("@")[0] + "@s.whatsapp.net";
+
+  const clientRes = await db.query("SELECT id FROM clients WHERE phone=$1", [finalJid]);
   let clientId;
   if (clientRes.rowCount === 0) {
     const newClient = await db.query(
