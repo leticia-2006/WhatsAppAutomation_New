@@ -104,17 +104,16 @@ try {
 }
 });
   function normalizeJid(msg) {
-  // حاول أولاً الرقم الحقيقي من peer_recipient_pn
-  if (msg?.key?.participantPn) return msg.key.participantPn;
-  if (msg?.message?.contextInfo?.participantPn) return msg.message.contextInfo.participantPn;
+  // ✅ 1. أولاً الرقم الذي يظهر في logs (peer_recipient_pn)
   if (msg?.message?.peer_recipient_pn) return msg.message.peer_recipient_pn;
 
-  // fallback
-  let jid = msg.key.participant || msg.key.remoteJid;
-  if (!jid) return null;
+  // 2. participant من الرسائل الجماعية
+  if (msg?.key?.participant) return msg.key.participant;
 
-  // إذا كان لا يحتوي على @s.whatsapp.net، أضفها
-  return jid.includes("@s.whatsapp.net") ? jid : jid.split("@")[0] + "@s.whatsapp.net";
+  // 3. remoteJid كـ fallback أخير
+  if (msg?.key?.remoteJid) return msg.key.remoteJid;
+
+  return null;
   }
  sock.ev.on("creds.update", saveCreds);
 
@@ -137,7 +136,7 @@ if (!sender) {
   console.log("⚠️ Invalid JID, ignoring message:", msg.key);
   return;
 }
-
+const finalJid = sender.includes("@s.whatsapp.net") ? sender : sender + "@s.whatsapp.net";
 console.log("Sender:", sender);
     
 let text = "[رسالة غير مدعومة]";
@@ -182,7 +181,7 @@ let clientId;
 if (clientRes.rowCount === 0) {
   const newClient = await db.query(
     "INSERT INTO clients (name, phone) VALUES ($1,$2) RETURNING id",
-    ["Unknown", sender]
+    ["Unknown", finalJid]
   );
   clientId = newClient.rows[0].id;
 } else {
@@ -196,9 +195,10 @@ let sessionRes = await db.query(
 
 let sessionId;
 if (sessionRes.rowCount === 0) {
+  const finalJid = sender.includes("@s.whatsapp.net") ? sender : sender + "@s.whatsapp.net";
   const newSession = await db.query(
     "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, jid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
-    [clientId, numberId, sender]
+    [clientId, numberId, finalJid]
   );
   sessionId = newSession.rows[0].id;
   console.log(`✅ New session created (${sessionId}) for number ${numberId}`);
