@@ -103,19 +103,30 @@ try {
   console.log("Close without automatic restart");
 }
 });
-  const { jidNormalizedUser } = require("@whiskeysockets/baileys");
+  function normalizeJid(msg) {
+  let jid = msg.key.participant || msg.key.remoteJid;
 
-function normalizeJid(msg) {
-  const jid = msg.key.participant || msg.key.remoteJid;
-  if (!jid) return null;
+  // إذا كان LID حاول استخراج الرقم الحقيقي
+  if (jid && jid.endsWith("@lid")) {
+    const pn = msg?.messageStubParameters?.[0] 
+      || msg?.pushName 
+      || msg?.key?.participantPn;
 
-  if (jid.endsWith("@lid")) {
-    console.log("⚠️ LID detected:", jid);
-    return null;
+    if (msg?.message?.contextInfo?.participantPn) {
+      jid = msg.message.contextInfo.participantPn;
+    }
+
+    if (msg?.key?.participantPn) {
+      jid = msg.key.participantPn;
+    }
   }
 
-  return jidNormalizedUser(jid);
-}
+  if (!jid) return null;
+
+  return jid.includes("@s.whatsapp.net")
+    ? jid
+    : jid.split("@")[0] + "@s.whatsapp.net";
+  }
  sock.ev.on("creds.update", saveCreds);
 
  sock.ev.on("messages.upsert", async (m) => {
