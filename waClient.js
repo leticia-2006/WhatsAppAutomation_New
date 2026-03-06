@@ -321,7 +321,7 @@ async function sendMessageToNumber(numberId, jid, content) {
   // ✅ عندما يرد الوكيل، لا يجب أن تبقى الجلسة unreplied
 await db.query(
   "UPDATE sessions SET status='read', updated_at=NOW() WHERE id=$1",
-  [await getOrCreateSession(numberId, jid)]
+  [await getOrCreateSession(numberId, finalJid)]
 );
   return insertRes.rows[0];
 }
@@ -349,7 +349,7 @@ async function getOrCreateSession(numberId, jid) {
   if (clientRes.rowCount === 0) {
     const newClient = await db.query(
       "INSERT INTO clients (name, phone) VALUES ($1,$2) RETURNING id",
-      ["Unknown", jid]
+      ["Unknown", finalJid]
     );
     clientId = newClient.rows[0].id;
   } else {
@@ -365,7 +365,7 @@ async function getOrCreateSession(numberId, jid) {
 
   const newSession = await db.query(
     "INSERT INTO sessions (client_id, wa_number_id, group_id, status, created_at, updated_at, jid) VALUES ($1,$2,1,'unread',NOW(),NOW(),$3) RETURNING id",
-    [clientId, numberId, jid]
+    [clientId, numberId, finalJid]
   );
 
   return newSession.rows[0].id;
