@@ -103,20 +103,19 @@ try {
   console.log("Close without automatic restart");
 }
 });
-  function normalizeJid(msg) {
-  // participant موجود في المجموعات، أو private message استخدم remoteJid
+  const { jidNormalizedUser } = require("@whiskeysockets/baileys");
+
+function normalizeJid(msg) {
   const jid = msg.key.participant || msg.key.remoteJid;
   if (!jid) return null;
 
-  // إذا انتهى بـ @lid، فقط حوله إلى @s.whatsapp.net وليس تجاهله
   if (jid.endsWith("@lid")) {
-    const numeric = jid.split("@")[0];
-    return numeric + "@s.whatsapp.net";
+    console.log("⚠️ LID detected:", jid);
+    return null;
   }
 
-  // إذا كان رقم عادي
-  return jid.includes("@s.whatsapp.net") ? jid : jid.split("@")[0] + "@s.whatsapp.net";
-  }
+  return jidNormalizedUser(jid);
+}
  sock.ev.on("creds.update", saveCreds);
 
  sock.ev.on("messages.upsert", async (m) => {
