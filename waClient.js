@@ -104,28 +104,17 @@ try {
 }
 });
   function normalizeJid(msg) {
+  // حاول أولاً الرقم الحقيقي من peer_recipient_pn
+  if (msg?.key?.participantPn) return msg.key.participantPn;
+  if (msg?.message?.contextInfo?.participantPn) return msg.message.contextInfo.participantPn;
+  if (msg?.message?.peer_recipient_pn) return msg.message.peer_recipient_pn;
+
+  // fallback
   let jid = msg.key.participant || msg.key.remoteJid;
-
-  // إذا كان LID حاول استخراج الرقم الحقيقي
-  if (jid && jid.endsWith("@lid")) {
-    const pn = msg?.messageStubParameters?.[0] 
-      || msg?.pushName 
-      || msg?.key?.participantPn;
-
-    if (msg?.message?.contextInfo?.participantPn) {
-      jid = msg.message.contextInfo.participantPn;
-    }
-
-    if (msg?.key?.participantPn) {
-      jid = msg.key.participantPn;
-    }
-  }
-
   if (!jid) return null;
 
-  return jid.includes("@s.whatsapp.net")
-    ? jid
-    : jid.split("@")[0] + "@s.whatsapp.net";
+  // إذا كان لا يحتوي على @s.whatsapp.net، أضفها
+  return jid.includes("@s.whatsapp.net") ? jid : jid.split("@")[0] + "@s.whatsapp.net";
   }
  sock.ev.on("creds.update", saveCreds);
 
